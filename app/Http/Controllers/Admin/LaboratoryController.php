@@ -1,0 +1,77 @@
+<?php
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Laboratory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class LaboratoryController extends Controller
+{
+    public function index()
+    {
+        $laboratories = Laboratory::all();
+        return view('admin.laboratories.index', compact('laboratories'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'descripcion' => 'required|string|max:255',
+            'logo' => 'nullable|image|max:2048',
+        ]);
+
+        $lastId = Laboratory::max('id') ?? 0;
+        $autoCode = 'LAB-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('laboratories', 'public');
+        }
+
+        Laboratory::create([
+            'codigo' => $autoCode,
+            'descripcion' => $request->descripcion,
+            'logo' => $logoPath,
+            'is_top' => false,
+            'estado' => true,
+        ]);
+
+        return redirect()->route('admin.laboratories.index')->with('success', 'Laboratorio creado correctamente con código ' . $autoCode);
+    }
+
+    public function toggleTop(Laboratory $laboratory)
+    {
+        $laboratory->update(['is_top' => !$laboratory->is_top]);
+        return back()->with('success', 'Estado destacado actualizado correctamente.');
+    }
+
+    public function update(Request $request, Laboratory $laboratory)
+    {
+        $request->validate([
+            'descripcion' => 'required|string|max:255',
+            'logo' => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('logo')) {
+            if ($laboratory->logo) {
+                Storage::disk('public')->delete($laboratory->logo);
+            }
+            $laboratory->logo = $request->file('logo')->store('laboratories', 'public');
+        }
+
+        $laboratory->descripcion = $request->descripcion;
+        $laboratory->save();
+
+        return redirect()->route('admin.laboratories.index')->with('success', 'Laboratorio actualizado correctamente.');
+    }
+
+    public function destroy(Laboratory $laboratory)
+    {
+        if ($laboratory->logo) {
+            Storage::disk('public')->delete($laboratory->logo);
+        }
+        $laboratory->delete();
+        return redirect()->route('admin.laboratories.index')->with('success', 'Laboratorio eliminado correctamente.');
+    }
+}

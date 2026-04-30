@@ -1,0 +1,47 @@
+.about {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 5%;
+    display: flex;
+    flex-direction: column;
+}
+.about-content {
+    margin-bottom: 40px;
+    text-align: center;
+}
+.section-title h2 { font-size: 2.5rem; color: var(--dark-green); margin-bottom: 15px; }
+.section-title p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+.about-features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+.feature-tag {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.feature-tag i { color: var(--primary-green); font-size: 1.2rem; }
+.about-map {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.map-controls {
+    background: white;
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    z-index: 10;
+    border-bottom: 1px solid #eee;
+}
+.btn { padding: 10px 20px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: 500; transition: var(--transition); }
+.btn-outline { background: transparent; color: var(--primary-green); border: 2px solid var(--primary-green); cursor: pointer; }
+.btn-outline:hover { background: var(--primary-green); color: white; }

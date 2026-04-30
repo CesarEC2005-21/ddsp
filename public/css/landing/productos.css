@@ -1,0 +1,55 @@
+.products {
+    background-color: #f0f7f4;
+    padding: 100px 5%;
+}
+.section-title { text-align: center; margin-bottom: 60px; }
+.section-title h2 { font-size: 2.5rem; color: var(--dark-green); margin-bottom: 15px; }
+.section-title p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+.products-header {
+    max-width: 1400px;
+    margin: 0 auto 30px;
+    display: flex;
+    justify-content: center;
+}
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 300px;
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+    border-radius: 10px;
+    padding: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+}
+.dropdown:hover .dropdown-content { display: block !important; }
+.lab-search-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; font-family: inherit; outline: none; box-sizing: border-box; }
+.lab-list { max-height: 200px; overflow-y: auto; text-align: left; }
+.lab-list a { display: block; padding: 8px 10px; color: var(--text-main); text-decoration: none; border-radius: 5px; transition: var(--transition); }
+.lab-list a:hover { background: var(--bg-light); color: var(--primary-green) !important; }
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.product-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
+.product-card i { font-size: 3rem; color: var(--secondary-teal); margin-bottom: 20px; }
+.btn { padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; transition: var(--transition); }
+.btn-primary { background: var(--primary-green); color: white; font-weight: 500; font-family: inherit; }
+.btn-primary:hover { background: var(--dark-green); }
