@@ -25,6 +25,11 @@ class ProductController extends Controller
             'unidad_medida_id' => 'required|exists:unidad_medidas,id',
             'precio' => 'required|numeric',
             'descripcion' => 'nullable|string',
+            'usos' => 'nullable|string',
+            'composicion' => 'nullable|string',
+            'contraindicaciones' => 'nullable|string',
+            'registro_sanitario' => 'nullable|string',
+            'is_featured' => 'nullable',
             'imagen' => 'nullable|image|max:2048'
         ]);
 
@@ -36,18 +41,14 @@ class ProductController extends Controller
             $path = $request->file('imagen')->store('products', 'public');
         }
 
-        Product::create([
-            'nombre' => $validated['nombre'],
+        Product::create(array_merge($validated, [
             'codigo' => $autoCode,
-            'laboratory_id' => $validated['laboratory_id'],
-            'unidad_medida_id' => $validated['unidad_medida_id'],
-            'precio' => $validated['precio'],
-            'descripcion' => $validated['descripcion'],
+            'is_featured' => $request->has('is_featured'),
             'imagen' => $path,
             'estado' => true,
             'usuario_origen' => auth()->id(),
             'usuario_actualizo' => auth()->id(),
-        ]);
+        ]));
 
         return redirect()->route('admin.products.index')->with('success', 'Producto creado exitosamente con código ' . $autoCode);
     }
@@ -60,6 +61,11 @@ class ProductController extends Controller
             'unidad_medida_id' => 'required|exists:unidad_medidas,id',
             'precio' => 'required|numeric',
             'descripcion' => 'nullable|string',
+            'usos' => 'nullable|string',
+            'composicion' => 'nullable|string',
+            'contraindicaciones' => 'nullable|string',
+            'registro_sanitario' => 'nullable|string',
+            'is_featured' => 'nullable',
             'imagen' => 'nullable|image|max:2048'
         ]);
 
@@ -70,14 +76,10 @@ class ProductController extends Controller
             $product->imagen = $request->file('imagen')->store('products', 'public');
         }
 
-        $product->update([
-            'nombre' => $validated['nombre'],
-            'laboratory_id' => $validated['laboratory_id'],
-            'unidad_medida_id' => $validated['unidad_medida_id'],
-            'precio' => $validated['precio'],
-            'descripcion' => $validated['descripcion'],
+        $product->update(array_merge($validated, [
+            'is_featured' => $request->has('is_featured'),
             'usuario_actualizo' => auth()->id(),
-        ]);
+        ]));
 
         return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente.');
     }

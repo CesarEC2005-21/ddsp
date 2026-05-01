@@ -14,7 +14,8 @@ class LandingController extends Controller
     public function index()
     {
         $topLaboratories = Laboratory::where('is_top', true)->get();
-        return view('landing.index', compact('topLaboratories'));
+        $featuredProducts = Product::where('estado', true)->where('is_featured', true)->limit(4)->get();
+        return view('landing.index', compact('topLaboratories', 'featuredProducts'));
     }
 
     public function about()

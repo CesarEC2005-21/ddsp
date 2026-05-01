@@ -58,51 +58,54 @@
         <div class="products-main" style="flex: 1;">
             <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
                 @forelse($products as $product)
-                <div class="product-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); display: flex; flex-direction: column; transition: 0.3s; border: 1px solid #f1f5f9;">
-                    <!-- Badge superior -->
-                    <div style="padding: 10px 15px;">
-                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary-green); background: #f0fdf4; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; border: 1px solid #dcfce7;">
+                <div class="product-card reveal" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: 0.4s; border: 1px solid #f1f5f9; position: relative;">
+                    <!-- Tag Premium -->
+                    <div style="position: absolute; top: 15px; left: 15px; z-index: 2;">
+                        <span style="font-size: 0.7rem; font-weight: 800; color: white; background: var(--primary-green); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);">
                             {{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}
                         </span>
                     </div>
 
-                    <!-- Imagen -->
-                    <a href="{{ route('product.detail', $product->id) }}" style="text-decoration: none; display: block; height: 240px; background: #fff; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px;">
+                    <!-- Imagen con Efecto -->
+                    <a href="{{ route('product.detail', $product->id) }}" class="product-img-wrapper" style="text-decoration: none; display: block; height: 260px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 30px;">
                         @if($product->imagen)
-                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}" style="max-height: 100%; max-width: 100%; object-fit: contain; transition: 0.5s;">
                         @else
-                            <div style="display: flex; flex-direction: column; align-items: center; color: #cbd5e1;">
-                                <i class="fas fa-pills" style="font-size: 3rem; margin-bottom: 10px;"></i>
-                                <span style="font-weight: 600; font-size: 0.9rem;">Sin Imagen</span>
+                            <div style="display: flex; flex-direction: column; align-items: center; color: #e2e8f0;">
+                                <i class="fas fa-pills" style="font-size: 4rem; margin-bottom: 10px;"></i>
+                                <span style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Sin Imagen</span>
                             </div>
                         @endif
                     </a>
 
-                    <!-- Info -->
-                    <div style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column; background: #fafafa;">
-                        <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 5px; font-weight: 600; font-family: monospace;">{{ $product->codigo }}</p>
+                    <!-- Info Premium -->
+                    <div style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <p style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; font-family: monospace; letter-spacing: 1px;">#{{ $product->codigo }}</p>
+                            @if($product->stock > 0)
+                                <span style="color: #10b981; font-size: 0.7rem; font-weight: 800;"><i class="fas fa-check-circle"></i> EN STOCK</span>
+                            @endif
+                        </div>
+                        
                         <a href="{{ route('product.detail', $product->id) }}" style="text-decoration: none;">
-                            <h3 style="font-size: 1.05rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; line-height: 1.3; min-height: 2.6rem;">{{ $product->nombre }}</h3>
+                            <h3 style="font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; line-height: 1.4; min-height: 3rem;">{{ $product->nombre }}</h3>
                         </a>
                         
-                        <div style="margin-bottom: 20px;">
-                            <span style="display: block; width: 100%; text-align: center; background: white; color: #64748b; padding: 8px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; border: 1px solid #e2e8f0; text-transform: uppercase; letter-spacing: 0.5px;">
-                                {{ $product->laboratory->descripcion ?? 'GENERAL' }}
-                            </span>
-                        </div>
-
                         <div style="margin-top: auto;">
-                            <p style="font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 15px;">S/ {{ number_format($product->precio, 2) }}</p>
+                            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">
+                                <span style="font-size: 1.8rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
+                                <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">/ unidad</span>
+                            </div>
                             
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <button onclick="addToCart({{ $product->id }}, '{{ $product->nombre }}')" class="btn" style="background: var(--primary-green); color: white; border: none; padding: 12px 15px; border-radius: 10px; font-weight: 700; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);">
-                                    <i class="fas fa-shopping-basket"></i> AGREGAR
+                                <button onclick="addToCart({{ $product->id }}, '{{ $product->nombre }}')" class="btn-add-cart">
+                                    <i class="fas fa-shopping-basket"></i>
                                 </button>
                                 
-                                <div style="display: flex; align-items: center; background: white; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
-                                    <button onclick="changeQty({{ $product->id }}, -1)" style="border: none; background: transparent; padding: 10px 12px; cursor: pointer; color: #94a3b8;"><i class="fas fa-minus"></i></button>
-                                    <input type="text" id="qty-{{ $product->id }}" value="1" readonly style="width: 30px; border: none; background: transparent; text-align: center; font-weight: 700; color: #1e293b; font-size: 0.95rem;">
-                                    <button onclick="changeQty({{ $product->id }}, 1)" style="border: none; background: transparent; padding: 10px 12px; cursor: pointer; color: #94a3b8;"><i class="fas fa-plus"></i></button>
+                                <div class="qty-selector">
+                                    <button onclick="changeQty({{ $product->id }}, -1)"><i class="fas fa-minus"></i></button>
+                                    <input type="text" id="qty-{{ $product->id }}" value="1" readonly>
+                                    <button onclick="changeQty({{ $product->id }}, 1)"><i class="fas fa-plus"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -155,62 +158,74 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Update badge
+                // Update floating badge
                 const badge = document.getElementById('cart-badge');
-                badge.innerText = data.cart_count;
-                badge.style.display = 'flex';
+                if (badge) {
+                    badge.innerText = data.cart_count;
+                    badge.style.display = 'flex';
+                }
+
+                // Update navigation badge
+                const navBadge = document.getElementById('nav-cart-badge');
+                if (navBadge) {
+                    navBadge.innerText = data.cart_count;
+                    navBadge.style.display = 'flex';
+                }
                 
-                // Professional Mini-Cart Notification
-                showMiniCartNotification(productName, qty);
+                // SweetAlert2 Confirmation
+                Swal.fire({
+                    title: '¡Agregado!',
+                    text: `${qty}x ${productName} se añadió a tu solicitud.`,
+                    icon: 'success',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
             }
         });
     }
 
-    function showMiniCartNotification(name, qty) {
-        // Remove existing if any
-        const old = document.getElementById('mini-cart-notif');
-        if (old) old.remove();
-
-        const notif = document.createElement('div');
-        notif.id = 'mini-cart-notif';
-        notif.style.cssText = `
-            position: fixed; top: 110px; right: 20px; width: 320px; 
-            background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            z-index: 10000; padding: 20px; border: 1px solid #f1f5f9;
-            animation: slideIn 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        `;
-
-        notif.innerHTML = `
-            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
-                <div style="width: 50px; height: 50px; background: #f0fdf4; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary-green);">
-                    <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
-                </div>
-                <div>
-                    <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">¡Producto Agregado!</h4>
-                    <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;">${qty}x ${name}</p>
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <a href="{{ route('cart.index') }}" class="btn btn-primary" style="flex: 1; padding: 10px; font-size: 0.85rem; text-align: center; border-radius: 10px;">VER CARRITO</a>
-                <button onclick="this.parentElement.parentElement.remove()" class="btn" style="flex: 1; padding: 10px; font-size: 0.85rem; background: #f1f5f9; color: #64748b; border: none; border-radius: 10px; cursor: pointer;">CONTINUAR</button>
-            </div>
-            <style>
-                @keyframes slideIn { from { transform: translateX(120%); } to { transform: translateX(0); } }
-            </style>
-        `;
-
-        document.body.appendChild(notif);
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notif) {
-                notif.style.animation = 'slideOut 0.5s forwards';
-                setTimeout(() => notif.remove(), 500);
+    // Intersection Observer for Reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
             }
-        }, 5000);
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function showMiniCartNotification(name, qty) {
+        // Obsoleto - Usando SweetAlert2
     }
 </script>
 <style>
     @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }
+    .product-card:hover .product-img-wrapper img { transform: scale(1.1); }
+
+    .qty-selector { display: flex; align-items: center; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .qty-selector button { border: none; background: transparent; padding: 12px; cursor: pointer; color: #64748b; transition: 0.3s; }
+    .qty-selector button:hover { background: #e2e8f0; color: var(--primary-green); }
+    .qty-selector input { width: 40px; border: none; background: transparent; text-align: center; font-weight: 800; color: #1e293b; font-size: 1rem; }
+
+    .btn-add-cart { 
+        background: var(--primary-green); color: white; border: none; padding: 15px 25px; 
+        border-radius: 12px; font-weight: 800; flex: 1; display: flex; align-items: center; 
+        justify-content: center; gap: 10px; cursor: pointer; transition: 0.3s; 
+        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2); 
+    }
+    .btn-add-cart:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3); }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 @endpush

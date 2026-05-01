@@ -8,9 +8,9 @@
         color: white; text-align: center; padding: 60px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;
     }
 
-    .nosotros-layout { display: grid; grid-template-columns: 350px 1fr; gap: 30px; padding: 0 5% 100px; max-width: 1400px; margin: 0 auto; min-height: 700px; }
+    .nosotros-layout { display: grid; grid-template-columns: 350px 1fr; gap: 30px; padding: 0 5% 100px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
     
-    .sidebar-filters { background: white; border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; height: fit-content; position: sticky; top: 120px; z-index: 10; }
+    .sidebar-filters { background: white; border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; height: fit-content; position: sticky; top: 120px; z-index: 10; animation: fadeInLeft 0.8s ease-out; }
     
     .filter-section { margin-bottom: 30px; }
     .filter-label { display: block; font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
@@ -22,20 +22,24 @@
 
     .select-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.95rem; color: #1e293b; cursor: pointer; }
 
-    .content-display { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-height: 600px; }
+    .content-display { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-height: 800px; animation: fadeInRight 0.8s ease-out; }
     
-    .rep-detail-view { display: grid; grid-template-columns: 400px 1fr; height: 100%; min-height: 600px; opacity: 0; transform: translateY(20px); transition: 0.5s ease; }
-    .rep-detail-view.visible { opacity: 1; transform: translateY(0); }
+    .map-container { position: relative; flex-grow: 1; min-height: 600px; }
+    #map-display { width: 100%; height: 100%; min-height: 800px; }
 
-    .rep-photo-side { background-size: cover; background-position: center; position: relative; }
-    .rep-photo-side::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(transparent, rgba(0,0,0,0.8)); }
-    .rep-photo-info { position: absolute; bottom: 30px; left: 30px; right: 30px; color: white; z-index: 2; }
+    .rep-overlay-card {
+        position: absolute; bottom: 30px; left: 30px; width: 380px; background: white; border-radius: 25px; 
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1000; overflow: hidden;
+        display: none; animation: fadeInUp 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    }
+    .rep-overlay-img { height: 220px; background-size: cover; background-position: center; position: relative; }
+    .rep-overlay-img::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, white); }
+    .rep-overlay-info { padding: 25px; position: relative; margin-top: -40px; background: white; border-radius: 25px 25px 0 0; }
 
-    .map-side { position: relative; }
-    #map-display { width: 100%; height: 100%; min-height: 600px; }
-
-    .placeholder-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 600px; color: #cbd5e1; text-align: center; padding: 50px; }
-    .placeholder-view i { font-size: 5rem; margin-bottom: 20px; }
+    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 @endpush
 
@@ -82,35 +86,30 @@
                 </select>
             </div>
 
-            <div id="contact-info-short" style="display: none; margin-top: 30px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
-                <h4 style="margin-bottom: 15px; color: #1e293b;">Contacto Directo</h4>
+            <div id="contact-info-short" style="display: none; margin-top: 30px; padding: 25px; border-radius: 20px; background: var(--primary-green); color: white; border: none; animation: fadeInUp 0.5s; box-shadow: 0 10px 30px rgba(46, 125, 50, 0.3);">
+                <h4 style="margin-bottom: 15px; color: white; font-size: 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
+                    <i class="fas fa-info-circle"></i> <span id="info-type-title">Información</span>
+                </h4>
+                <div id="rep-photo-container" style="margin-bottom: 20px; border-radius: 20px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #f8fafc;">
+                    <img id="side-rep-img" src="" alt="Imagen" style="width: 100%; height: auto; max-height: 400px; display: block; object-fit: cover;">
+                </div>
                 <div id="rep-contact-data">
-                    <p style="font-size: 0.9rem; margin-bottom: 8px;"><i class="fas fa-phone" style="color: var(--primary-green); width: 20px;"></i> <span id="text-phone"></span></p>
-                    <p style="font-size: 0.9rem;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 20px;"></i> <span id="text-email"></span></p>
+                    <p id="side-rep-name" style="font-weight: 700; color: white; margin-bottom: 12px; font-size: 1.2rem;"></p>
+                    <p style="font-size: 0.9rem; margin-bottom: 10px; color: rgba(255,255,255,0.9);"><i class="fas fa-phone-alt" style="width: 20px;"></i> <span id="text-phone"></span></p>
+                    <p style="font-size: 0.9rem; margin-bottom: 15px; color: rgba(255,255,255,0.9);"><i class="fas fa-map-marker-alt" style="width: 20px;"></i> <span id="text-email"></span></p>
+                    <a id="side-rep-call" href="#" target="_blank" class="btn" style="width: 100%; text-align: center; font-size: 0.9rem; padding: 12px; background: white; color: var(--primary-green); border-radius: 12px; font-weight: 700; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
                 </div>
             </div>
         </aside>
 
         <!-- Área de Visualización -->
         <main class="content-display">
-            <div id="view-placeholder" class="placeholder-view">
-                <i class="fas fa-map-marked-alt"></i>
-                <h2>Explora nuestra red nacional</h2>
-                <p>Selecciona una opción a la izquierda para ver su ubicación y detalles.</p>
-            </div>
-
-            <div id="view-details" style="display: none; height: 100%;">
-                <div class="rep-detail-view" id="rep-layout">
-                    <div class="rep-photo-side" id="rep-photo">
-                        <div class="rep-photo-info">
-                            <h2 id="rep-name" style="font-size: 2rem; margin-bottom: 5px;"></h2>
-                            <p id="rep-city" style="opacity: 0.8; font-weight: 500;"></p>
-                        </div>
-                    </div>
-                    <div class="map-side">
-                        <div id="map-display"></div>
-                    </div>
-                </div>
+            <div class="map-container">
+                <div id="map-display"></div>
+                
+                <!-- Overlay Card Removed as per request -->
             </div>
         </main>
     </div>
@@ -123,6 +122,61 @@
     const boticas = @json($pharmacies);
     const reps = @json($representatives->load('locations.zona'));
 
+    // Initialize map on load
+    document.addEventListener('DOMContentLoaded', () => {
+        initMap(-9.189967, -75.015152, 6);
+        showAllMarkers();
+    });
+
+    function initMap(lat, lng, zoom = 6) {
+        if (map) map.remove();
+        map = L.map('map-display', {
+            zoomControl: false
+        }).setView([lat, lng], zoom);
+        
+        L.control.zoom({ position: 'topright' }).addTo(map);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; Sanchez Pharma'
+        }).addTo(map);
+        
+        markersGroup = L.featureGroup().addTo(map);
+    }
+
+    function showAllMarkers() {
+        markersGroup.clearLayers();
+        
+        // Add Boticas (Green)
+        boticas.forEach(b => {
+            if (b.latitud && b.longitud) {
+                const m = L.marker([b.latitud, b.longitud], {
+                    icon: createIcon('#10b981')
+                }).addTo(markersGroup).bindPopup(`<b>Botica: ${b.nombre}</b><br>${b.ubicacion}`);
+            }
+        });
+
+        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
+        
+        // Add Reps (Different colors per representative)
+        reps.forEach((r, idx) => {
+            const repColor = colors[idx % colors.length];
+            r.locations.forEach(loc => {
+                const m = L.marker([loc.latitud, loc.longitud], {
+                    icon: createIcon(repColor)
+                }).addTo(markersGroup).on('click', () => showRepOverlay(r));
+            });
+        });
+    }
+
+    function createIcon(color) {
+        return L.divIcon({
+            className: 'custom-icon',
+            html: `<div style="background:${color}; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 0 15px rgba(0,0,0,0.2)"></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+    }
+
     function selectType(type) {
         document.getElementById('btn-type-botica').classList.toggle('active', type === 'botica');
         document.getElementById('btn-type-rep').classList.toggle('active', type === 'rep');
@@ -130,82 +184,90 @@
         document.getElementById('section-boticas').style.display = type === 'botica' ? 'block' : 'none';
         document.getElementById('section-reps').style.display = type === 'rep' ? 'block' : 'none';
         
-        resetView();
-    }
-
-    function initMap(lat, lng, zoom = 13) {
-        if (map) map.remove();
-        map = L.map('map-display').setView([lat, lng], zoom);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-        markersGroup = L.featureGroup().addTo(map);
+        hideOverlay();
+        showAllMarkers();
     }
 
     function showBotica(id) {
-        if (!id) return resetView();
+        if (!id) return showAllMarkers();
         const b = boticas.find(x => x.id == id);
         if (!b) return;
 
-        document.getElementById('view-placeholder').style.display = 'none';
-        document.getElementById('view-details').style.display = 'block';
-        setTimeout(() => document.getElementById('rep-layout').classList.add('visible'), 50);
+        showAllMarkers(); // Keep all markers but fly to the one
+        showPharmacyOverlay(b);
+        map.flyTo([b.latitud, b.longitud], 16);
+    }
+
+    function showPharmacyOverlay(b) {
+        document.getElementById('contact-info-short').style.display = 'block';
+        document.getElementById('info-type-title').innerText = 'Detalle de Botica';
+        document.getElementById('rep-photo-container').style.display = 'none'; // No photo for pharmacy usually
+        document.getElementById('side-rep-name').innerText = b.nombre;
+        document.getElementById('text-phone').innerText = b.telefono || 'Consultar';
+        document.getElementById('text-email').innerText = b.ubicacion || 'Consultar dirección';
         
-        document.getElementById('rep-layout').style.gridTemplateColumns = "1fr"; 
-        document.getElementById('rep-photo').style.display = 'none';
+        const message = encodeURIComponent(`Hola, quisiera contactar con la botica ${b.nombre} para una consulta.`);
+        const phone = b.telefono ? b.telefono.replace(/\D/g,'') : '999999999';
+        const waLink = `https://wa.me/51${phone}?text=${message}`;
         
-        initMap(b.latitud, b.longitud, 15);
-        L.marker([b.latitud, b.longitud], {
-            icon: L.divIcon({
-                className: 'custom-icon',
-                html: `<div style="background:#10b981; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 0 10px rgba(0,0,0,0.2)"></div>`,
-                iconSize: [20, 20]
-            })
-        }).addTo(markersGroup).bindPopup(`<b>${b.nombre}</b><br>${b.ubicacion}`).openPopup();
+        const btn = document.getElementById('side-rep-call');
+        btn.href = waLink;
+        btn.onclick = (e) => { window.open(waLink, '_blank'); return false; }; // Force open
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> Chat con Botica';
     }
 
     function showRep(id) {
-        if (!id) return resetView();
+        if (!id) return showAllMarkers();
         const r = reps.find(x => x.id == id);
         if (!r) return;
 
-        document.getElementById('view-placeholder').style.display = 'none';
-        document.getElementById('view-details').style.display = 'block';
-        setTimeout(() => document.getElementById('rep-layout').classList.add('visible'), 50);
+        markersGroup.clearLayers();
+        showRepOverlay(r);
         
-        document.getElementById('rep-layout').style.gridTemplateColumns = "400px 1fr";
-        document.getElementById('rep-photo').style.display = 'block';
-        
-        document.getElementById('rep-photo').style.backgroundImage = `url(${r.imagen ? '/storage/' + r.imagen : 'https://ui-avatars.com/api/?name=' + r.nombre + '&size=400'})`;
-        document.getElementById('rep-name').innerText = r.nombre;
-        document.getElementById('rep-city').innerText = r.ubicacion;
-        
-        document.getElementById('contact-info-short').style.display = 'block';
-        document.getElementById('text-phone').innerText = r.telefono || 'Consultar';
-        document.getElementById('text-email').innerText = r.email || 'Consultar';
-
         if (r.locations.length > 0) {
-            initMap(r.locations[0].latitud, r.locations[0].longitud, 10);
+            const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
+            const repColor = colors[reps.indexOf(r) % colors.length];
+            
             r.locations.forEach(loc => {
                 L.marker([loc.latitud, loc.longitud], {
-                    icon: L.divIcon({
-                        className: 'custom-icon',
-                        html: `<div style="background:#ef4444; width:18px; height:18px; border-radius:50%; border:3px solid white; box-shadow:0 0 10px rgba(0,0,0,0.2)"></div>`,
-                        iconSize: [18, 18]
-                    })
+                    icon: createIcon(repColor)
                 }).addTo(markersGroup).bindPopup(`<b>Zona: ${loc.zona?.nombre_zona || 'Atención'}</b>`);
             });
-            map.fitBounds(markersGroup.getBounds().pad(0.5));
-        } else {
-            initMap(-9.189967, -75.015152, 5); 
+            
+            const group = L.featureGroup(markersGroup.getLayers());
+            map.flyToBounds(group.getBounds().pad(1));
         }
     }
 
-    function resetView() {
-        document.getElementById('view-placeholder').style.display = 'flex';
-        document.getElementById('view-details').style.display = 'none';
-        document.getElementById('rep-layout').classList.remove('visible');
+    function showRepOverlay(r) {
+        document.getElementById('contact-info-short').style.display = 'block';
+        document.getElementById('info-type-title').innerText = 'Información del Vendedor';
+        document.getElementById('rep-photo-container').style.display = 'block';
+        document.getElementById('side-rep-img').src = r.imagen ? '/storage/' + r.imagen : 'https://ui-avatars.com/api/?name=' + r.nombre + '&size=400';
+        document.getElementById('side-rep-name').innerText = r.nombre;
+        document.getElementById('text-phone').innerText = r.telefono || 'Consultar';
+        document.getElementById('text-email').innerText = r.email || 'Consultar';
+        
+        const message = encodeURIComponent("Hola, quisiera atencion para cotizar un pedido por favor.");
+        const phone = r.telefono ? r.telefono.replace(/\D/g,'') : '';
+        const waLink = `https://wa.me/51${phone}?text=${message}`;
+        
+        const btn = document.getElementById('side-rep-call');
+        btn.href = waLink;
+        btn.onclick = (e) => { window.open(waLink, '_blank'); return false; }; // Force open
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> WhatsApp Vendedor';
+    }
+
+    function hideOverlay() {
         document.getElementById('contact-info-short').style.display = 'none';
+    }
+
+    function resetView() {
+        showAllMarkers();
+        hideOverlay();
         document.getElementById('select-botica').value = '';
         document.getElementById('select-rep').value = '';
+        map.flyTo([-9.189967, -75.015152], 6);
     }
 </script>
 @endpush

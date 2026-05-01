@@ -15,6 +15,11 @@ class Product extends Model
         'estado',
         'imagen',
         'descripcion',
+        'is_featured',
+        'usos',
+        'composicion',
+        'contraindicaciones',
+        'registro_sanitario',
         'usuario_origen',
         'usuario_actualizo'
     ];

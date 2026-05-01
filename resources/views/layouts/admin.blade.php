@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intranet - Sanchez Pharma</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     @stack('styles')
 </head>
@@ -41,6 +44,9 @@
             </a>
             <a href="{{ route('admin.representatives.index') }}" class="nav-item {{ request()->routeIs('admin.representatives.*') ? 'active' : '' }}">
                 <i class="fas fa-briefcase"></i> Representantes
+            </a>
+            <a href="{{ route('admin.quotations.index') }}" class="nav-item {{ request()->routeIs('admin.quotations.*') ? 'active' : '' }}">
+                <i class="fas fa-file-invoice"></i> Cotizaciones
             </a>
 
             <div class="nav-section-title">Administración</div>

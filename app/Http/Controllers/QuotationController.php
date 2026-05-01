@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Quotation;
 use App\Models\QuotationItem;
+use App\Models\Setting;
+use App\Mail\QuotationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuotationController extends Controller
 {
@@ -28,7 +32,6 @@ class QuotationController extends Controller
             'total' => 'required|numeric'
         ]);
 
-        // Validación adicional para longitud de documento
         if ($validated['tipo_documento'] == 'DNI' && strlen($validated['numero_documento']) != 8) {
             return back()->withErrors(['numero_documento' => 'El DNI debe tener 8 dígitos'])->withInput();
         }
@@ -51,9 +54,35 @@ class QuotationController extends Controller
             }
 
             DB::commit();
+
+            // Preparar datos de la empresa
+            $company = [
+                'name' => Setting::get('company_name', 'Sanchez Pharma'),
+                'ruc' => Setting::get('company_ruc', ''),
+                'address' => Setting::get('company_address', ''),
+                'phone' => Setting::get('company_phone', ''),
+                'email' => Setting::get('company_email', ''),
+            ];
+
+            // Generar PDF
+            $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
+            $pdfContent = $pdf->output();
+
+            // Enviar Email
+            try {
+                Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
+            } catch (\Exception $e) {
+                // Log error but continue
+                \Log::error("Error enviando email: " . $e->getMessage());
+            }
+
             session()->forget('cart');
 
-            return redirect()->route('quotation.success')->with('quotation_id', $quotation->id);
+            return redirect()->route('quotation.success')->with([
+                'quotation_id' => $quotation->id,
+                'customer_phone' => $quotation->telefono,
+                'customer_name' => $quotation->nombre
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();

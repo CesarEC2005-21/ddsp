@@ -25,6 +25,7 @@
                         <th>Laboratorio</th>
                         <th>UM</th>
                         <th>Precio</th>
+                        <th>Destacado</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -44,6 +45,13 @@
                         <td>{{ $product->laboratory->descripcion ?? 'N/A' }}</td>
                         <td><span class="badge" style="background: #f1f5f9; color: #475569;">{{ $product->unidadMedida->um ?? 'N/A' }}</span></td>
                         <td style="font-weight: bold; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</td>
+                        <td style="text-align: center;">
+                            @if($product->is_featured)
+                                <span class="badge" style="background: #FEF3C7; color: #92400E;"><i class="fas fa-star"></i> SÍ</span>
+                            @else
+                                <span class="badge" style="background: #f1f5f9; color: #64748b;">NO</span>
+                            @endif
+                        </td>
                         <td>
                             <label class="switch">
                                 <input type="checkbox" {{ $product->estado ? 'checked' : '' }} onchange="toggleStatus({{ $product->id }})">
@@ -113,6 +121,31 @@
                                 <label class="form-label">Descripción</label>
                                 <textarea name="descripcion" class="form-control" rows="3" placeholder="Información técnica, beneficios, etc."></textarea>
                             </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                    <input type="checkbox" name="is_featured" value="1">
+                                    <span style="font-weight: 600; color: #1e293b;">Marcar como Producto Destacado (Inicio)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Usos</label>
+                            <textarea name="usos" class="form-control" rows="2" placeholder="Indicaciones terapéuticas..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Composición</label>
+                            <textarea name="composicion" class="form-control" rows="2" placeholder="Componentes activos..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraindicaciones</label>
+                            <textarea name="contraindicaciones" class="form-control" rows="2" placeholder="Advertencias y restricciones..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registro Sanitario</label>
+                            <input type="text" name="registro_sanitario" class="form-control" placeholder="Número de RS...">
                         </div>
                     </div>
                     <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f1f5f9; pt-20">
@@ -171,6 +204,31 @@
                                 <label class="form-label">Descripción</label>
                                 <textarea name="descripcion" id="edit-descripcion" class="form-control" rows="3"></textarea>
                             </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                    <input type="checkbox" name="is_featured" id="edit-is_featured" value="1">
+                                    <span style="font-weight: 600; color: #1e293b;">Marcar como Producto Destacado (Inicio)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Usos</label>
+                            <textarea name="usos" id="edit-usos" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Composición</label>
+                            <textarea name="composicion" id="edit-composicion" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraindicaciones</label>
+                            <textarea name="contraindicaciones" id="edit-contraindicaciones" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Registro Sanitario</label>
+                            <input type="text" name="registro_sanitario" id="edit-registro_sanitario" class="form-control">
                         </div>
                     </div>
                     <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f1f5f9; pt-20">
@@ -193,6 +251,11 @@
         document.getElementById('edit-unidad_medida_id').value = product.unidad_medida_id;
         document.getElementById('edit-precio').value = product.precio;
         document.getElementById('edit-descripcion').value = product.descripcion || '';
+        document.getElementById('edit-usos').value = product.usos || '';
+        document.getElementById('edit-composicion').value = product.composicion || '';
+        document.getElementById('edit-contraindicaciones').value = product.contraindicaciones || '';
+        document.getElementById('edit-registro_sanitario').value = product.registro_sanitario || '';
+        document.getElementById('edit-is_featured').checked = !!product.is_featured;
         openModal('editProductModal');
     }
 

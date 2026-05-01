@@ -45,3 +45,15 @@
 .btn { padding: 10px 20px; border-radius: 50px; text-decoration: none; display: inline-block; font-weight: 500; transition: var(--transition); }
 .btn-outline { background: transparent; color: var(--primary-green); border: 2px solid var(--primary-green); cursor: pointer; }
 .btn-outline:hover { background: var(--primary-green); color: white; }
+
+@media (max-width: 968px) {
+    .about { padding: 60px 5%; }
+    .about-map { height: 400px; }
+    .map-controls { flex-wrap: wrap; }
+}
+
+@media (max-width: 768px) {
+    .section-title h2 { font-size: 2rem; }
+    .about-features { flex-direction: column; align-items: center; }
+    .about-map { height: 350px; }
+}

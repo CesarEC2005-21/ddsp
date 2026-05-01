@@ -1,157 +1,199 @@
 @extends('layouts.landing')
 
+@push('styles')
+<style>
+    .cart-page { background: #f8fafc; padding: 60px 5%; min-height: 90vh; }
+    .cart-container { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: 1fr 550px; gap: 20px; }
+    
+    .cart-items-card { background: white; border-radius: 30px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+    .cart-item { display: flex; gap: 25px; padding: 25px 0; border-bottom: 1px solid #f1f5f9; align-items: center; position: relative; }
+    .cart-item:last-child { border-bottom: none; }
+    
+    .item-img-box { 
+        width: 160px; height: 160px; background: #fff; border-radius: 20px; 
+        display: flex; align-items: center; justify-content: center; 
+        border: 1px solid #f1f5f9; overflow: hidden; padding: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+    }
+    .item-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; transition: 0.3s; }
+    .cart-item:hover .item-img-box img { transform: scale(1.1); }
+
+    .item-info { flex: 1; }
+    .item-title { font-size: 1.2rem; font-weight: 800; color: #1e293b; margin-bottom: 5px; }
+    .item-meta { font-size: 0.85rem; color: #94a3b8; font-weight: 600; margin-bottom: 15px; }
+    
+    .qty-row { display: flex; justify-content: space-between; align-items: center; }
+    .qty-spinner { display: flex; align-items: center; background: #f1f5f9; border-radius: 12px; padding: 5px; }
+    .qty-spinner button { width: 35px; height: 35px; border-radius: 10px; border: none; background: white; cursor: pointer; color: #1e293b; font-weight: 700; transition: 0.3s; }
+    .qty-spinner button:hover { background: var(--primary-green); color: white; }
+    .qty-spinner span { width: 40px; text-align: center; font-weight: 800; color: #1e293b; }
+
+    .checkout-card { background: white; border-radius: 30px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 1px solid #f1f5f9; height: fit-content; position: sticky; top: 120px; }
+    .checkout-title { font-size: 1.5rem; font-weight: 900; color: #1e293b; margin-bottom: 30px; text-align: center; }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 800; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input { 
+        width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid #f1f5f9; 
+        background: #f8fafc; font-size: 1rem; color: #1e293b; outline: none; transition: 0.3s; 
+        box-sizing: border-box;
+    }
+    .form-input:focus { border-color: var(--primary-green); background: white; box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1); }
+    
+    .summary-box { background: #f0fdf4; border-radius: 20px; padding: 25px; margin: 30px 0; border: 1px dashed var(--primary-green); }
+    .summary-line { display: flex; justify-content: space-between; margin-bottom: 10px; color: #64748b; font-weight: 600; }
+    .summary-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid rgba(46, 125, 50, 0.2); padding-top: 15px; margin-top: 15px; }
+    .total-val { font-size: 2.2rem; font-weight: 900; color: var(--primary-green); }
+
+    .btn-confirm { 
+        width: 100%; padding: 20px; background: var(--primary-green); color: white; border: none; 
+        border-radius: 18px; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: 0.3s;
+        text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 15px 30px rgba(46, 125, 50, 0.25);
+    }
+    .btn-confirm:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(46, 125, 50, 0.35); background: #1B5E20; }
+
+    @media (max-width: 1100px) {
+        .cart-container { grid-template-columns: 1fr; }
+        .checkout-card { position: static; }
+    }
+</style>
+@endpush
+
 @section('content')
-<div style="background: #f1f5f9; padding: 60px 5%; min-height: 90vh;">
-    <div style="max-width: 1200px; margin: 0 auto;">
+<div class="cart-page">
+    <div class="cart-container">
         
-        <!-- Pasos del Proceso -->
-        <div style="display: flex; justify-content: center; margin-bottom: 50px; gap: 20px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="width: 35px; height: 35px; background: var(--primary-green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
-                <span style="font-weight: 700; color: #1e293b;">Carrito</span>
-            </div>
-            <div style="width: 50px; height: 2px; background: #cbd5e1; align-self: center;"></div>
-            <div style="display: flex; align-items: center; gap: 10px; opacity: 0.5;">
-                <span style="width: 35px; height: 35px; background: #94a3b8; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
-                <span style="font-weight: 600; color: #1e293b;">Información</span>
-            </div>
-            <div style="width: 50px; height: 2px; background: #cbd5e1; align-self: center;"></div>
-            <div style="display: flex; align-items: center; gap: 10px; opacity: 0.5;">
-                <span style="width: 35px; height: 35px; background: #94a3b8; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
-                <span style="font-weight: 600; color: #1e293b;">Confirmación</span>
-            </div>
-        </div>
-
         @if(count($cart) > 0)
-        <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 30px; align-items: flex-start;">
-            
-            <!-- Listado de Productos -->
-            <div style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); padding: 30px; border: 1px solid #e2e8f0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
-                    <h2 style="font-size: 1.4rem; color: #1e293b; margin: 0;">Resumen de solicitud ({{ count($cart) }})</h2>
-                    <a href="{{ route('cart.clear') }}" style="color: #ef4444; text-decoration: none; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-trash-alt"></i> Vaciar Carrito</a>
-                </div>
-
-                @php $total = 0; @endphp
-                @foreach($cart as $id => $details)
-                    @php $total += $details['price'] * $details['quantity']; @endphp
-                    <div style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #f8fafc; align-items: center;">
-                        <div style="width: 80px; height: 80px; background: #f8fafc; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid #f1f5f9; padding: 5px;">
-                            @if($details['image'])
-                                <img src="{{ asset('storage/' . $details['image']) }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                            @else
-                                <i class="fas fa-pills" style="font-size: 1.5rem; color: #cbd5e1;"></i>
-                            @endif
-                        </div>
-                        <div style="flex-grow: 1;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <h4 style="margin: 0; color: #1e293b; font-size: 1rem; font-weight: 700;">{{ $details['name'] }}</h4>
-                                <button onclick="removeFromCart({{ $id }})" style="color: #cbd5e1; border: none; background: transparent; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ef4444'"><i class="fas fa-times"></i></button>
-                            </div>
-                            <p style="margin: 4px 0; font-size: 0.8rem; color: #94a3b8; font-family: monospace;">Ref: {{ $details['code'] }}</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                                <div style="display: flex; align-items: center; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; padding: 4px;">
-                                    <button onclick="updateCart({{ $id }}, -1)" style="border: none; background: transparent; padding: 4px 10px; cursor: pointer; color: #64748b;">-</button>
-                                    <span style="width: 25px; text-align: center; font-weight: 700; color: #1e293b; font-size: 0.9rem;">{{ $details['quantity'] }}</span>
-                                    <button onclick="updateCart({{ $id }}, 1)" style="border: none; background: transparent; padding: 4px 10px; cursor: pointer; color: #64748b;">+</button>
-                                </div>
-                                <div style="text-align: right;">
-                                    <span style="font-size: 0.8rem; color: #94a3b8; display: block;">S/ {{ number_format($details['price'], 2) }} c/u</span>
-                                    <span style="font-weight: 800; color: #1e293b; font-size: 1.1rem;">S/ {{ number_format($details['price'] * $details['quantity'], 2) }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-                <div style="margin-top: 30px;">
-                    <a href="{{ route('products') }}" style="display: inline-flex; align-items: center; gap: 8px; color: #64748b; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
-                        <i class="fas fa-chevron-left"></i> Continuar navegando
-                    </a>
-                </div>
+        <!-- Sección de Items -->
+        <div class="cart-items-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                <h2 style="font-size: 1.8rem; font-weight: 900; color: #1e293b;">Tu Carrito <span style="color: #94a3b8; font-size: 1.2rem; font-weight: 600;">({{ count($cart) }} items)</span></h2>
+                <a href="{{ route('cart.clear') }}" style="color: #ef4444; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-trash-alt"></i> Vaciar Carrito
+                </a>
             </div>
 
-            <!-- Formulario de Cotización -->
-            <div style="background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); padding: 40px; border: 1px solid #e2e8f0; position: sticky; top: 100px;">
-                <h3 style="margin-bottom: 25px; color: #1e293b; font-size: 1.4rem; font-weight: 800; text-align: center;">Datos de Contacto</h3>
-                
-                <form action="{{ route('quotation.store') }}" method="POST" id="quotationForm">
-                    @csrf
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Nombres</label>
-                            <input type="text" name="nombre" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
+            @php $total = 0; @endphp
+            @foreach($cart as $id => $details)
+                @php $total += $details['price'] * $details['quantity']; @endphp
+                <div class="cart-item">
+                    <div class="item-img-box">
+                        @if($details['image'])
+                            <img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}">
+                        @else
+                            <i class="fas fa-pills" style="font-size: 2.5rem; color: #e2e8f0;"></i>
+                        @endif
+                    </div>
+                    <div class="item-info">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 class="item-title">{{ $details['name'] }}</h4>
+                            <button onclick="removeFromCart({{ $id }})" style="border: none; background: transparent; color: #cbd5e1; cursor: pointer; transition: 0.3s; font-size: 1.2rem;" onmouseover="this.style.color='#ef4444'">&times;</button>
                         </div>
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Apellidos</label>
-                            <input type="text" name="apellidos" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
+                        <p class="item-meta">CÓDIGO: {{ $details['code'] }} | {{ $details['lab'] }}</p>
+                        
+                        <div class="qty-row">
+                            <div class="qty-spinner">
+                                <button onclick="updateCart({{ $id }}, -1)">-</button>
+                                <span>{{ $details['quantity'] }}</span>
+                                <button onclick="updateCart({{ $id }}, 1)">+</button>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="display: block; font-size: 0.8rem; color: #94a3b8; font-weight: 700;">UNIT: S/ {{ number_format($details['price'], 2) }}</span>
+                                <span style="font-size: 1.3rem; font-weight: 900; color: #1e293b;">S/ {{ number_format($details['price'] * $details['quantity'], 2) }}</span>
+                            </div>
                         </div>
                     </div>
+                </div>
+            @endforeach
 
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">WhatsApp / Celular (9 dígitos)</label>
-                        <input type="tel" name="telefono" pattern="[0-9]{9}" maxlength="9" placeholder="912345678" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; margin-bottom: 15px;">
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Tipo Doc.</label>
-                            <select name="tipo_documento" id="tipo_doc" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" onchange="toggleDocLength()">
-                                <option value="DNI">DNI</option>
-                                <option value="RUC">RUC</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Nro Documento</label>
-                            <input type="text" name="numero_documento" id="nro_doc" maxlength="8" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Ciudad</label>
-                            <input type="text" name="ciudad" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Correo Electrónico</label>
-                            <input type="email" name="email" class="form-control" style="width: 100%; padding: 12px; border-radius: 10px; background: #f8fafc;" required>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 30px;">
-                        <label style="display: block; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; font-weight: 600;">Observaciones (Opcional)</label>
-                        <textarea name="observaciones" class="form-control" style="width: 100%; height: 80px; padding: 12px; border-radius: 10px; background: #f8fafc; resize: none;" placeholder="Ej. Horario de atención o referencia..."></textarea>
-                    </div>
-
-                    <div style="background: #f1f5f9; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <span style="color: #64748b; font-weight: 600;">Subtotal estimado:</span>
-                            <span style="color: #1e293b; font-weight: 700;">S/ {{ number_format($total, 2) }}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #cbd5e1; padding-top: 15px;">
-                            <span style="color: #1e293b; font-weight: 800; font-size: 1.1rem;">TOTAL:</span>
-                            <span style="font-size: 2rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($total, 2) }}</span>
-                        </div>
-                        <input type="hidden" name="total" value="{{ $total }}">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; font-weight: 800; border-radius: 12px; box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2); border: none; cursor: pointer; transition: 0.3s;">
-                        CONFIRMAR SOLICITUD DE COTIZACIÓN
-                    </button>
-                    <p style="text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 15px;">
-                        <i class="fas fa-lock"></i> Sus datos están protegidos y serán tratados con confidencialidad.
-                    </p>
-                </form>
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px dashed #f1f5f9;">
+                <a href="{{ route('products') }}" style="color: var(--primary-green); text-decoration: none; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-arrow-left"></i> Seguir agregando productos
+                </a>
             </div>
         </div>
+
+        <!-- Formulario Checkout -->
+        <div class="checkout-card">
+            <h3 class="checkout-title">Datos de Entrega</h3>
+            
+            <form action="{{ route('quotation.store') }}" method="POST" id="quotationForm">
+                @csrf
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Nombres</label>
+                        <input type="text" name="nombre" class="form-input" required placeholder="Juan">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Apellidos</label>
+                        <input type="text" name="apellidos" class="form-input" required placeholder="Pérez">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">WhatsApp / Teléfono</label>
+                    <input type="tel" name="telefono" pattern="[0-9]{9}" maxlength="9" class="form-input" required placeholder="999888777">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Documento</label>
+                        <select name="tipo_documento" id="tipo_doc" class="form-input" onchange="toggleDocLength()">
+                            <option value="DNI">DNI</option>
+                            <option value="RUC">RUC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nro Doc</label>
+                        <input type="text" name="numero_documento" id="nro_doc" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ciudad / Localidad</label>
+                    <input type="text" name="ciudad" class="form-input" required placeholder="Ej. Lima, Trujillo...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input type="email" name="email" class="form-input" required placeholder="ejemplo@correo.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observaciones adicionales</label>
+                    <textarea name="observaciones" class="form-input" style="height: 100px; resize: none;" placeholder="Ej. Referencias de ubicación..."></textarea>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-line">
+                        <span>Items seleccionados</span>
+                        <span style="color: #1e293b;">{{ count($cart) }}</span>
+                    </div>
+                    <div class="summary-total">
+                        <span style="font-weight: 900; color: #1e293b; font-size: 1.1rem;">TOTAL ESTIMADO</span>
+                        <div class="total-val">S/ {{ number_format($total, 2) }}</div>
+                    </div>
+                    <input type="hidden" name="total" value="{{ $total }}">
+                </div>
+
+                <button type="submit" class="btn-confirm">
+                    Finalizar Solicitud <i class="fas fa-check-circle" style="margin-left: 10px;"></i>
+                </button>
+                
+                <p style="text-align: center; color: #94a3b8; font-size: 0.75rem; margin-top: 20px;">
+                    <i class="fas fa-shield-alt"></i> Compra 100% Segura con Sanchez Pharma
+                </p>
+            </form>
+        </div>
+
         @else
-        <div style="background: white; padding: 120px 5%; border-radius: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
-            <div style="width: 120px; height: 120px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
-                <i class="fas fa-shopping-basket" style="font-size: 4rem; color: #cbd5e1;"></i>
+        <div style="grid-column: 1 / -1; background: white; padding: 100px 5%; border-radius: 40px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.02); border: 1px solid #f1f5f9;">
+            <div style="width: 150px; height: 150px; background: #f0fdf4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+                <i class="fas fa-shopping-cart" style="font-size: 4.5rem; color: var(--primary-green); opacity: 0.4;"></i>
             </div>
-            <h2 style="color: #1e293b; font-size: 2rem; margin-bottom: 10px;">Tu carrito está esperando</h2>
-            <p style="color: #64748b; margin-bottom: 40px; font-size: 1.1rem;">No has agregado productos a tu solicitud de cotización todavía.</p>
-            <a href="{{ route('products') }}" class="btn btn-primary" style="padding: 18px 45px; font-size: 1.1rem; border-radius: 15px;">Explorar Productos</a>
+            <h2 style="font-size: 2.5rem; font-weight: 900; color: #1e293b; margin-bottom: 15px;">Tu carrito está vacío</h2>
+            <p style="color: #64748b; font-size: 1.2rem; max-width: 500px; margin: 0 auto 40px;">Parece que aún no has agregado productos a tu solicitud. Explora nuestro catálogo y encuentra lo que necesitas.</p>
+            <a href="{{ route('products') }}" class="btn-confirm" style="display: inline-block; width: auto; padding: 20px 60px; text-decoration: none;">Ir al Catálogo</a>
         </div>
         @endif
     </div>
@@ -165,14 +207,26 @@
         const input = document.getElementById('nro_doc');
         if (type === 'DNI') {
             input.maxLength = 8;
-            input.placeholder = "DNI de 8 dígitos";
+            input.placeholder = "8 dígitos";
         } else {
             input.maxLength = 11;
-            input.placeholder = "RUC de 11 dígitos";
+            input.placeholder = "11 dígitos";
         }
     }
 
-    function updateCart(id, delta) {
+    async function updateCart(id, delta) {
+        // Encontrar el valor actual sin recargar para UI fluida si fuera necesario
+        // Pero por ahora mantenemos recarga para asegurar consistencia de sesión
+        const response = await fetch('{{ route('cart.update') }}', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ id: id, quantity: 'delta', delta: delta }) // El controlador actual usa quantity absoluto
+        });
+        
+        // El controlador actual espera quantity, así que calculamos
         let currentQty = parseInt(event.target.parentElement.querySelector('span').innerText);
         let newQty = currentQty + delta;
         if (newQty < 1) return;
@@ -188,17 +242,29 @@
     }
 
     function removeFromCart(id) {
-        fetch('{{ route('cart.remove') }}', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ id: id })
-        }).then(() => location.reload());
+        Swal.fire({
+            title: '¿Eliminar producto?',
+            text: "Este producto se quitará de tu solicitud.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('{{ route('cart.remove') }}', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ id: id })
+                }).then(() => location.reload());
+            }
+        });
     }
 
-    // Inicializar placeholders
     toggleDocLength();
 </script>
 @endpush

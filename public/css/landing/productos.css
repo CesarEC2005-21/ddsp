@@ -53,3 +53,10 @@
 .btn { padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; transition: var(--transition); }
 .btn-primary { background: var(--primary-green); color: white; font-weight: 500; font-family: inherit; }
 .btn-primary:hover { background: var(--dark-green); }
+
+@media (max-width: 768px) {
+    .products { padding: 60px 5%; }
+    .section-title h2 { font-size: 2rem; }
+    .product-grid { grid-template-columns: 1fr; }
+    .dropdown-content { min-width: 90vw; }
+}

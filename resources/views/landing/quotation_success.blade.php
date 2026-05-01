@@ -11,9 +11,14 @@
             Gracias por confiar en <strong>Sanchez Pharma</strong>. Hemos recibido tu solicitud de cotización (ID: #{{ session('quotation_id') }}). 
             Uno de nuestros asesores se pondrá en contacto contigo a la brevedad.
         </p>
-        <div style="display: flex; gap: 15px; justify-content: center;">
-            <a href="{{ route('products') }}" class="btn btn-primary" style="padding: 15px 30px;">Seguir comprando</a>
-            <a href="{{ route('home') }}" class="btn btn-outline" style="padding: 15px 30px; border: 1px solid #ddd; color: #666; text-decoration: none; border-radius: 8px;">Volver al inicio</a>
+        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+            <a href="https://wa.me/51{{ session('customer_phone') }}?text={{ urlencode('Hola ' . session('customer_name') . ', gracias por tu solicitud #'.session('quotation_id').' en Sanchez Pharma. Adjuntamos tu cotización.') }}" class="btn" style="background: #25D366; color: white; padding: 15px 40px; border-radius: 12px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 10px; width: 100%; justify-content: center;">
+                <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> CONTACTAR POR WHATSAPP
+            </a>
+            <div style="display: flex; gap: 15px; width: 100%;">
+                <a href="{{ route('products') }}" class="btn btn-primary" style="flex: 1; padding: 15px; border-radius: 12px;">Seguir navegando</a>
+                <a href="{{ route('home') }}" class="btn" style="flex: 1; padding: 15px; border: 1px solid #ddd; color: #666; text-decoration: none; border-radius: 12px; text-align: center;">Ir al inicio</a>
+            </div>
         </div>
     </div>
 </div>
