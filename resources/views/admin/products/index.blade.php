@@ -3,9 +3,14 @@
 @section('content')
     <div class="page-header">
         <h2 class="page-title">Gestión de Productos</h2>
-        <button onclick="openModal('newProductModal')" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nuevo Producto
-        </button>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="openModal('importExcelModal')" class="btn" style="background: #10b981; color: white;">
+                <i class="fas fa-file-excel"></i> Importar Excel
+            </button>
+            <button onclick="openModal('newProductModal')" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nuevo Producto
+            </button>
+        </div>
     </div>
 
     @if(session('success'))
@@ -13,6 +18,60 @@
             {{ session('success') }}
         </div>
     @endif
+    @if($errors->any())
+        <div style="background: #FEE2E2; color: #B91C1C; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.products.index') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Código</label>
+                    <input type="text" name="codigo" class="form-control" value="{{ request('codigo') }}" placeholder="Ej. 1187">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ request('nombre') }}" placeholder="Buscar...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Laboratorio</label>
+                    <select name="laboratory_id" class="form-control">
+                        <option value="">Todos</option>
+                        @foreach($laboratories as $lab)
+                            <option value="{{ $lab->id }}" {{ request('laboratory_id') == $lab->id ? 'selected' : '' }}>{{ $lab->descripcion }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Destacado</label>
+                    <select name="is_featured" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('is_featured') === '1' ? 'selected' : '' }}>Sí</option>
+                        <option value="0" {{ request('is_featured') === '0' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('estado') === '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ request('estado') === '0' ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['codigo', 'nombre', 'laboratory_id', 'is_featured', 'estado']))
+                        <a href="{{ route('admin.products.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
 
     <div class="card">
         <div class="table-container">
@@ -71,6 +130,9 @@
                 </tbody>
             </table>
         </div>
+        <div style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: center;">
+            {{ $products->appends(request()->query())->links('partials.pagination') }}
+        </div>
     </div>
 
     <!-- Modal Nuevo Producto -->
@@ -85,6 +147,10 @@
                     @csrf
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div>
+                            <div class="form-group">
+                                <label class="form-label">Código del Producto</label>
+                                <input type="text" name="codigo" class="form-control" placeholder="Ej. PRD-001" required>
+                            </div>
                             <div class="form-group">
                                 <label class="form-label">Nombre del Producto</label>
                                 <input type="text" name="nombre" class="form-control" placeholder="Ej. Amoxicilina 500mg" required>
@@ -171,6 +237,10 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div>
                             <div class="form-group">
+                                <label class="form-label">Código del Producto</label>
+                                <input type="text" name="codigo" id="edit-codigo" class="form-control" required readonly title="El código no se puede editar.">
+                            </div>
+                            <div class="form-group">
                                 <label class="form-label">Nombre del Producto</label>
                                 <input type="text" name="nombre" id="edit-nombre" class="form-control" required>
                             </div>
@@ -239,6 +309,38 @@
             </div>
         </div>
     </div>
+    <!-- Modal Importar Excel -->
+    <div id="importExcelModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-excel"></i> Importar Productos</h3>
+                <span class="close-modal" onclick="closeModal('importExcelModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.products.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label class="form-label">Laboratorio</label>
+                        <select name="laboratory_id" class="form-control" required>
+                            <option value="">Seleccione laboratorio</option>
+                            @foreach($laboratories as $lab)
+                                <option value="{{ $lab->id }}">{{ $lab->descripcion }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label class="form-label">Archivo Excel</label>
+                        <input type="file" name="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
+                        <small style="color: #64748b; margin-top: 5px; display: block;">Columnas requeridas: CODIGO, DESCRIPCION, UM, PRECIO</small>
+                    </div>
+                    <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn" style="background: #e5e7eb;" onclick="closeModal('importExcelModal')">Cancelar</button>
+                        <button type="submit" class="btn" style="background: #10b981; color: white;">Importar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -246,6 +348,7 @@
     function openEditModal(product) {
         const form = document.getElementById('editProductForm');
         form.action = `/admin/products/${product.id}`;
+        document.getElementById('edit-codigo').value = product.codigo || '';
         document.getElementById('edit-nombre').value = product.nombre;
         document.getElementById('edit-laboratory_id').value = product.laboratory_id;
         document.getElementById('edit-unidad_medida_id').value = product.unidad_medida_id;

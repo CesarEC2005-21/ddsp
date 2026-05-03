@@ -48,6 +48,9 @@
                 </tbody>
             </table>
         </div>
+        <div style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: center;">
+            {{ $unidadMedidas->appends(request()->query())->links('partials.pagination') }}
+        </div>
     </div>
 
     <!-- Modal Nueva UM -->

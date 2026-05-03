@@ -35,10 +35,10 @@
             </button>
 
             <ul class="nav-links" id="navLinks" style="display: flex; align-items: center;">
-                <li style="margin-right: 25px;">
-                    <form action="{{ route('products') }}" method="GET" style="display: flex; background: white; border-radius: 12px; padding: 6px 18px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar productos..." style="border: none; background: transparent; outline: none; width: 220px; font-size: 0.95rem; color: #1e293b;">
-                        <button type="submit" style="border: none; background: transparent; color: var(--primary-green); cursor: pointer; font-size: 1rem;"><i class="fas fa-search"></i></button>
+                <li style="margin-right: 25px;" class="nav-search-container">
+                    <form action="{{ route('products') }}" method="GET" style="display: flex; align-items: center; background: #f8fafc; border-radius: 50px; padding: 4px 6px 4px 20px; border: 1px solid #e2e8f0; transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.1)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar en catálogo..." style="border: none; background: transparent; outline: none; width: 200px; font-size: 0.9rem; color: #1e293b;" onfocus="this.parentElement.style.background='white'; this.parentElement.style.borderColor='var(--primary-green)';" onblur="this.parentElement.style.background='#f8fafc';">
+                        <button type="submit" style="border: none; background: var(--primary-green); color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: 0.3s;" onmouseover="this.style.background='var(--dark-green)'" onmouseout="this.style.background='var(--primary-green)'"><i class="fas fa-search"></i></button>
                     </form>
                 </li>
                 <li><a href="{{ route('home') }}">Inicio</a></li>

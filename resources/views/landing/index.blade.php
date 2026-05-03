@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1579165466541-74e2b49a995a?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ asset('img/hero2.png') }}');"></div>
                 <div class="hero-content">
                     <h1 class="animate-title">Logística Especializada</h1>
                     <p class="animate-text">Garantizamos la cadena de frío y trazabilidad en cada entrega nacional.</p>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ asset('img/hero3.png') }}');"></div>
                 <div class="hero-content">
                     <h1 class="animate-title">Alianzas que Saludan</h1>
                     <p class="animate-text">Trabajamos con los laboratorios más prestigiosos para cuidar tu salud.</p>
@@ -77,7 +77,7 @@
     </div>
 
     <!-- Laboratorios Top -->
-    <section class="top-laboratories" style="padding: 120px 5% 80px; background: white; text-align: center;">
+    <section class="top-laboratories" style="padding: 120px 5% 80px; background: #f0fdf4; text-align: center;">
         <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Nuestras Alianzas</span>
         <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0 20px;">Laboratorios Destacados</h2>
         <p style="color: #64748b; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Colaboramos con laboratorios de clase mundial para asegurar el acceso a medicinas de alta calidad en todo el Perú.</p>
@@ -110,7 +110,7 @@
     </section>
 
     <!-- Featured Products Section -->
-    <section class="featured-products reveal" style="padding: 80px 5%; background: #f8fafc;">
+    <section class="featured-products reveal" style="padding: 100px 5%; background: white;">
         <div style="text-align: center; margin-bottom: 60px;">
             <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Selección Especial</span>
             <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0;">Productos Destacados</h2>
@@ -150,7 +150,8 @@
     </section>
 
     <!-- Secciones adicionales (Mapa de Cobertura y Galería) se mantienen iguales con mejoras visuales leves -->
-    <section class="coverage-map" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); color: white; padding: 120px 5%; display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap; position: relative;">
+    <section class="coverage-map" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 120px 5%; display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.1;"></div>
         <div style="max-width: 550px; z-index: 2;">
             <h2 style="font-size: 3.5rem; margin-bottom: 25px; line-height: 1.1; font-family: 'Poppins', sans-serif; font-weight: 800;">Logística de clase mundial a su alcance</h2>
             <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; line-height: 1.6;">Nuestro compromiso va más allá de la entrega. Garantizamos la trazabilidad y calidad de cada fármaco mediante una red de representantes altamente capacitados.</p>
@@ -164,7 +165,7 @@
         </div>
     </section>
 
-    <section class="gallery reveal" style="padding: 120px 5%; background: #fdfdfd; text-align: center;">
+    <section class="gallery reveal" style="padding: 120px 5%; background: #f0fdf4; text-align: center;">
         <h2 style="font-size: 3rem; color: #1e293b; margin-bottom: 20px; font-weight: 800;">Infraestructura de Excelencia</h2>
         <p style="color: #64748b; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Operamos bajo estrictos protocolos de Buenas Prácticas de Almacenamiento (BPA).</p>
         <div class="gallery-grid">

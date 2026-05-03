@@ -25,7 +25,7 @@
     .main-img-box:hover img { transform: scale(1.8); }
 
     .category-tag { color: var(--brand-green); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; display: block; }
-    .product-name { font-size: 3.5rem; font-weight: 900; color: var(--brand-green); font-style: italic; margin-bottom: 20px; line-height: 1; }
+    .product-name { font-size: 2.2rem; font-weight: 800; color: #1e293b; margin-bottom: 20px; line-height: 1.2; letter-spacing: -0.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
     .product-short-desc { font-size: 1.1rem; color: #64748b; line-height: 1.6; margin-bottom: 30px; }
 
     /* Accordion Styles */
@@ -64,8 +64,17 @@
 
     @media (max-width: 968px) {
         .detail-grid { grid-template-columns: 1fr; gap: 40px; }
-        .product-name { font-size: 2.5rem; }
+        .product-name { font-size: 1.8rem; }
     }
+    
+    /* Related Products Grid */
+    .related-title { font-size: 1.8rem; font-weight: 800; color: var(--text-dark); margin: 60px 0 30px; text-align: center; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+    .related-card { background: white; border: 1px solid #e2e8f0; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; text-decoration: none; display: block; }
+    .related-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-color: var(--brand-green); }
+    .related-img { height: 150px; width: 100%; object-fit: contain; margin-bottom: 15px; }
+    .related-name { font-size: 1rem; color: #1e293b; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+    .related-price { color: var(--brand-green); font-weight: 800; font-size: 1.2rem; }
 </style>
 @endpush
 
@@ -169,6 +178,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Related Products -->
+    @if($relatedProducts->count() > 0)
+    <div style="margin-top: 50px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+        <h2 class="related-title">Productos Similares</h2>
+        <div class="related-grid">
+            @foreach($relatedProducts as $rel)
+            <a href="{{ route('product.detail', $rel->id) }}" class="related-card">
+                @if($rel->imagen)
+                    <img src="{{ asset('storage/' . $rel->imagen) }}" alt="{{ $rel->nombre }}" class="related-img">
+                @else
+                    <div style="height: 150px; display: flex; align-items: center; justify-content: center; color: #cbd5e1; margin-bottom: 15px;">
+                        <i class="fas fa-pills" style="font-size: 4rem;"></i>
+                    </div>
+                @endif
+                <h3 class="related-name">{{ Str::limit($rel->nombre, 50) }}</h3>
+                <span class="related-price">S/ {{ number_format($rel->precio, 2) }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
 

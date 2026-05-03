@@ -40,6 +40,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // Protegido por rol (ejemplo: admin y supervisor pueden ver/crear productos)
     Route::middleware(['role:ing_sistemas,admin,supervisor'])->group(function () {
+        Route::post('products/import', [ProductController::class, 'import'])->name('products.import');
         Route::resource('products', ProductController::class);
         Route::patch('laboratories/{laboratory}/toggle-top', [\App\Http\Controllers\Admin\LaboratoryController::class, 'toggleTop'])->name('laboratories.toggle-top');
         Route::resource('laboratories', LaboratoryController::class);

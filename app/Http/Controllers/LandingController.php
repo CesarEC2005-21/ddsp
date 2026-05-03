@@ -46,10 +46,25 @@ class LandingController extends Controller
     public function productDetail(Product $product)
     {
         $product->load('laboratory');
-        $relatedProducts = Product::where('laboratory_id', $product->laboratory_id)
+        // Extract first word to find similar names (e.g. "Paracetamol")
+        $firstWord = explode(' ', $product->nombre)[0];
+        
+        $relatedProducts = Product::where('nombre', 'like', $firstWord . '%')
+            ->where('estado', true)
             ->where('id', '!=', $product->id)
             ->limit(4)
             ->get();
+            
+        // Fill up to 4 with same laboratory if not enough similar names
+        if ($relatedProducts->count() < 4) {
+            $moreProducts = Product::where('laboratory_id', $product->laboratory_id)
+                ->where('estado', true)
+                ->where('id', '!=', $product->id)
+                ->whereNotIn('id', $relatedProducts->pluck('id')->toArray())
+                ->limit(4 - $relatedProducts->count())
+                ->get();
+            $relatedProducts = $relatedProducts->merge($moreProducts);
+        }
             
         return view('landing.product_detail', compact('product', 'relatedProducts'));
     }

@@ -8,9 +8,24 @@ use Illuminate\Support\Facades\Storage;
 
 class LaboratoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $laboratories = Laboratory::all();
+        $query = Laboratory::query();
+
+        if ($request->filled('codigo')) {
+            $query->where('codigo', 'like', '%' . $request->codigo . '%');
+        }
+        if ($request->filled('descripcion')) {
+            $query->where('descripcion', 'like', '%' . $request->descripcion . '%');
+        }
+        if ($request->filled('is_top')) {
+            $query->where('is_top', $request->is_top == '1');
+        }
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado == '1');
+        }
+
+        $laboratories = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.laboratories.index', compact('laboratories'));
     }
 

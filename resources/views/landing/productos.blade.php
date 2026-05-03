@@ -8,9 +8,9 @@
 @endpush
 
 @section('content')
-    <div style="background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); padding: 80px 5%; text-align: center; color: white;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Catálogo de Productos</h1>
-        <p style="opacity: 0.9; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Distribución farmacéutica con los más altos estándares de calidad.</p>
+    <div style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
+        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800; margin-bottom: 15px;">Catálogo de Productos</h1>
+        <p style="font-size: 1.1rem; opacity: 0.9; color: white; max-width: 600px; margin: 0 auto;">Explora nuestro catálogo completo de medicamentos y productos farmacéuticos de la más alta calidad.</p>
     </div>
 
     <section class="products-container" style="display: flex; gap: 40px; padding: 60px 5%; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
@@ -121,7 +121,7 @@
             </div>
 
             <div style="margin-top: 50px; display: flex; justify-content: center;">
-                {{ $products->appends(request()->query())->links() }}
+                {{ $products->appends(request()->query())->links('partials.pagination') }}
             </div>
         </div>
     </section>
@@ -227,5 +227,19 @@
 
     .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Custom Pagination Styles */
+    .pagination { display: flex; padding-left: 0; list-style: none; justify-content: center; gap: 8px; margin-top: 20px; }
+    .page-item .page-link { 
+        position: relative; display: block; padding: 10px 18px; color: #475569; background-color: #fff; 
+        border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .page-item.active .page-link { 
+        z-index: 3; color: #fff; background-color: var(--primary-green); border-color: var(--primary-green); 
+        box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.3);
+    }
+    .page-item.disabled .page-link { color: #94a3b8; pointer-events: none; background-color: #f8fafc; border-color: #e2e8f0; }
+    .page-item .page-link:hover { background-color: #f1f5f9; color: var(--primary-green); transform: translateY(-2px); }
 </style>
 @endpush

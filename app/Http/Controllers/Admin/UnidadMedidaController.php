@@ -10,7 +10,7 @@ class UnidadMedidaController extends Controller
 {
     public function index()
     {
-        $unidadMedidas = UnidadMedida::all();
+        $unidadMedidas = UnidadMedida::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.unidad_medidas.index', compact('unidadMedidas'));
     }
 

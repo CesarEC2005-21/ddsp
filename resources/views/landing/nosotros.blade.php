@@ -45,8 +45,8 @@
 
 @section('content')
     <div class="about-hero">
-        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif;">Nuestra Red de Distribución</h1>
-        <p style="font-size: 1.1rem; opacity: 0.9;">Ubica nuestras boticas aliadas y representantes autorizados en todo el país.</p>
+        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800;">Nuestra Red de Distribución</h1>
+        <p style="font-size: 1.1rem; opacity: 0.9; color: white;">Ubica nuestras boticas aliadas y representantes autorizados en todo el país.</p>
     </div>
 
     <div class="nosotros-layout">
@@ -113,6 +113,46 @@
             </div>
         </main>
     </div>
+
+    <!-- Sección Nuestro Equipo de Trabajo -->
+    <section style="padding: 80px 5%; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Representantes Autorizados</span>
+            <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0;">Nuestro Equipo de Trabajo</h2>
+            <div style="width: 80px; height: 4px; background: var(--primary-green); margin: 0 auto; border-radius: 2px;"></div>
+            <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 20px auto 0;">Contáctate directamente con nuestro equipo de vendedores a través de WhatsApp para una atención personalizada y rápida.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto;">
+            @foreach($representatives as $rep)
+                @php
+                    $phone = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
+                    $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
+                    $waLink = "https://wa.me/51{$phone}?text={$message}";
+                @endphp
+                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: 0.4s;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.05)';">
+                    <div style="height: 300px; overflow: hidden; background: #e2e8f0; position: relative;">
+                        @if($rep->imagen)
+                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($rep->nombre) }}&size=400&background=10b981&color=fff" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @endif
+                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, rgba(15, 23, 42, 0.8));"></div>
+                        <h3 style="position: absolute; bottom: 20px; left: 20px; color: white; margin: 0; font-size: 1.4rem; font-weight: 700;">{{ $rep->nombre }}</h3>
+                    </div>
+                    <div style="padding: 25px;">
+                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marked-alt" style="color: var(--primary-green); width: 20px;"></i> Cobertura: <strong>{{ $rep->locations->first()->zona->nombre_zona ?? 'Múltiples zonas' }}</strong></p>
+                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-phone-alt" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->telefono ?? 'No especificado' }}</p>
+                        <p style="color: #64748b; margin-bottom: 25px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->email ?? 'No especificado' }}</p>
+                        
+                        <a href="{{ $waLink }}" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; background: #25D366; color: white; border-radius: 12px; text-decoration: none; font-weight: 700; transition: 0.3s; font-size: 1.05rem;" onmouseover="this.style.background='#1da851'" onmouseout="this.style.background='#25D366'">
+                            <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Contactar por WhatsApp
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
 @endsection
 
 @push('scripts')

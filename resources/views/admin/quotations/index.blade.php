@@ -11,6 +11,32 @@
         </div>
     @endif
 
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.quotations.index') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Buscar (ID, Nombre, Documento)</label>
+                    <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Buscar...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="pendiente" {{ request('estado') === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                        <option value="completado" {{ request('estado') === 'completado' ? 'selected' : '' }}>Completado</option>
+                        <option value="cancelado" {{ request('estado') === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['search', 'estado']))
+                        <a href="{{ route('admin.quotations.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="card">
         <div class="table-container">
             <table class="admin-table">
@@ -58,6 +84,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: center;">
+            {{ $quotations->appends(request()->query())->links('partials.pagination') }}
         </div>
     </div>
 

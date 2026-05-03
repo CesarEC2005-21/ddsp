@@ -14,6 +14,43 @@
         </div>
     @endif
 
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.laboratories.index') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Código</label>
+                    <input type="text" name="codigo" class="form-control" value="{{ request('codigo') }}" placeholder="Ej. LAB-001">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Descripción</label>
+                    <input type="text" name="descripcion" class="form-control" value="{{ request('descripcion') }}" placeholder="Buscar...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Destacado (TOP)</label>
+                    <select name="is_top" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('is_top') === '1' ? 'selected' : '' }}>Sí</option>
+                        <option value="0" {{ request('is_top') === '0' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('estado') === '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ request('estado') === '0' ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['codigo', 'descripcion', 'is_top', 'estado']))
+                        <a href="{{ route('admin.laboratories.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="card">
         <div class="table-container">
             <table class="admin-table">
@@ -66,6 +103,9 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        <div style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: center;">
+            {{ $laboratories->appends(request()->query())->links('partials.pagination') }}
         </div>
     </div>
 
