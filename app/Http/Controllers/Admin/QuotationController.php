@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Quotation;
+use App\Models\Setting;
+use App\Exports\QuotationExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuotationController extends Controller
 {
@@ -34,10 +39,29 @@ class QuotationController extends Controller
         return response()->json($quotation);
     }
 
-    public function updateStatus(Request $request, \App\Models\Quotation $quotation)
+    public function updateStatus(Request $request, Quotation $quotation)
     {
         $request->validate(['estado' => 'required|in:pendiente,completado,cancelado']);
         $quotation->update(['estado' => $request->estado]);
         return back()->with('success', 'Estado actualizado correctamente');
+    }
+
+    public function exportPdf(Quotation $quotation)
+    {
+        $company = [
+            'name' => Setting::get('company_name', 'Sanchez Pharma'),
+            'ruc' => Setting::get('company_ruc', ''),
+            'address' => Setting::get('company_address', ''),
+            'phone' => Setting::get('company_phone', ''),
+            'email' => Setting::get('company_email', ''),
+        ];
+
+        $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
+        return $pdf->download('Cotizacion_' . str_pad($quotation->id, 6, '0', STR_PAD_LEFT) . '.pdf');
+    }
+
+    public function exportExcel(Quotation $quotation)
+    {
+        return Excel::download(new QuotationExport($quotation), 'Cotizacion_' . $quotation->id . '.xlsx');
     }
 }

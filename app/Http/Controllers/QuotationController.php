@@ -6,6 +6,7 @@ use App\Models\Quotation;
 use App\Models\QuotationItem;
 use App\Models\Setting;
 use App\Mail\QuotationMail;
+use App\Mail\QuotationAdminMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -68,12 +69,19 @@ class QuotationController extends Controller
             $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
             $pdfContent = $pdf->output();
 
-            // Enviar Email
+            // Enviar Email al cliente
             try {
                 Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
             } catch (\Exception $e) {
-                // Log error but continue
-                \Log::error("Error enviando email: " . $e->getMessage());
+                \Log::error("Error enviando email al cliente: " . $e->getMessage());
+            }
+
+            // Enviar Email al administrador
+            try {
+                $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
+                Mail::to($adminEmail)->send(new QuotationAdminMail($quotation, $pdfContent, $company));
+            } catch (\Exception $e) {
+                \Log::error("Error enviando email al admin: " . $e->getMessage());
             }
 
             session()->forget('cart');

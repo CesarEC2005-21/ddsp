@@ -63,6 +63,16 @@
                 <i class="fas fa-cog"></i> Configuración
             </a>
         </div>
+        
+        <div class="sidebar-footer">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
     </div>
     
     <div class="main-content">
@@ -72,14 +82,56 @@
                 <span class="role-badge">{{ strtoupper(auth()->user()->role ?? 'Admin') }}</span>
             </div>
             <div class="user-profile">
+                <!-- Notifications -->
+                @php
+                    $pendingQuotations = \App\Models\Quotation::where('estado', 'pendiente')->latest()->take(5)->get();
+                    $pendingCount = \App\Models\Quotation::where('estado', 'pendiente')->count();
+                @endphp
+                
+                <div class="notifications-wrapper">
+                    <button class="notification-btn" id="notifBtn">
+                        <i class="fas fa-bell"></i>
+                        @if($pendingCount > 0)
+                            <span class="notification-badge">{{ $pendingCount }}</span>
+                        @endif
+                    </button>
+                    
+                    <div class="notifications-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <h4>Notificaciones</h4>
+                            @if($pendingCount > 0)
+                                <span class="badge badge-warning">{{ $pendingCount }} nuevas</span>
+                            @endif
+                        </div>
+                        <div class="notif-list">
+                            @forelse($pendingQuotations as $notif)
+                                <a href="{{ route('admin.quotations.index') }}?search={{ $notif->numero_documento }}" class="notif-item">
+                                    <div class="notif-icon">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </div>
+                                    <div class="notif-content">
+                                        <span class="notif-title">Nueva cotización #{{ str_pad($notif->id, 6, '0', STR_PAD_LEFT) }}</span>
+                                        <span class="notif-text">{{ $notif->nombre }} {{ $notif->apellidos }}</span>
+                                        <span class="notif-time">{{ $notif->created_at->diffForHumans() }}</span>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="notif-empty">
+                                    <i class="fas fa-check-circle" style="display: block; font-size: 2rem; margin-bottom: 10px; color: #DCFCE7;"></i>
+                                    No hay cotizaciones pendientes
+                                </div>
+                            @endforelse
+                        </div>
+                        <div class="notif-footer">
+                            <a href="{{ route('admin.quotations.index') }}">Ver todas las cotizaciones</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 30px; width: 1px; background: var(--border-color); margin: 0 10px;"></div>
+
                 <i class="fas fa-user-circle" style="font-size: 1.5rem; color: var(--primary-color);"></i>
                 <span>{{ auth()->user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" style="display:inline; margin-left: 20px;">
-                    @csrf
-                    <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </button>
-                </form>
             </div>
         </div>
         <div class="content-area">
@@ -106,7 +158,18 @@
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = "none";
             }
+            
+            // Close notification dropdown if clicking outside
+            if (!event.target.closest('.notifications-wrapper')) {
+                document.getElementById('notifDropdown').classList.remove('show');
+            }
         }
+
+        // Toggle notifications
+        document.getElementById('notifBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('notifDropdown').classList.toggle('show');
+        });
     </script>
 
     <!-- Modal de Eliminación -->

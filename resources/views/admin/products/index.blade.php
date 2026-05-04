@@ -137,88 +137,139 @@
 
     <!-- Modal Nuevo Producto -->
     <div id="newProductModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3><i class="fas fa-pills"></i> Nuevo Producto</h3>
-                <span class="close-modal" onclick="closeModal('newProductModal')">&times;</span>
+        <div class="modal-content" style="max-width: 900px; border: none; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 20px 30px;">
+                <h3 style="color: white; margin: 0;"><i class="fas fa-box-open" style="background: rgba(255,255,255,0.1); color: #10b981;"></i> Registrar Nuevo Producto</h3>
+                <span class="close-modal" onclick="closeModal('newProductModal')" style="background: rgba(255,255,255,0.1); color: white;">&times;</span>
             </div>
-            <div class="modal-body">
-                <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            <div class="modal-body" style="padding: 0;">
+                <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" id="newProductForm">
                     @csrf
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <div class="form-group">
-                                <label class="form-label">Código del Producto</label>
-                                <input type="text" name="codigo" class="form-control" placeholder="Ej. PRD-001" required>
+                    <div style="display: flex; min-height: 500px;">
+                        <!-- Sidebar de navegación del modal -->
+                        <div style="width: 220px; background: #f8fafc; border-right: 1px solid #e2e8f0; padding: 30px 20px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="padding: 10px 15px; border-radius: 8px; background: white; color: var(--primary-color); font-weight: 700; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-info-circle"></i> General
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Nombre del Producto</label>
-                                <input type="text" name="nombre" class="form-control" placeholder="Ej. Amoxicilina 500mg" required>
+                            <div style="padding: 10px 15px; border-radius: 8px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-stethoscope"></i> Técnico
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Laboratorio</label>
-                                <select name="laboratory_id" class="form-control" required>
-                                    <option value="">Seleccione laboratorio</option>
-                                    @foreach($laboratories as $lab)
-                                        <option value="{{ $lab->id }}">{{ $lab->descripcion }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Unidad de Medida</label>
-                                <select name="unidad_medida_id" class="form-control" required>
-                                    <option value="">Seleccione U.M.</option>
-                                    @foreach($unidadMedidas as $um)
-                                        <option value="{{ $um->id }}">{{ $um->um }}</option>
-                                    @endforeach
-                                </select>
+                            <div style="padding: 10px 15px; border-radius: 8px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-image"></i> Multimedia
                             </div>
                         </div>
-                        <div>
-                            <div class="form-group">
-                                <label class="form-label">Precio</label>
-                                <input type="number" step="0.01" name="precio" class="form-control" placeholder="0.00" required>
+
+                        <!-- Contenido del formulario -->
+                        <div style="flex: 1; padding: 40px; max-height: 600px; overflow-y: auto;">
+                            <!-- Sección: Datos Principales -->
+                            <div class="form-section-header" style="margin-bottom: 25px;">
+                                <h4 style="margin: 0; font-size: 1.1rem; color: #1e293b; font-weight: 700;">Información Comercial</h4>
+                                <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Complete los datos básicos del producto para el catálogo.</p>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Imagen del Producto</label>
-                                <input type="file" name="imagen" class="form-control" accept="image/*">
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                                <div class="form-group">
+                                    <label class="form-label" style="font-weight: 700; color: #334155;">Código SKU</label>
+                                    <div style="position: relative;">
+                                        <i class="fas fa-barcode" style="position: absolute; left: 15px; top: 14px; color: #94a3b8;"></i>
+                                        <input type="text" name="codigo" class="form-control" style="padding-left: 45px;" placeholder="Ej. PRD-8821" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-weight: 700; color: #334155;">Nombre Comercial</label>
+                                    <input type="text" name="nombre" class="form-control" placeholder="Ej. Paracetamol 500mg x 100" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Descripción</label>
-                                <textarea name="descripcion" class="form-control" rows="3" placeholder="Información técnica, beneficios, etc."></textarea>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 10px;">
+                                <div class="form-group">
+                                    <label class="form-label" style="font-weight: 700; color: #334155;">Laboratorio</label>
+                                    <select name="laboratory_id" class="form-control" required>
+                                        <option value="">Seleccionar...</option>
+                                        @foreach($laboratories as $lab)
+                                            <option value="{{ $lab->id }}">{{ $lab->descripcion }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-weight: 700; color: #334155;">U. Medida</label>
+                                    <select name="unidad_medida_id" class="form-control" required>
+                                        <option value="">Seleccionar...</option>
+                                        @foreach($unidadMedidas as $um)
+                                            <option value="{{ $um->id }}">{{ $um->um }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-weight: 700; color: #334155;">Precio (S/)</label>
+                                    <div style="position: relative;">
+                                        <span style="position: absolute; left: 15px; top: 10px; color: #64748b; font-weight: 600;">S/</span>
+                                        <input type="number" step="0.01" name="precio" class="form-control" style="padding-left: 35px;" placeholder="0.00" required>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label class="form-label" style="font-weight: 700; color: #334155;">Descripción Corta</label>
+                                <textarea name="descripcion" class="form-control" rows="2" placeholder="Resumen del producto para listados..."></textarea>
+                            </div>
+
+                            <hr style="margin: 40px 0; border: 0; border-top: 1px solid #f1f5f9;">
+
+                            <!-- Sección: Especificaciones Técnicas -->
+                            <div class="form-section-header" style="margin-bottom: 25px;">
+                                <h4 style="margin: 0; font-size: 1.1rem; color: #1e293b; font-weight: 700;">Especificaciones Médicas</h4>
+                                <p style="margin: 5px 0 0; font-size: 0.85rem; color: #64748b;">Información técnica y regulatoria del producto.</p>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label class="form-label">Composición / Activos</label>
+                                    <textarea name="composicion" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Usos / Indicaciones</label>
+                                    <textarea name="usos" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+
                             <div class="form-group">
-                                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                    <input type="checkbox" name="is_featured" value="1">
-                                    <span style="font-weight: 600; color: #1e293b;">Marcar como Producto Destacado (Inicio)</span>
+                                <label class="form-label">Contraindicaciones / Advertencias</label>
+                                <textarea name="contraindicaciones" class="form-control" rows="2"></textarea>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div class="form-group">
+                                    <label class="form-label">Registro Sanitario</label>
+                                    <input type="text" name="registro_sanitario" class="form-control" placeholder="Ej. EE-00412">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Imagen Principal</label>
+                                    <input type="file" name="imagen" class="form-control">
+                                </div>
+                            </div>
+
+                            <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; border: 1px solid #dcfce7; margin-top: 20px;">
+                                <label style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
+                                    <div style="width: 50px; height: 50px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #16a34a; font-size: 1.5rem; box-shadow: var(--shadow-sm);">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <span style="display: block; font-weight: 700; color: #166534;">Producto Destacado</span>
+                                        <span style="display: block; font-size: 0.8rem; color: #14532d;">Aparecerá en la sección principal de la página de inicio.</span>
+                                    </div>
+                                    <input type="checkbox" name="is_featured" value="1" style="width: 20px; height: 20px; accent-color: #16a34a;">
                                 </label>
                             </div>
                         </div>
                     </div>
-                    
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div class="form-group">
-                            <label class="form-label">Usos</label>
-                            <textarea name="usos" class="form-control" rows="2" placeholder="Indicaciones terapéuticas..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Composición</label>
-                            <textarea name="composicion" class="form-control" rows="2" placeholder="Componentes activos..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contraindicaciones</label>
-                            <textarea name="contraindicaciones" class="form-control" rows="2" placeholder="Advertencias y restricciones..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Registro Sanitario</label>
-                            <input type="text" name="registro_sanitario" class="form-control" placeholder="Número de RS...">
-                        </div>
-                    </div>
-                    <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f1f5f9; pt-20">
-                        <button type="button" class="btn" style="background: #e5e7eb;" onclick="closeModal('newProductModal')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Producto</button>
-                    </div>
                 </form>
+            </div>
+            <div class="modal-footer" style="padding: 25px 40px; background: white;">
+                <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('newProductModal')">Cancelar</button>
+                <button type="submit" form="newProductForm" class="btn btn-primary" style="padding: 12px 40px; font-weight: 700; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
+                    <i class="fas fa-check-circle"></i> Finalizar y Guardar
+                </button>
             </div>
         </div>
     </div>

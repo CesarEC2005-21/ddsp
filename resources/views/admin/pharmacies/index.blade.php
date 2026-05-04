@@ -3,7 +3,33 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    #map-new, #map-edit { height: 300px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
+    #map-new, #map-edit { height: 350px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+    .map-search-container {
+        position: relative;
+        margin-bottom: 10px;
+        display: flex;
+        gap: 8px;
+    }
+    .map-search-input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+    .map-search-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .map-search-btn:hover {
+        background: var(--primary-hover);
+    }
+
 </style>
 @endpush
 
@@ -79,8 +105,15 @@
                         <input type="text" name="ubicacion" class="form-control" placeholder="Ej. Av. Larco 123" required>
                     </div>
                     
-                    <label class="form-label">Marcar en el mapa:</label>
+                    <label class="form-label">Ubicación exacta en mapa:</label>
+                    <div class="map-search-container">
+                        <input type="text" id="search-new" class="map-search-input" placeholder="Buscar dirección o lugar...">
+                        <button type="button" class="map-search-btn" onclick="searchLocation('new')">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                     <div id="map-new"></div>
+
 
                     <div class="form-grid">
                         <div class="form-group">
@@ -121,8 +154,15 @@
                         <input type="text" name="ubicacion" id="edit-ubicacion" class="form-control" required>
                     </div>
 
-                    <label class="form-label">Actualizar en el mapa:</label>
+                    <label class="form-label">Actualizar ubicación en mapa:</label>
+                    <div class="map-search-container">
+                        <input type="text" id="search-edit" class="map-search-input" placeholder="Buscar dirección o lugar...">
+                        <button type="button" class="map-search-btn" onclick="searchLocation('edit')">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                     <div id="map-edit"></div>
+
 
                     <div class="form-grid">
                         <div class="form-group">
@@ -148,6 +188,42 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     let mapNew, mapEdit, markerNew, markerEdit;
+
+    async function searchLocation(type) {
+        const query = document.getElementById('search-' + type).value;
+        if (!query) return;
+
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            if (data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                const map = type === 'new' ? mapNew : mapEdit;
+                const latInput = document.getElementById('lat-' + type);
+                const lngInput = document.getElementById('lng-' + type);
+
+                map.setView([lat, lon], 16);
+
+                if (type === 'new') {
+                    if (markerNew) markerNew.remove();
+                    markerNew = L.marker([lat, lon]).addTo(mapNew);
+                } else {
+                    if (markerEdit) markerEdit.remove();
+                    markerEdit = L.marker([lat, lon]).addTo(mapEdit);
+                }
+
+                latInput.value = lat.toFixed(8);
+                lngInput.value = lon.toFixed(8);
+            } else {
+                alert('No se encontró la ubicación');
+            }
+        } catch (error) {
+            console.error('Error al buscar ubicación:', error);
+        }
+    }
+
 
     function initMap(type, lat = -12.046374, lng = -77.042793) {
         const mapId = 'map-' + type;

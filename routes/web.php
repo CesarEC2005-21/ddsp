@@ -60,6 +60,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // Quotations (Pedidos)
         Route::get('quotations', [\App\Http\Controllers\Admin\QuotationController::class, 'index'])->name('quotations.index');
         Route::get('quotations/{quotation}', [\App\Http\Controllers\Admin\QuotationController::class, 'show'])->name('quotations.show');
+        Route::get('quotations/{quotation}/pdf', [\App\Http\Controllers\Admin\QuotationController::class, 'exportPdf'])->name('quotations.pdf');
+        Route::get('quotations/{quotation}/excel', [\App\Http\Controllers\Admin\QuotationController::class, 'exportExcel'])->name('quotations.excel');
         Route::patch('quotations/{quotation}/status', [\App\Http\Controllers\Admin\QuotationController::class, 'updateStatus'])->name('quotations.status');
     });
 });

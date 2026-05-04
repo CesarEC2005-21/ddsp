@@ -139,54 +139,87 @@
             const response = await fetch(`/admin/quotations/${id}`);
             const data = await response.json();
             
-            document.getElementById('detail-id').innerText = `#${String(id).padStart(5, '0')}`;
+            document.getElementById('detail-id').innerText = `#${String(id).padStart(6, '0')}`;
             
             let itemsHtml = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 15px;">
-                    <div>
-                        <h4 style="color: var(--primary-green); margin-bottom: 10px;">Información del Cliente</h4>
-                        <p><strong>Nombre:</strong> ${data.nombre} ${data.apellidos}</p>
-                        <p><strong>${data.tipo_documento}:</strong> ${data.numero_documento}</p>
-                        <p><strong>Teléfono:</strong> ${data.telefono}</p>
-                        <p><strong>Email:</strong> ${data.email}</p>
-                        <p><strong>Ciudad:</strong> ${data.ciudad}</p>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
+                    <a href="/admin/quotations/${id}/pdf" class="btn" style="background: #ef4444; color: white; font-size: 0.85rem;">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </a>
+                    <a href="/admin/quotations/${id}/excel" class="btn" style="background: #10b981; color: white; font-size: 0.85rem;">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </a>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; margin-bottom: 30px;">
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 15px; border: 1px solid #e2e8f0;">
+                        <h4 style="color: #1e293b; margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-user-circle" style="color: var(--primary-color);"></i> Información del Cliente
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; font-weight: 600;">Nombre Completo</label>
+                                <span style="font-weight: 600; color: #1e293b;">${data.nombre} ${data.apellidos}</span>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; font-weight: 600;">${data.tipo_documento}</label>
+                                <span style="font-weight: 600; color: #1e293b;">${data.numero_documento}</span>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; font-weight: 600;">Teléfono</label>
+                                <span style="font-weight: 600; color: #1e293b;">${data.telefono}</span>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; font-weight: 600;">Ciudad</label>
+                                <span style="font-weight: 600; color: #1e293b;">${data.ciudad}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h4 style="color: var(--primary-green); margin-bottom: 10px;">Observaciones</h4>
-                        <p>${data.observaciones || 'Sin observaciones'}</p>
+                    <div style="background: #fff8e1; padding: 25px; border-radius: 15px; border: 1px solid #fef3c7;">
+                        <h4 style="color: #92400e; margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-sticky-note"></i> Observaciones
+                        </h4>
+                        <p style="font-size: 0.9rem; color: #92400e; font-style: italic; margin: 0;">"${data.observaciones || 'Sin observaciones por parte del cliente.'}"</p>
                     </div>
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unit.</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.items.map(item => `
+
+                <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
+                    <table class="admin-table" style="margin: 0;">
+                        <thead style="background: #f8fafc;">
                             <tr>
-                                <td>${item.product.nombre}</td>
-                                <td>${item.cantidad}</td>
-                                <td>S/ ${parseFloat(item.precio_unitario).toFixed(2)}</td>
-                                <td style="font-weight: bold;">S/ ${(item.cantidad * item.precio_unitario).toFixed(2)}</td>
+                                <th style="padding: 15px 25px;">Producto / Descripción</th>
+                                <th style="text-align: center;">Cantidad</th>
+                                <th style="text-align: right;">Precio Unit.</th>
+                                <th style="text-align: right; padding-right: 25px;">Subtotal</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" style="text-align: right; font-weight: 800; font-size: 1.2rem;">TOTAL:</td>
-                            <td style="font-weight: 800; font-size: 1.2rem; color: var(--primary-green);">S/ ${parseFloat(data.total).toFixed(2)}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            ${data.items.map(item => `
+                                <tr>
+                                    <td style="padding: 15px 25px;">
+                                        <div style="font-weight: 600; color: #1e293b;">${item.product.nombre}</div>
+                                        <div style="font-size: 0.75rem; color: #64748b;">Código: ${item.product.codigo}</div>
+                                    </td>
+                                    <td style="text-align: center; font-weight: 500;">${item.cantidad}</td>
+                                    <td style="text-align: right; color: #64748b;">S/ ${parseFloat(item.precio_unitario).toFixed(2)}</td>
+                                    <td style="text-align: right; font-weight: 700; color: #1e293b; padding-right: 25px;">S/ ${(item.cantidad * item.precio_unitario).toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot style="background: #f1fdf4;">
+                            <tr>
+                                <td colspan="3" style="text-align: right; padding: 20px; font-weight: 800; font-size: 1.1rem; color: #1e293b;">TOTAL ESTIMADO:</td>
+                                <td style="text-align: right; padding: 20px 25px; font-weight: 800; font-size: 1.4rem; color: var(--primary-color);">S/ ${parseFloat(data.total).toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             `;
             
             document.getElementById('detail-body').innerHTML = itemsHtml;
             openModal('detailModal');
         } catch (error) {
+            console.error(error);
             alert('Error al cargar detalles');
         }
     }
