@@ -26,6 +26,9 @@ Route::get('/api/search-products', [LandingController::class, 'searchProducts'])
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::get('/login/verify', [LoginController::class, 'showTwoFactorForm'])->name('2fa.index');
+Route::post('/login/verify', [LoginController::class, 'verifyTwoFactor'])->name('2fa.verify');
+Route::post('/login/resend', [LoginController::class, 'resendTwoFactor'])->name('2fa.resend');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Cart & Quotation Routes

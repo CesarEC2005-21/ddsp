@@ -25,6 +25,9 @@ class User extends Authenticatable
         'role',
         'estado',
         'permissions',
+        'two_factor_code',
+        'two_factor_expires_at',
+        'two_factor_attempts',
     ];
 
     /**
@@ -35,6 +38,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_code',
     ];
 
     /**
@@ -47,6 +51,7 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'permissions' => 'array',
+            'two_factor_expires_at' => 'datetime',
         ];
     }
 

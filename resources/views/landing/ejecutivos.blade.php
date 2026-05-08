@@ -132,7 +132,7 @@
                         </div>
 
                         <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">
-                            <span style="color: var(--primary-green); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;">Representante Senior</span>
+                            <span style="color: var(--primary-green); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;">Representante Ventas</span>
                             <h3 style="color: white; margin: 0; font-size: 1.8rem; font-weight: 800; line-height: 1.2;">{{ $rep->nombre }}</h3>
                         </div>
                     </div>
