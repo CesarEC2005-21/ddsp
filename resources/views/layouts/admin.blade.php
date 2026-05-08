@@ -13,8 +13,9 @@
 </head>
 <body>
     <!-- ===================== SIDEBAR ===================== -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
+            <button class="sidebar-toggle-mobile" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
             <img src="{{ asset('img/logo.png') }}" alt="Logo Sanchez Pharma">
             <h3>Droguería y Distribuidora<br>Sanchez Pharma</h3>
             <p>Intranet Administrativa</p>
@@ -113,24 +114,23 @@
             @endif
         </nav>
 
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                </button>
-            </form>
-        </div>
+        <!-- Logout removido de aquí -->
+    </div>
     </div>
 
     <!-- ===================== MAIN CONTENT ===================== -->
     <div class="main-content">
         <!-- Topbar -->
         <header class="topbar">
-            <div class="topbar-info">
-                <span>Bienvenido de nuevo,</span>
-                <span class="fw-bold" style="color: var(--text);">{{ auth()->user()->name }}</span>
-                <span class="role-badge">{{ strtoupper(auth()->user()->role ?? 'Admin') }}</span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="hamburger-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="topbar-info">
+                    <span>Bienvenido,</span>
+                    <span class="fw-bold" style="color: var(--text);">{{ auth()->user()->name }}</span>
+                    <span class="role-badge">{{ strtoupper(auth()->user()->role ?? 'Admin') }}</span>
+                </div>
             </div>
 
             <div class="user-profile">
@@ -179,10 +179,34 @@
 
                 <div style="width: 1px; height: 28px; background: var(--border);"></div>
 
-                <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary-dark); font-weight: 700; font-size: 0.9rem;">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                <div class="profile-dropdown-wrapper">
+                    <button class="profile-toggle-btn" id="profileBtn">
+                        <div class="avatar-circle">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                        <div class="profile-info-text">
+                            <span class="profile-name">{{ auth()->user()->name }}</span>
+                            <span class="profile-role">{{ strtoupper(auth()->user()->role ?? 'Admin') }}</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="dropdown-section">
+                            <span class="dropdown-label">MI CUENTA</span>
+                        </div>
+                        <a href="{{ route('admin.settings.index') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Configuración
+                        </a>
+                        <div style="border-top: 1px solid #f1f5f9; margin: 5px 0;"></div>
+                        <form action="{{ route('logout') }}" method="POST" id="logout-form-dropdown">
+                            @csrf
+                            <button type="submit" class="dropdown-item logout-link">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <span style="font-weight: 600;">{{ auth()->user()->name }}</span>
             </div>
         </header>
 
@@ -243,20 +267,47 @@
             });
         }
 
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth <= 968) {
+                sidebar.classList.toggle('show-mobile');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+            }
+        }
+
         // Notification Dropdown
         const notifBtn = document.getElementById('notifBtn');
         const notifDropdown = document.getElementById('notifDropdown');
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
 
         if (notifBtn) {
             notifBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 notifDropdown.classList.toggle('show');
+                profileDropdown?.classList.remove('show');
+            });
+        }
+
+        if (profileBtn) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+                notifDropdown?.classList.remove('show');
             });
         }
 
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.notifications-wrapper')) {
                 notifDropdown?.classList.remove('show');
+            }
+            if (!e.target.closest('.profile-dropdown-wrapper')) {
+                profileDropdown?.classList.remove('show');
             }
         });
 

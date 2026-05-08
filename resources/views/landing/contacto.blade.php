@@ -177,12 +177,18 @@
                     @csrf
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Nombre de la Empresa <span>*</span></label>
-                            <input type="text" name="empresa" class="form-input" placeholder="Ej. Farmacia Salud Total" required>
+                            <label class="form-label">Nombre del Cliente <span>*</span></label>
+                            <input type="text" name="cliente" class="form-input" placeholder="Ej. Juan Pérez / Farmacia Salud" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">RUC <span>*</span></label>
-                            <input type="text" name="ruc" class="form-input" placeholder="Ej. 20123456789" required>
+                            <label class="form-label">Tipo de Documento <span>*</span></label>
+                            <div style="display: flex; gap: 10px;">
+                                <select name="tipo_doc" id="tipo_doc" class="form-select" style="flex: 0 0 120px;" onchange="updateDocValidation()">
+                                    <option value="DNI">DNI (8)</option>
+                                    <option value="RUC" selected>RUC (11)</option>
+                                </select>
+                                <input type="text" name="ruc" id="doc_numero" class="form-input" placeholder="Número de documento" required>
+                            </div>
                         </div>
                     </div>
                     
@@ -192,8 +198,8 @@
                             <input type="email" name="email" class="form-input" placeholder="correo@empresa.com" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Teléfono</label>
-                            <input type="tel" name="telefono" class="form-input" placeholder="+51 987 654 321">
+                            <label class="form-label">Teléfono <span>*</span></label>
+                            <input type="tel" name="telefono" id="telefono" class="form-input" placeholder="Ej. 987654321" required maxlength="9" pattern="[0-9]{9}">
                         </div>
                     </div>
                     
@@ -224,6 +230,51 @@
 
 @push('scripts')
 <script>
+    function updateDocValidation() {
+        const tipo = document.getElementById('tipo_doc').value;
+        const input = document.getElementById('doc_numero');
+        if (tipo === 'DNI') {
+            input.placeholder = 'Ej. 12345678';
+            input.maxLength = 8;
+            input.pattern = '[0-9]{8}';
+        } else {
+            input.placeholder = 'Ej. 20123456789';
+            input.maxLength = 11;
+            input.pattern = '[0-9]{11}';
+        }
+    }
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const email = document.getElementsByName('email')[0].value;
+        const telefono = document.getElementById('telefono').value;
+        const doc = document.getElementById('doc_numero').value;
+        const tipo = document.getElementById('tipo_doc').value;
+
+        if (!email.includes('@')) {
+            e.preventDefault();
+            Swal.fire({ icon: 'error', title: 'Error', text: 'El correo debe contener @' });
+            return;
+        }
+
+        if (telefono.length !== 9 || isNaN(telefono)) {
+            e.preventDefault();
+            Swal.fire({ icon: 'error', title: 'Error', text: 'El teléfono debe tener exactamente 9 dígitos' });
+            return;
+        }
+
+        if (tipo === 'DNI' && doc.length !== 8) {
+            e.preventDefault();
+            Swal.fire({ icon: 'error', title: 'Error', text: 'El DNI debe tener 8 dígitos' });
+            return;
+        }
+
+        if (tipo === 'RUC' && doc.length !== 11) {
+            e.preventDefault();
+            Swal.fire({ icon: 'error', title: 'Error', text: 'El RUC debe tener 11 dígitos' });
+            return;
+        }
+    });
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {

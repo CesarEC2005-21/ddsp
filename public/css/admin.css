@@ -199,7 +199,7 @@ a { text-decoration: none; color: inherit; }
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 1px 0 var(--border);
-    z-index: 50;
+    z-index: 101; /* Above sidebar (100) to ensure dropdowns are visible */
     flex-shrink: 0;
 }
 
@@ -807,4 +807,229 @@ input:checked + .slider::before { transform: translateX(21px); }
     border: 1px solid var(--border);
     background: #f8fafc;
     padding: 3px;
+}
+
+/* =====================
+   SIDEBAR & TOPBAR UPDATES
+   ===================== */
+
+/* Hamburger Button */
+.hamburger-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.hamburger-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Sidebar Responsive & Collapsed */
+.sidebar {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
+}
+
+.main-content {
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    transform: translateX(-100%);
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+.sidebar-toggle-mobile {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* Profile Dropdown */
+.profile-dropdown-wrapper {
+    position: relative;
+}
+
+.profile-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.profile-toggle-btn:hover {
+    background: #f8fafc;
+}
+
+.avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(16,185,129,0.2);
+}
+
+.profile-info-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.profile-role {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 220px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    display: none;
+    z-index: 9999; /* Very high priority */
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+/* Fix for SweetAlert notifications appearing behind elements */
+.swal2-container {
+    z-index: 10001 !important;
+}
+
+.profile-dropdown.show {
+    display: block;
+    animation: dropIn 0.2s ease-out;
+}
+
+.dropdown-section {
+    padding: 8px 20px 4px;
+}
+
+.dropdown-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+    transition: var(--transition);
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background: #f8fafc;
+    color: var(--primary);
+    padding-left: 25px;
+}
+
+.dropdown-item i {
+    font-size: 1rem;
+    color: #94a3b8;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover i {
+    color: var(--primary);
+}
+
+.logout-link {
+    color: #ef4444 !important;
+}
+
+.logout-link:hover {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+}
+
+.logout-link:hover i {
+    color: #dc2626 !important;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 968px) {
+    .sidebar {
+        position: fixed;
+        left: -270px;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+    }
+    
+    .sidebar.show-mobile {
+        left: 0;
+    }
+    
+    .sidebar-toggle-mobile {
+        display: block;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+    }
+    
+    .topbar {
+        padding: 10px 15px;
+    }
+    
+    .topbar-info {
+        display: none;
+    }
+    
+    .profile-info-text {
+        display: none;
+    }
 }

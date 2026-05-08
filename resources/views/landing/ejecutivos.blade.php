@@ -53,75 +53,111 @@
         <!-- Sidebar de Filtros -->
         <aside class="sidebar-filters">
             <div class="filter-section" id="section-reps">
-                <span class="filter-label">Selecciona un Ejecutivo</span>
-                <select id="select-rep" class="select-input" onchange="showRep(this.value)">
-                    <option value="">Seleccione...</option>
-                    @foreach($representatives as $rep)
-                        <option value="{{ $rep->id }}">{{ $rep->nombre }}</option>
-                    @endforeach
-                </select>
+                <span class="filter-label">Encuentra a tu asesor</span>
+                <div style="position: relative;">
+                    <select id="select-rep" class="select-input" onchange="showRep(this.value)" style="padding-left: 45px;">
+                        <option value="">Todos los Ejecutivos</option>
+                        @foreach($representatives as $rep)
+                            <option value="{{ $rep->id }}">{{ $rep->nombre }}</option>
+                        @endforeach
+                    </select>
+                    <i class="fas fa-search" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                </div>
             </div>
 
-            <div id="contact-info-short" style="display: none; margin-top: 30px; padding: 25px; border-radius: 20px; background: var(--primary-green); color: white; border: none; animation: fadeInUp 0.5s; box-shadow: 0 10px 30px rgba(46, 125, 50, 0.3);">
-                <h4 style="margin-bottom: 15px; color: white; font-size: 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
-                    <i class="fas fa-info-circle"></i> <span id="info-type-title">Información</span>
-                </h4>
-                <div id="rep-photo-container" style="margin-bottom: 20px; border-radius: 20px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #f8fafc;">
-                    <img id="side-rep-img" src="" alt="Imagen" style="width: 100%; height: auto; max-height: 400px; display: block; object-fit: cover;">
+            <div id="contact-info-short" style="display: none; margin-top: 30px; padding: 30px; border-radius: 24px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(16, 185, 129, 0.2); animation: fadeInUp 0.5s; box-shadow: 0 20px 40px rgba(0,0,0,0.08);">
+                <div id="rep-photo-container" style="margin-bottom: 25px; border-radius: 20px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #f8fafc;">
+                    <img id="side-rep-img" src="" alt="Imagen" style="width: 100%; height: auto; max-height: 400px; display: block; object-fit: cover; transition: 0.5s;">
                 </div>
                 <div id="rep-contact-data">
-                    <p id="side-rep-name" style="font-weight: 700; color: white; margin-bottom: 12px; font-size: 1.2rem;"></p>
-                    <p style="font-size: 0.9rem; margin-bottom: 10px; color: rgba(255,255,255,0.9);"><i class="fas fa-phone-alt" style="width: 20px;"></i> <span id="text-phone"></span></p>
-                    <p style="font-size: 0.9rem; margin-bottom: 15px; color: rgba(255,255,255,0.9);"><i class="fas fa-map-marker-alt" style="width: 20px;"></i> <span id="text-email"></span></p>
-                    <a id="side-rep-call" href="#" target="_blank" class="btn" style="width: 100%; text-align: center; font-size: 0.9rem; padding: 12px; background: white; color: var(--primary-green); border-radius: 12px; font-weight: 700; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    <h4 id="side-rep-name" style="font-weight: 800; color: #1e293b; margin-bottom: 8px; font-size: 1.4rem;"></h4>
+                    <span id="text-email" style="display: block; color: var(--primary-green); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;"></span>
+                    
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 25px;">
+                        <p style="font-size: 0.95rem; margin-bottom: 10px; color: #475569; display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-phone-alt" style="color: var(--primary-green);"></i> <span id="text-phone"></span>
+                        </p>
+                        <p style="font-size: 0.95rem; margin: 0; color: #475569; display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-clock" style="color: var(--primary-green);"></i> Lun - Vie: 8:00 - 18:00
+                        </p>
+                    </div>
+
+                    <a id="side-rep-call" href="#" target="_blank" class="btn" style="width: 100%; text-align: center; font-size: 1rem; padding: 16px; background: linear-gradient(135deg, #25D366, #128c7e); color: white; border-radius: 16px; font-weight: 800; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);">
+                        <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Contactar Ahora
                     </a>
                 </div>
             </div>
         </aside>
 
         <!-- Área de Visualización -->
-        <main class="content-display">
+        <main class="content-display" style="position: relative;">
             <div class="map-container">
                 <div id="map-display"></div>
+            </div>
+            <div style="position: absolute; top: 20px; right: 20px; z-index: 1000; background: white; padding: 10px 20px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 700; color: #64748b; border: 1px solid #f1f5f9;">
+                <div style="width: 10px; height: 10px; background: var(--primary-green); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                Puntos de Atención Activos
             </div>
         </main>
     </div>
 
     <!-- Sección Nuestro Equipo de Trabajo -->
-    <section style="padding: 80px 5%; background: #f8fafc; border-top: 1px solid #e2e8f0;">
-        <div style="text-align: center; margin-bottom: 60px;">
-            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Representantes Autorizados</span>
-            <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0;">Nuestro Equipo de Trabajo</h2>
-            <div style="width: 80px; height: 4px; background: var(--primary-green); margin: 0 auto; border-radius: 2px;"></div>
-            <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 20px auto 0;">Contáctate directamente con nuestro equipo de vendedores a través de WhatsApp para una atención personalizada y rápida.</p>
+    <section style="padding: 120px 5%; background: white; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; right: 0; width: 400px; height: 400px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%); border-radius: 50%; z-index: 0;"></div>
+        
+        <div style="text-align: center; margin-bottom: 80px; position: relative; z-index: 1;">
+            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 3px; font-size: 0.85rem; background: #f0fdf4; padding: 8px 20px; border-radius: 50px;">Asesoría Profesional</span>
+            <h2 style="font-size: 3.5rem; color: #1e293b; margin: 25px 0; font-family: 'Poppins', sans-serif; font-weight: 800;">Conoce a tu Próximo Socio Estratégico</h2>
+            <p style="color: #64748b; font-size: 1.2rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">Nuestro equipo está conformado por especialistas comprometidos con el crecimiento de tu farmacia o botica.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1;">
             @foreach($representatives as $rep)
                 @php
                     $phone = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
                     $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
                     $waLink = "https://wa.me/51{$phone}?text={$message}";
                 @endphp
-                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: 0.4s;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.05)';">
-                    <div style="height: 300px; overflow: hidden; background: #e2e8f0; position: relative;">
+                <div class="rep-card-premium" style="background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 45px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); group;" onmouseover="this.style.transform='translateY(-15px)'; this.style.boxShadow='0 30px 60px rgba(16, 185, 129, 0.12)'; this.style.borderColor='rgba(16, 185, 129, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 15px 45px rgba(0,0,0,0.04)'; this.style.borderColor='#f1f5f9';">
+                    <div style="height: 380px; overflow: hidden; position: relative;">
                         @if($rep->imagen)
-                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover; transition: 0.8s;">
                         @else
                             <img src="https://ui-avatars.com/api/?name={{ urlencode($rep->nombre) }}&size=400&background=10b981&color=fff" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
                         @endif
-                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, rgba(15, 23, 42, 0.8));"></div>
-                        <h3 style="position: absolute; bottom: 20px; left: 20px; color: white; margin: 0; font-size: 1.4rem; font-weight: 700;">{{ $rep->nombre }}</h3>
-                    </div>
-                    <div style="padding: 25px;">
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marked-alt" style="color: var(--primary-green); width: 20px;"></i> Cobertura: <strong>{{ $rep->locations->first()->zona->nombre_zona ?? 'Múltiples zonas' }}</strong></p>
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-phone-alt" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->telefono ?? 'No especificado' }}</p>
-                        <p style="color: #64748b; margin-bottom: 25px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->email ?? 'No especificado' }}</p>
+                        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%);"></div>
                         
-                        <a href="{{ $waLink }}" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; background: #25D366; color: white; border-radius: 12px; text-decoration: none; font-weight: 700; transition: 0.3s; font-size: 1.05rem;" onmouseover="this.style.background='#1da851'" onmouseout="this.style.background='#25D366'">
-                            <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Contactar por WhatsApp
-                        </a>
+                        <div style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 8px 15px; border-radius: 50px; color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="fas fa-check-circle"></i> VERIFICADO
+                        </div>
+
+                        <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">
+                            <span style="color: var(--primary-green); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;">Representante Senior</span>
+                            <h3 style="color: white; margin: 0; font-size: 1.8rem; font-weight: 800; line-height: 1.2;">{{ $rep->nombre }}</h3>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 35px;">
+                        <div style="margin-bottom: 30px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 12px; background: #f8fafc; border-radius: 15px; border: 1px solid #f1f5f9;">
+                                <div style="width: 35px; height: 35px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-green); box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Zona de Atención</span>
+                                    <strong style="color: #1e293b; font-size: 0.95rem;">{{ $rep->locations->first()->zona->nombre_zona ?? 'Cobertura Nacional' }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px;">
+                            <a href="tel:{{ $phone }}" style="flex: 0 0 55px; height: 55px; background: #f1f5f9; color: #475569; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s;" onmouseover="this.style.background='var(--primary-green)'; this.style.color='white';" onmouseout="this.style.background='#f1f5f9'; this.style.color='#475569';">
+                                <i class="fas fa-phone-alt"></i>
+                            </a>
+                            <a href="{{ $waLink }}" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: #25D366; color: white; border-radius: 15px; text-decoration: none; font-weight: 800; transition: 0.3s; font-size: 1rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.15);" onmouseover="this.style.transform='scale(1.02)'; this.style.background='#1da851';" onmouseout="this.style.transform='scale(1)'; this.style.background='#25D366';">
+                                <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> WhatsApp
+                            </a>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -214,7 +250,6 @@
 
     function showRepOverlay(r) {
         document.getElementById('contact-info-short').style.display = 'block';
-        document.getElementById('info-type-title').innerText = 'Información del Ejecutivo';
         document.getElementById('rep-photo-container').style.display = 'block';
         
         const imgSrc = r.imagen 
@@ -236,7 +271,7 @@
         btn.href = waLink;
         if (phone) {
             btn.onclick = (e) => { window.open(waLink, '_blank'); return false; };
-            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Contactar';
+            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Contactar Ahora';
             btn.style.display = 'flex';
         } else {
             btn.style.display = 'none';

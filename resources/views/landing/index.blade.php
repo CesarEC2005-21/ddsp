@@ -83,7 +83,7 @@
         <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0 20px;">Laboratorios Destacados</h2>
         <p style="color: #64748b; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Colaboramos con laboratorios de clase mundial para asegurar el acceso a medicinas de alta calidad en todo el Perú.</p>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; max-width: 1400px; margin: 0 auto;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 35px; max-width: 1400px; margin: 0 auto; justify-content: center;">
             @forelse($topLaboratories as $lab)
                 <a href="{{ route('products', ['lab' => $lab->id]) }}" class="lab-card-link" style="text-decoration: none;">
                     <div class="lab-card premium-hover">

@@ -45,7 +45,7 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 2000;
+    z-index: 1000;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -243,4 +243,10 @@ footer::before {
     cursor: pointer;
     text-decoration: none;
     transition: var(--transition);
+}
+
+/* Fix for SweetAlert notifications appearing behind navbar */
+.swal2-container {
+    z-index: 10000 !important;
+    margin-top: 100px !important; /* Move below fixed header */
 }

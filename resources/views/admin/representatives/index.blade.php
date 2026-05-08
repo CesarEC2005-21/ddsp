@@ -220,9 +220,21 @@
         }).on('markgeocode', function(e) {
             const center = e.geocode.center;
             mapObj.setView(center, 12);
-            if(confirm("¿Marcar '" + e.geocode.name + "'?")) {
-                addLocation(type, center.lat, center.lng);
-            }
+            
+            Swal.fire({
+                title: '¿Confirmar ubicación?',
+                text: `¿Desea marcar "${e.geocode.name}" como punto de atención?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--primary)',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Sí, marcar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    addLocation(type, center.lat, center.lng);
+                }
+            });
         }).addTo(mapObj);
 
         mapObj.on('click', function(e) {
@@ -241,23 +253,41 @@
     }
 
     function addLocation(type, lat, lng) {
-        const zoneId = prompt("NUEVO PUNTO DETECTADO\nSeleccione Zona:\n" + zones.map(z => z.id + ': ' + z.nombre_zona).join('\n'));
-        if (!zoneId || !zones.find(z => z.id == zoneId)) return;
+        const zoneOptions = {};
+        zones.forEach(z => { zoneOptions[z.id] = z.nombre_zona; });
 
-        const zone = zones.find(z => z.id == zoneId);
-        const locObj = { lat, lng, zona_id: zone.id, zona_name: zone.nombre_zona };
+        Swal.fire({
+            title: '<i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Punto Detectado',
+            text: 'Seleccione la zona de influencia para este punto:',
+            input: 'select',
+            inputOptions: zoneOptions,
+            inputPlaceholder: 'Seleccione una zona...',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--primary)',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Confirmar Punto',
+            cancelButtonText: 'Descartar',
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value) { resolve(); } else { resolve('Debe seleccionar una zona'); }
+                });
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const zoneId = result.value;
+                const zone = zones.find(z => z.id == zoneId);
+                const locObj = { lat, lng, zona_id: zone.id, zona_name: zone.nombre_zona };
 
-        if (type === 'new') {
-            locationsNew.push(locObj);
-            const marker = L.marker([lat, lng]).addTo(mapNew).bindPopup(zone.nombre_zona).openPopup();
-            markersNew.push(marker);
-            renderLocationList('new');
-        } else {
-            locationsEdit.push(locObj);
-            const marker = L.marker([lat, lng]).addTo(mapEdit).bindPopup(zone.nombre_zona).openPopup();
-            markersEdit.push(marker);
-            renderLocationList('edit');
-        }
+                const currentMap = type === 'new' ? mapNew : mapEdit;
+                const currentLocations = type === 'new' ? locationsNew : locationsEdit;
+                const currentMarkers = type === 'new' ? markersNew : markersEdit;
+
+                currentLocations.push(locObj);
+                const marker = L.marker([lat, lng]).addTo(currentMap).bindPopup(zone.nombre_zona).openPopup();
+                currentMarkers.push(marker);
+                renderLocationList(type);
+            }
+        });
     }
 
     function removeLocation(type, index) {
