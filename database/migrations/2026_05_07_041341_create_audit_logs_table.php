@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pharmacies', function (Blueprint $table) {
-            $table->boolean('estado')->default(true)->after('longitud');
+        Schema::create('audit_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('action');
+            $table->text('description');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pharmacies', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('audit_logs');
     }
 };

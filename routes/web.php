@@ -6,18 +6,22 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\LaboratoryController;
-use App\Http\Controllers\Admin\PharmacyController;
+// use App\Http\Controllers\Admin\PharmacyController;
 use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ZonaController;
 use App\Http\Controllers\Admin\UnidadMedidaController;
+use App\Http\Controllers\Admin\SecurityController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
-Route::get('/nosotros', [LandingController::class, 'about'])->name('about');
+Route::get('/nosotros', [LandingController::class, 'nosotros'])->name('nosotros');
+Route::get('/ejecutivos', [LandingController::class, 'about'])->name('about');
 Route::get('/productos', [LandingController::class, 'products'])->name('products');
 Route::get('/producto/{product}', [LandingController::class, 'productDetail'])->name('product.detail');
 Route::get('/contacto', [LandingController::class, 'contact'])->name('contact');
+Route::post('/contacto', [LandingController::class, 'processContact'])->name('contact.post');
+Route::get('/api/search-products', [LandingController::class, 'searchProducts'])->name('api.products.search');
 
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -46,8 +50,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::resource('laboratories', LaboratoryController::class);
         Route::resource('zonas', ZonaController::class);
         Route::resource('unidad-medidas', UnidadMedidaController::class);
-        Route::resource('pharmacies', PharmacyController::class);
+        // Route::resource('pharmacies', PharmacyController::class);
         Route::resource('representatives', RepresentativeController::class);
+        
+        Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::get('users/{user}/block-history', [UserController::class, 'blockHistory'])->name('users.block-history');
         Route::resource('users', UserController::class);
         
         // Reportes, Backups y Configuración
@@ -56,6 +63,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('backups/generate', [\App\Http\Controllers\Admin\BackupController::class, 'generate'])->name('backups.generate');
         Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
         Route::post('settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
+        
+        // Seguridad
+        Route::get('security/audit', [SecurityController::class, 'audit'])->name('security.audit');
+        Route::get('security/access', [SecurityController::class, 'access'])->name('security.access');
         
         // Quotations (Pedidos)
         Route::get('quotations', [\App\Http\Controllers\Admin\QuotationController::class, 'index'])->name('quotations.index');

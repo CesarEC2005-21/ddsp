@@ -28,6 +28,11 @@ class UserController extends Controller
             $query->where('estado', $request->estado == '1');
         }
 
+        // El rol de Ing. Sistemas es incógnito para los demás
+        if (auth()->user()->role !== 'ing_sistemas') {
+            $query->where('role', '!=', 'ing_sistemas');
+        }
+
         $users = $query->orderBy('created_at', 'desc')->get();
         return view('admin.users.index', compact('users'));
     }
@@ -43,7 +48,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin,supervisor,ing_sistemas'
+            'role' => 'required|string|in:admin,supervisor,ing_sistemas',
+            'permissions' => 'nullable|array'
         ]);
 
         User::create([
@@ -52,6 +58,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'estado' => true,
+            'permissions' => $request->permissions ?? [],
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Usuario creado exitosamente.');
@@ -63,12 +70,14 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
-            'role' => 'required|string|in:admin,supervisor,ing_sistemas'
+            'role' => 'required|string|in:admin,supervisor,ing_sistemas',
+            'permissions' => 'nullable|array'
         ]);
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->role = $validated['role'];
+        $user->permissions = $request->permissions ?? [];
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
@@ -77,6 +86,41 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
+    }
+
+    public function toggleStatus(Request $request, User $user)
+    {
+        if (auth()->user()->role !== 'ing_sistemas') {
+            return redirect()->back()->with('error', 'Solo el Ingeniero de Sistemas puede realizar esta acción.');
+        }
+
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->with('error', 'No puedes bloquearte a ti mismo.');
+        }
+
+        $user->estado = !$user->estado;
+        $user->save();
+
+        $action = $user->estado ? 'unblocked' : 'blocked';
+        
+        \App\Models\UserBlockHistory::create([
+            'user_id' => $user->id,
+            'admin_id' => auth()->id(),
+            'action' => $action,
+            'reason' => $request->reason ?? 'Sin motivo especificado'
+        ]);
+
+        $statusText = $user->estado ? 'desbloqueado' : 'bloqueado';
+        return redirect()->back()->with('success', "Usuario {$statusText} correctamente.");
+    }
+
+    public function blockHistory(User $user)
+    {
+        if (auth()->user()->role !== 'ing_sistemas') {
+            abort(403);
+        }
+        $user->load('blockHistories.admin');
+        return view('admin.users.block_history', compact('user'));
     }
 
     public function destroy(User $user)

@@ -1,313 +1,264 @@
 @extends('layouts.landing')
 
 @push('styles')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    
     .about-hero {
-        background: linear-gradient(rgba(27, 94, 32, 0.8), rgba(27, 94, 32, 0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-        color: white; text-align: center; padding: 60px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;
+        background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?auto=format&fit=crop&w=1920&q=80') center/cover;
+        color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 60px;
+        animation: fadeInDown 1s ease-out;
     }
 
-    .nosotros-layout { display: grid; grid-template-columns: 350px 1fr; gap: 30px; padding: 0 5% 100px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
-    
-    .sidebar-filters { background: white; border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; height: fit-content; position: sticky; top: 120px; z-index: 10; animation: fadeInLeft 0.8s ease-out; }
-    
-    .filter-section { margin-bottom: 30px; }
-    .filter-label { display: block; font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-    
-    .type-selector { display: flex; gap: 10px; margin-bottom: 25px; }
-    .type-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; background: white; cursor: pointer; font-weight: 600; color: #64748b; transition: 0.3s; font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .type-btn.active { border-color: var(--primary-green); background: #f0fdf4; color: var(--primary-green); }
-    .type-btn i { font-size: 1.2rem; }
-
-    .select-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.95rem; color: #1e293b; cursor: pointer; }
-
-    .content-display { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-height: 800px; animation: fadeInRight 0.8s ease-out; }
-    
-    .map-container { position: relative; flex-grow: 1; min-height: 600px; }
-    #map-display { width: 100%; height: 100%; min-height: 800px; }
-
-    .rep-overlay-card {
-        position: absolute; bottom: 30px; left: 30px; width: 380px; background: white; border-radius: 25px; 
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1000; overflow: hidden;
-        display: none; animation: fadeInUp 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .rep-overlay-img { height: 220px; background-size: cover; background-position: center; position: relative; }
-    .rep-overlay-img::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, white); }
-    .rep-overlay-info { padding: 25px; position: relative; margin-top: -40px; background: white; border-radius: 25px 25px 0 0; }
 
-    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .stats-bar {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; max-width: 1000px; margin: -40px auto 60px; position: relative; z-index: 10;
+    }
+    .stat-card {
+        background: white; padding: 30px 20px; border-radius: 20px; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 1px solid #f1f5f9;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stat-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(16, 185, 129, 0.2); }
+    .stat-number { font-size: 2.5rem; font-weight: 900; color: var(--primary-green); line-height: 1; }
+    .stat-label { font-size: 0.9rem; color: #64748b; margin-top: 8px; font-weight: 600; }
+
+    .section-padding { padding: 80px 5%; }
+    .section-bg { background: #f8fafc; }
+
+    .about-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1200px; margin: 0 auto;
+    }
+    .about-grid.reverse { direction: rtl; }
+    .about-grid.reverse > * { direction: ltr; }
+
+    .about-content { animation: fadeInLeft 0.8s ease-out; }
+    .about-content h2 {
+        font-size: 2.5rem; color: #1e293b; font-family: 'Poppins', sans-serif; font-weight: 800; margin-bottom: 20px; line-height: 1.2;
+    }
+    .about-content h2 span { color: var(--primary-green); }
+    .about-content p {
+        font-size: 1.1rem; color: #64748b; line-height: 1.8; margin-bottom: 20px;
+    }
+
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .about-image {
+        border-radius: 30px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.15); position: relative;
+        animation: fadeInRight 0.8s ease-out;
+    }
+    .about-image img { 
+        width: 100%; height: 400px; object-fit: cover; 
+        transition: transform 0.6s ease;
+    }
+    .about-image:hover img { transform: scale(1.08); }
+    .about-image::before {
+        content: ''; position: absolute; top: -20px; right: -20px; width: 100%; height: 100%; border: 4px solid var(--primary-green); border-radius: 30px; z-index: -1;
+    }
+
+    .values-grid {
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; max-width: 1200px; margin: 0 auto;
+    }
+    .value-card {
+        background: white; padding: 30px 20px; border-radius: 20px; text-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f1f5f9;
+        animation: fadeInUp 0.6s ease-out backwards;
+    }
+    .value-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); border-color: var(--primary-green); }
+    .value-icon {
+        width: 70px; height: 70px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; display: flex;
+        align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.8rem; color: white;
+        transition: all 0.4s ease;
+    }
+    .value-card:hover .value-icon { transform: scale(1.1) rotate(5deg); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4); }
+    .value-card h4 { font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 10px; }
+    .value-card p { font-size: 0.9rem; color: #64748b; line-height: 1.6; }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .principles-card {
+        background: white; border-radius: 25px; padding: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid #f1f5f9;
+    }
+    .principles-card h3 {
+        font-size: 1.5rem; color: #1e293b; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 12px;
+    }
+    .principles-card h3 i { color: var(--primary-green); }
+    .principles-list { list-style: none; padding: 0; }
+    .principles-list li {
+        padding: 15px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 15px; font-size: 1.05rem; color: #475569;
+        transition: all 0.3s ease;
+    }
+    .principles-list li:hover { background: #f8fafc; padding-left: 10px; border-radius: 8px; }
+    .principles-list li:last-child { border-bottom: none; }
+    .principles-list li i {
+        color: var(--primary-green); margin-top: 4px; transition: transform 0.3s ease;
+    }
+    .principles-list li:hover i { transform: scale(1.3); }
+
+    @media (max-width: 900px) {
+        .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        .about-grid { grid-template-columns: 1fr; gap: 40px; }
+        .values-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+        .stat-number { font-size: 2rem; }
+        .values-grid { grid-template-columns: 1fr; }
+    }
 </style>
 @endpush
 
 @section('content')
     <div class="about-hero">
-        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800;">Nuestra Red de Distribución</h1>
-        <p style="font-size: 1.1rem; opacity: 0.9; color: white;">Ubica nuestras boticas aliadas y representantes autorizados en todo el país.</p>
+        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800;">Nosotros</h1>
+        <p style="font-size: 1.1rem; opacity: 0.9; color: white; max-width: 600px; margin: 15px auto 0;">Conoce más sobre nuestra historia, misión y los valores que nos impulsa a mejorar la salud de todos los peruanos.</p>
     </div>
 
-    <div class="nosotros-layout">
-        <!-- Sidebar de Filtros -->
-        <aside class="sidebar-filters">
-            <div class="filter-section">
-                <span class="filter-label">¿Qué deseas buscar?</span>
-                <div class="type-selector">
-                    <button class="type-btn active" id="btn-type-botica" onclick="selectType('botica')">
-                        <i class="fas fa-store"></i>
-                        Boticas
-                    </button>
-                    <button class="type-btn" id="btn-type-rep" onclick="selectType('rep')">
-                        <i class="fas fa-user-tie"></i>
-                        Vendedores
-                    </button>
-                </div>
-            </div>
-
-            <div class="filter-section" id="section-boticas">
-                <span class="filter-label">Selecciona una Botica</span>
-                <select id="select-botica" class="select-input" onchange="showBotica(this.value)">
-                    <option value="">Seleccione...</option>
-                    @foreach($pharmacies as $pharmacy)
-                        <option value="{{ $pharmacy->id }}">{{ $pharmacy->nombre }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="filter-section" id="section-reps" style="display: none;">
-                <span class="filter-label">Selecciona un Vendedor</span>
-                <select id="select-rep" class="select-input" onchange="showRep(this.value)">
-                    <option value="">Seleccione...</option>
-                    @foreach($representatives as $rep)
-                        <option value="{{ $rep->id }}">{{ $rep->nombre }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div id="contact-info-short" style="display: none; margin-top: 30px; padding: 25px; border-radius: 20px; background: var(--primary-green); color: white; border: none; animation: fadeInUp 0.5s; box-shadow: 0 10px 30px rgba(46, 125, 50, 0.3);">
-                <h4 style="margin-bottom: 15px; color: white; font-size: 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
-                    <i class="fas fa-info-circle"></i> <span id="info-type-title">Información</span>
-                </h4>
-                <div id="rep-photo-container" style="margin-bottom: 20px; border-radius: 20px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #f8fafc;">
-                    <img id="side-rep-img" src="" alt="Imagen" style="width: 100%; height: auto; max-height: 400px; display: block; object-fit: cover;">
-                </div>
-                <div id="rep-contact-data">
-                    <p id="side-rep-name" style="font-weight: 700; color: white; margin-bottom: 12px; font-size: 1.2rem;"></p>
-                    <p style="font-size: 0.9rem; margin-bottom: 10px; color: rgba(255,255,255,0.9);"><i class="fas fa-phone-alt" style="width: 20px;"></i> <span id="text-phone"></span></p>
-                    <p style="font-size: 0.9rem; margin-bottom: 15px; color: rgba(255,255,255,0.9);"><i class="fas fa-map-marker-alt" style="width: 20px;"></i> <span id="text-email"></span></p>
-                    <a id="side-rep-call" href="#" target="_blank" class="btn" style="width: 100%; text-align: center; font-size: 0.9rem; padding: 12px; background: white; color: var(--primary-green); border-radius: 12px; font-weight: 700; border: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </a>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Área de Visualización -->
-        <main class="content-display">
-            <div class="map-container">
-                <div id="map-display"></div>
-                
-                <!-- Overlay Card Removed as per request -->
-            </div>
-        </main>
+    <div class="stats-bar reveal">
+        <div class="stat-card">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Años de Experiencia</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Productos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Ejecutivos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Atención</div>
+        </div>
     </div>
 
-    <!-- Sección Nuestro Equipo de Trabajo -->
-    <section style="padding: 80px 5%; background: #f8fafc; border-top: 1px solid #e2e8f0;">
-        <div style="text-align: center; margin-bottom: 60px;">
-            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Representantes Autorizados</span>
-            <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0;">Nuestro Equipo de Trabajo</h2>
+    <section class="section-padding">
+        <div class="about-grid">
+            <div class="about-image reveal">
+                <img src="{{ asset('img/hero.png') }}" alt="Nuestra Historia">
+            </div>
+            <div class="about-content reveal">
+                <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">Nuestra Historia</span>
+                <h2>Comprometidos con la <span>Salud</span> del Perú</h2>
+                <p>{{ $settings['historia'] }}</p>
+                <p>Desde nuestros inicios, hemos trabajado incansablemente para construir una red de distribución que llegue a cada rincón del país, garantizando que cada peruano tenga acceso a los medicamentos que necesita.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding section-bg">
+        <div style="text-align: center; margin-bottom: 60px;" class="reveal">
+            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">¿Por qué elegirnos?</span>
+            <h2 style="font-size: 2.5rem; color: #1e293b; margin: 15px 0; font-family: 'Poppins', sans-serif; font-weight: 800;">Nuestra Esencia</h2>
             <div style="width: 80px; height: 4px; background: var(--primary-green); margin: 0 auto; border-radius: 2px;"></div>
-            <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; margin: 20px auto 0;">Contáctate directamente con nuestro equipo de vendedores a través de WhatsApp para una atención personalizada y rápida.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto;">
-            @foreach($representatives as $rep)
-                @php
-                    $phone = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
-                    $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
-                    $waLink = "https://wa.me/51{$phone}?text={$message}";
-                @endphp
-                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: 0.4s;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.05)';">
-                    <div style="height: 300px; overflow: hidden; background: #e2e8f0; position: relative;">
-                        @if($rep->imagen)
-                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($rep->nombre) }}&size=400&background=10b981&color=fff" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        @endif
-                        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, rgba(15, 23, 42, 0.8));"></div>
-                        <h3 style="position: absolute; bottom: 20px; left: 20px; color: white; margin: 0; font-size: 1.4rem; font-weight: 700;">{{ $rep->nombre }}</h3>
-                    </div>
-                    <div style="padding: 25px;">
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marked-alt" style="color: var(--primary-green); width: 20px;"></i> Cobertura: <strong>{{ $rep->locations->first()->zona->nombre_zona ?? 'Múltiples zonas' }}</strong></p>
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-phone-alt" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->telefono ?? 'No especificado' }}</p>
-                        <p style="color: #64748b; margin-bottom: 25px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 20px;"></i> {{ $rep->email ?? 'No especificado' }}</p>
-                        
-                        <a href="{{ $waLink }}" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px; background: #25D366; color: white; border-radius: 12px; text-decoration: none; font-weight: 700; transition: 0.3s; font-size: 1.05rem;" onmouseover="this.style.background='#1da851'" onmouseout="this.style.background='#25D366'">
-                            <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Contactar por WhatsApp
-                        </a>
-                    </div>
+        <div class="about-grid reveal">
+            <div class="about-content">
+                <h2>Nuestra <span>Misión</span></h2>
+                <p>{{ $settings['mision'] }}</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80" alt="Misión">
+            </div>
+        </div>
+
+        <div class="about-grid reverse reveal" style="margin-top: 80px;">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80" alt="Visión">
+            </div>
+            <div class="about-content">
+                <h2>Nuestra <span>Visión</span></h2>
+                <p>{{ $settings['vision'] }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding">
+        <div style="text-align: center; margin-bottom: 60px;" class="reveal">
+            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">Nuestros Pilares</span>
+            <h2 style="font-size: 2.5rem; color: #1e293b; margin: 15px 0; font-family: 'Poppins', sans-serif; font-weight: 800;">Valores Corporativos</h2>
+            <div style="width: 80px; height: 4px; background: var(--primary-green); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+
+        <div class="values-grid">
+            @foreach(explode(',', $settings['valores']) as $index => $valor)
+            <div class="value-card" style="animation-delay: {{ $index * 0.1 }}s">
+                <div class="value-icon">
+                    @php
+                        $valClean = trim($valor);
+                        $valLower = strtolower($valClean);
+                        $icon = 'star';
+                        if (str_contains($valLower, 'compromiso')) $icon = 'hand-holding-heart';
+                        elseif (str_contains($valLower, 'honestidad')) $icon = 'shield-alt';
+                        elseif (str_contains($valLower, 'innovaci')) $icon = 'lightbulb';
+                        elseif (str_contains($valLower, 'servicio')) $icon = 'headset';
+                        elseif (str_contains($valLower, 'calidad')) $icon = 'award';
+                        elseif (str_contains($valLower, 'ética')) $icon = 'balance-scale';
+                        elseif (str_contains($valLower, 'integridad')) $icon = 'user-shield';
+                    @endphp
+                    <i class="fas fa-{{ $icon }}"></i>
                 </div>
+                <h4>{{ $valClean }}</h4>
+                <p>Guiando cada acción con {{ strtolower($valClean) }} y excelencia</p>
+            </div>
             @endforeach
         </div>
+    </section>
+
+    <section class="section-padding section-bg">
+        <div class="about-grid">
+            <div class="principles-card reveal">
+                <h3><i class="fas fa-book-open"></i> Principios Institucionales</h3>
+                <ul class="principles-list">
+                    @foreach(explode("\n", $settings['principios']) as $principio)
+                    @if(trim($principio))
+                    <li><i class="fas fa-check-circle"></i> {{ trim($principio, '• ') }}</li>
+                    @endif
+                    @endforeach
+                </ul>
+            </div>
+            <div class="about-content reveal">
+                <h2> Nuestros <span>Principios</span></h2>
+                <p>Guiamos cada acción y decisión mediante principios sólidos que garantizan la integridad y el compromiso con nuestros clientes y la sociedad.</p>
+                <p>Estos principios nos permiten mantener los más altos estándares de calidad en cada aspecto de nuestra operación, desde la selección de productos hasta la entrega final.</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 80px 5%; text-align: center; background: linear-gradient(135deg, #10b981, #059669);">
+        <h2 style="font-size: 2.5rem; color: white; font-family: 'Poppins', sans-serif; font-weight: 800; margin-bottom: 15px;">¿Listo para trabajar con nosotros?</h2>
+        <p style="font-size: 1.1rem; color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto 30px;">Contáctanos hoy mismo y descubre cómo podemos ayudarte a acceder a medicamentos de calidad.</p>
+        <a href="{{ route('contact') }}" style="display: inline-flex; align-items: center; gap: 10px; background: white; color: var(--primary-green); padding: 18px 40px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 1.1rem; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <i class="fas fa-envelope"></i> Contáctanos
+        </a>
     </section>
 @endsection
 
 @push('scripts')
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    let map, marker, markersGroup;
-    const boticas = @json($pharmacies);
-    const reps = @json($representatives->load('locations.zona'));
-
-    // Initialize map on load
-    document.addEventListener('DOMContentLoaded', () => {
-        initMap(-9.189967, -75.015152, 6);
-        showAllMarkers();
-    });
-
-    function initMap(lat, lng, zoom = 6) {
-        if (map) map.remove();
-        map = L.map('map-display', {
-            zoomControl: false
-        }).setView([lat, lng], zoom);
-        
-        L.control.zoom({ position: 'topright' }).addTo(map);
-        
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; Sanchez Pharma'
-        }).addTo(map);
-        
-        markersGroup = L.featureGroup().addTo(map);
-    }
-
-    function showAllMarkers() {
-        markersGroup.clearLayers();
-        
-        // Add Boticas (Green)
-        boticas.forEach(b => {
-            if (b.latitud && b.longitud) {
-                const m = L.marker([b.latitud, b.longitud], {
-                    icon: createIcon('#10b981')
-                }).addTo(markersGroup).bindPopup(`<b>Botica: ${b.nombre}</b><br>${b.ubicacion}`);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
             }
         });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
-        
-        // Add Reps (Different colors per representative)
-        reps.forEach((r, idx) => {
-            const repColor = colors[idx % colors.length];
-            r.locations.forEach(loc => {
-                const m = L.marker([loc.latitud, loc.longitud], {
-                    icon: createIcon(repColor)
-                }).addTo(markersGroup).on('click', () => showRepOverlay(r));
-            });
-        });
-    }
-
-    function createIcon(color) {
-        return L.divIcon({
-            className: 'custom-icon',
-            html: `<div style="background:${color}; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 0 15px rgba(0,0,0,0.2)"></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-    }
-
-    function selectType(type) {
-        document.getElementById('btn-type-botica').classList.toggle('active', type === 'botica');
-        document.getElementById('btn-type-rep').classList.toggle('active', type === 'rep');
-        
-        document.getElementById('section-boticas').style.display = type === 'botica' ? 'block' : 'none';
-        document.getElementById('section-reps').style.display = type === 'rep' ? 'block' : 'none';
-        
-        hideOverlay();
-        showAllMarkers();
-    }
-
-    function showBotica(id) {
-        if (!id) return showAllMarkers();
-        const b = boticas.find(x => x.id == id);
-        if (!b) return;
-
-        showAllMarkers(); // Keep all markers but fly to the one
-        showPharmacyOverlay(b);
-        map.flyTo([b.latitud, b.longitud], 16);
-    }
-
-    function showPharmacyOverlay(b) {
-        document.getElementById('contact-info-short').style.display = 'block';
-        document.getElementById('info-type-title').innerText = 'Detalle de Botica';
-        document.getElementById('rep-photo-container').style.display = 'none'; // No photo for pharmacy usually
-        document.getElementById('side-rep-name').innerText = b.nombre;
-        document.getElementById('text-phone').innerText = b.telefono || 'Consultar';
-        document.getElementById('text-email').innerText = b.ubicacion || 'Consultar dirección';
-        
-        const message = encodeURIComponent(`Hola, quisiera contactar con la botica ${b.nombre} para una consulta.`);
-        const phone = b.telefono ? b.telefono.replace(/\D/g,'') : '999999999';
-        const waLink = `https://wa.me/51${phone}?text=${message}`;
-        
-        const btn = document.getElementById('side-rep-call');
-        btn.href = waLink;
-        btn.onclick = (e) => { window.open(waLink, '_blank'); return false; }; // Force open
-        btn.innerHTML = '<i class="fab fa-whatsapp"></i> Chat con Botica';
-    }
-
-    function showRep(id) {
-        if (!id) return showAllMarkers();
-        const r = reps.find(x => x.id == id);
-        if (!r) return;
-
-        markersGroup.clearLayers();
-        showRepOverlay(r);
-        
-        if (r.locations.length > 0) {
-            const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
-            const repColor = colors[reps.indexOf(r) % colors.length];
-            
-            r.locations.forEach(loc => {
-                L.marker([loc.latitud, loc.longitud], {
-                    icon: createIcon(repColor)
-                }).addTo(markersGroup).bindPopup(`<b>Zona: ${loc.zona?.nombre_zona || 'Atención'}</b>`);
-            });
-            
-            const group = L.featureGroup(markersGroup.getLayers());
-            map.flyToBounds(group.getBounds().pad(1));
-        }
-    }
-
-    function showRepOverlay(r) {
-        document.getElementById('contact-info-short').style.display = 'block';
-        document.getElementById('info-type-title').innerText = 'Información del Vendedor';
-        document.getElementById('rep-photo-container').style.display = 'block';
-        document.getElementById('side-rep-img').src = r.imagen ? '/storage/' + r.imagen : 'https://ui-avatars.com/api/?name=' + r.nombre + '&size=400';
-        document.getElementById('side-rep-name').innerText = r.nombre;
-        document.getElementById('text-phone').innerText = r.telefono || 'Consultar';
-        document.getElementById('text-email').innerText = r.email || 'Consultar';
-        
-        const message = encodeURIComponent("Hola, quisiera atencion para cotizar un pedido por favor.");
-        const phone = r.telefono ? r.telefono.replace(/\D/g,'') : '';
-        const waLink = `https://wa.me/51${phone}?text=${message}`;
-        
-        const btn = document.getElementById('side-rep-call');
-        btn.href = waLink;
-        btn.onclick = (e) => { window.open(waLink, '_blank'); return false; }; // Force open
-        btn.innerHTML = '<i class="fab fa-whatsapp"></i> WhatsApp Vendedor';
-    }
-
-    function hideOverlay() {
-        document.getElementById('contact-info-short').style.display = 'none';
-    }
-
-    function resetView() {
-        showAllMarkers();
-        hideOverlay();
-        document.getElementById('select-botica').value = '';
-        document.getElementById('select-rep').value = '';
-        map.flyTo([-9.189967, -75.015152], 6);
-    }
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 @endpush

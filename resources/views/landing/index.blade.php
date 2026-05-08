@@ -1,6 +1,7 @@
 @extends('layouts.landing')
 
 @push('styles')
+<link rel="preload" href="{{ asset('img/hero.png') }}" as="image">
 <link rel="stylesheet" href="{{ asset('css/landing/home.css') }}">
 <link rel="stylesheet" href="{{ asset('css/landing/home_labs.css') }}">
 @endpush
@@ -150,18 +151,17 @@
     </section>
 
     <!-- Secciones adicionales (Mapa de Cobertura y Galería) se mantienen iguales con mejoras visuales leves -->
-    <section class="coverage-map" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 120px 5%; display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap; position: relative; overflow: hidden;">
+    <section class="coverage-map" style="background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%); color: white; padding: 120px 5%; display: flex; align-items: center; justify-content: center; gap: 80px; flex-wrap: wrap; position: relative;">
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px; opacity: 0.1;"></div>
         <div style="max-width: 550px; z-index: 2;">
-            <h2 style="font-size: 3.5rem; margin-bottom: 25px; line-height: 1.1; font-family: 'Poppins', sans-serif; font-weight: 800;">Logística de clase mundial a su alcance</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; line-height: 1.6;">Nuestro compromiso va más allá de la entrega. Garantizamos la trazabilidad y calidad de cada fármaco mediante una red de representantes altamente capacitados.</p>
+            <h2 style="font-size: 3.5rem; margin-bottom: 25px; line-height: 1.1; font-family: 'Poppins', sans-serif; font-weight: 800; color: white !important;">Logística de clase mundial a su alcance</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; line-height: 1.6; color: white;">Nuestro compromiso va más allá de la entrega. Garantizamos la trazabilidad y calidad de cada fármaco mediante una red de representantes altamente capacitados.</p>
             <a href="{{ route('contact') }}" class="btn" style="background: white; color: #1b5e20; padding: 20px 40px; border-radius: 50px; font-weight: 800; text-decoration: none; display: inline-block; box-shadow: 0 15px 30px rgba(0,0,0,0.2); transition: 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                 <i class="fas fa-shield-alt"></i> ASEGURAR CALIDAD
             </a>
         </div>
-        <div style="position: relative; z-index: 2; width: 400px; height: 400px; display: flex; align-items: center; justify-content: center;">
-            <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(255,255,255,0.1); animation: pulse 3s infinite;"></div>
-            <i class="fas fa-map-marked-alt" style="font-size: 12rem; color: #fbbf24; filter: drop-shadow(0 10px 20px rgba(251, 191, 36, 0.4));"></i>
+        <div style="position: relative; z-index: 2; width: 550px; height: 550px; display: flex; align-items: center; justify-content: center; margin-right: -5%; transform: scale(1.15);">
+            <img src="{{ asset('img/mapa_peru.png') }}" alt="Mapa de Cobertura" style="width: 100%; height: auto; z-index: 3; mix-blend-mode: multiply; filter: contrast(1.1) brightness(1.2);">
         </div>
     </section>
 
@@ -169,13 +169,12 @@
         <h2 style="font-size: 3rem; color: #1e293b; margin-bottom: 20px; font-weight: 800;">Infraestructura de Excelencia</h2>
         <p style="color: #64748b; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Operamos bajo estrictos protocolos de Buenas Prácticas de Almacenamiento (BPA).</p>
         <div class="gallery-grid">
-            <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1587370560942-ad2a04eabb6d?auto=format&fit=crop&w=800&q=80');">
-                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
+                <div class="gallery-item" style="background-image: url('{{ asset('img/logistica.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
             </div>
-            <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1563213126-a4273aed2016?auto=format&fit=crop&w=800&q=80');">
+                <div class="gallery-item" style="background-image: url('{{ asset('img/calidad.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
                 <div class="gallery-overlay"><span>Calidad Garantizada</span></div>
             </div>
-            <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80');">
+                <div class="gallery-item" style="background-image: url('{{ asset('img/transporte.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
                 <div class="gallery-overlay"><span>Cobertura Nacional</span></div>
             </div>
         </div>

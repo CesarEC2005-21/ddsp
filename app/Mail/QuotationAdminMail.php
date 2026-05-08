@@ -16,12 +16,14 @@ class QuotationAdminMail extends Mailable
 
     public $quotation;
     public $pdfContent;
+    public $excelContent;
     public $company;
 
-    public function __construct(Quotation $quotation, $pdfContent, $company)
+    public function __construct(Quotation $quotation, $pdfContent, $excelContent, $company)
     {
         $this->quotation = $quotation;
         $this->pdfContent = $pdfContent;
+        $this->excelContent = $excelContent;
         $this->company = $company;
     }
 
@@ -45,6 +47,8 @@ class QuotationAdminMail extends Mailable
         return [
             Attachment::fromData(fn () => $this->pdfContent, 'Cotizacion_' . str_pad($this->quotation->id, 6, '0', STR_PAD_LEFT) . '.pdf')
                 ->withMime('application/pdf'),
+            Attachment::fromData(fn () => $this->excelContent, 'Cotizacion_' . str_pad($this->quotation->id, 6, '0', STR_PAD_LEFT) . '.xlsx')
+                ->withMime('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
         ];
     }
 }

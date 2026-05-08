@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'estado',
+        'permissions',
     ];
 
     /**
@@ -42,8 +45,13 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'permissions' => 'array',
         ];
+    }
+
+    public function blockHistories()
+    {
+        return $this->hasMany(UserBlockHistory::class, 'user_id')->latest();
     }
 }

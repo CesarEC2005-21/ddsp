@@ -5,6 +5,7 @@ use App\Models\Representative;
 use App\Models\RepresentativeLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AuditLog;
 
 class RepresentativeController extends Controller
 {
@@ -47,6 +48,12 @@ class RepresentativeController extends Controller
                 ]);
             }
         }
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_representative',
+            'description' => "Creó el representante: {$representative->nombre}"
+        ]);
 
         return redirect()->route('admin.representatives.index')->with('success', 'Representante creado exitosamente.');
     }

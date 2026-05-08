@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Models\AuditLog;
 
 class SettingController extends Controller
 {
@@ -33,6 +34,12 @@ class SettingController extends Controller
         foreach ($validated as $key => $value) {
             Setting::set($key, $value);
         }
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated_settings',
+            'description' => "Actualizó la información de la página web"
+        ]);
 
         return redirect()->back()->with('success', 'Configuración actualizada correctamente.');
     }

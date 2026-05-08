@@ -5,8 +5,10 @@
     <title>Cotización #{{ $quotation->id }}</title>
     <style>
         body { font-family: 'Helvetica', sans-serif; color: #333; line-height: 1.5; }
-        .header { border-bottom: 2px solid #2E7D32; padding-bottom: 20px; margin-bottom: 30px; }
-        .company-name { font-size: 24px; font-weight: bold; color: #2E7D32; margin: 0; }
+        .header { border-bottom: 2px solid #2E7D32; padding-bottom: 20px; margin-bottom: 30px; display: table; width: 100%; }
+        .header-left { display: table-cell; vertical-align: top; width: 70%; }
+        .header-right { display: table-cell; vertical-align: top; width: 30%; text-align: right; }
+        .company-name { font-size: 20px; font-weight: bold; color: #2E7D32; margin: 0; }
         .company-info { font-size: 12px; color: #666; margin-top: 5px; }
         .quotation-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; background: #f0fdf4; padding: 10px; border-radius: 5px; }
         .grid { display: table; width: 100%; margin-bottom: 20px; }
@@ -24,10 +26,17 @@
 </head>
 <body>
     <div class="header">
-        <div class="company-name">{{ $company['name'] }}</div>
-        <div class="company-info">
-            RUC: {{ $company['ruc'] }} | {{ $company['address'] }}<br>
-            Teléfono: {{ $company['phone'] }} | Email: {{ $company['email'] }}
+        <div class="header-left">
+            <div class="company-name">Drogueria y Distribuidora Sanchez Pharma</div>
+            <div class="company-info">
+                RUC: {{ $company['ruc'] }} | {{ $company['address'] }}<br>
+                Teléfono: {{ $company['phone'] }} | Email: {{ $company['email'] }}
+            </div>
+        </div>
+        <div class="header-right">
+            @if(file_exists(public_path('img/logo.PNG')))
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.PNG'))) }}" style="max-height: 120px; object-fit: contain;">
+            @endif
         </div>
     </div>
 

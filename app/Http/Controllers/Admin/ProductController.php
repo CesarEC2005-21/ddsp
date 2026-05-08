@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AuditLog;
 
 class ProductController extends Controller
 {
@@ -58,13 +59,19 @@ class ProductController extends Controller
             $path = $request->file('imagen')->store('products', 'public');
         }
 
-        Product::create(array_merge($validated, [
+        $product = Product::create(array_merge($validated, [
             'is_featured' => $request->has('is_featured'),
             'imagen' => $path,
             'estado' => true,
             'usuario_origen' => auth()->id(),
             'usuario_actualizo' => auth()->id(),
         ]));
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_product',
+            'description' => "Ingresó el producto: {$product->nombre} ({$product->codigo})"
+        ]);
 
         return redirect()->route('admin.products.index')->with('success', 'Producto creado exitosamente.');
     }
@@ -106,11 +113,20 @@ class ProductController extends Controller
     {
         try {
             $imagePath = $product->imagen;
+            $nombre = $product->nombre;
+            $codigo = $product->codigo;
+            
             $product->delete();
             
             if ($imagePath) {
                 Storage::disk('public')->delete($imagePath);
             }
+            
+            AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'deleted_product',
+                'description' => "Eliminó el producto: {$nombre} ({$codigo})"
+            ]);
             
             return redirect()->route('admin.products.index')->with('success', 'Producto eliminado correctamente.');
         } catch (\Illuminate\Database\QueryException $e) {

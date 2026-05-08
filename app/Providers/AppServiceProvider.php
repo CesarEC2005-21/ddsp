@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Laboratory;
 use Illuminate\Support\ServiceProvider;
+use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,5 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \Illuminate\Pagination\Paginator::useBootstrapFive();
+        
+        View::share('laboratories', Laboratory::all());
     }
 }

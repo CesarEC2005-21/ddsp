@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Laboratory;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
-use App\Models\Pharmacy;
+// use App\Models\Pharmacy;
 use App\Models\Representative;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactAdminMail;
 
 class LandingController extends Controller
 {
@@ -20,9 +23,20 @@ class LandingController extends Controller
 
     public function about()
     {
-        $pharmacies = Pharmacy::where('estado', true)->get();
-        $representatives = Representative::where('estado', true)->with('zona')->get();
-        return view('landing.nosotros', compact('pharmacies', 'representatives'));
+        $representatives = Representative::where('estado', true)->with('locations.zona')->get();
+        return view('landing.ejecutivos', compact('representatives'));
+    }
+
+    public function nosotros()
+    {
+        $settings = [
+            'mision' => Setting::get('mision', 'Brindar acceso a medicamentos de calidad a través de una red de distribución eficiente, garantizando la salud y bienestar de todos los peruanos.'),
+            'vision' => Setting::get('vision', 'Ser la empresa líder en distribución farmacéutica en el Perú, reconocida por su compromiso con la salud y la innovación en el sector.'),
+            'valores' => Setting::get('valores', 'Compromiso, Honestidad, Innovación, Servicio, Calidad'),
+            'principios' => Setting::get('principios', '• Atención al cliente con excelencia\n• Distribución oportuna de medicamentos\n• Precios justos y accesibles\n• Compromiso con la salud pública\n• Ética profesional en todas nuestras acciones'),
+            'historia' => Setting::get('historia', 'Sanchez Pharma E.I.R.L. nació con la misión de democratizar el acceso a medicamentos de calidad en el Perú. Con años de experiencia en el sector farmacéutico, hemos construido una red de distribución que llegaa cada rincón del país, partnering con laboratorios reconocidos y un equipo de ejecutivos comprometidos con la salud de los peruanos.'),
+        ];
+        return view('landing.nosotros', compact('settings'));
     }
 
     public function products(Request $request)
@@ -72,5 +86,47 @@ class LandingController extends Controller
     public function contact()
     {
         return view('landing.contacto');
+    }
+
+    public function processContact(Request $request)
+    {
+        $validated = $request->validate([
+            'empresa' => 'required|string|max:255',
+            'ruc' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'asunto' => 'required|string|max:255',
+            'mensaje' => 'required|string'
+        ]);
+
+        try {
+            $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
+            Mail::to($adminEmail)->send(new ContactAdminMail($validated));
+        } catch (\Exception $e) {
+            \Log::error("Error enviando email de contacto al admin: " . $e->getMessage());
+        }
+
+        return back()->with('success', 'Tu mensaje ha sido enviado correctamente. Nos pondremos en contacto contigo pronto.');
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $query = $request->get('q');
+        if (!$query) return response()->json([]);
+
+        $products = Product::where('estado', true)
+            ->where(function($q) use ($query) {
+                $q->where('nombre', 'like', "%{$query}%")
+                  ->orWhere('codigo', 'like', "%{$query}%");
+            })
+            ->limit(5)
+            ->get(['id', 'nombre', 'imagen', 'precio']);
+
+        $products->map(function($product) {
+            $product->imagen_url = $product->imagen ? asset('storage/' . $product->imagen) : null;
+            return $product;
+        });
+
+        return response()->json($products);
     }
 }

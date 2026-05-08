@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\QuotationExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuotationController extends Controller
 {
@@ -65,31 +67,40 @@ class QuotationController extends Controller
                 'email' => Setting::get('company_email', ''),
             ];
 
-            // Generar PDF
-            $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
-            $pdfContent = $pdf->output();
+            $quotation_id = $quotation->id;
+            $customer_phone = $quotation->telefono;
+            $customer_name = $quotation->nombre;
 
-            // Enviar Email al cliente
-            try {
-                Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
-            } catch (\Exception $e) {
-                \Log::error("Error enviando email al cliente: " . $e->getMessage());
-            }
+            app()->terminating(function () use ($quotation, $company) {
+                // Generar PDF
+                $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
+                $pdfContent = $pdf->output();
 
-            // Enviar Email al administrador
-            try {
-                $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
-                Mail::to($adminEmail)->send(new QuotationAdminMail($quotation, $pdfContent, $company));
-            } catch (\Exception $e) {
-                \Log::error("Error enviando email al admin: " . $e->getMessage());
-            }
+                // Enviar Email al cliente
+                try {
+                    Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
+                } catch (\Exception $e) {
+                    \Log::error("Error enviando email al cliente: " . $e->getMessage());
+                }
+
+                // Generar Excel
+                $excelContent = Excel::raw(new QuotationExport($quotation), \Maatwebsite\Excel\Excel::XLSX);
+
+                // Enviar Email al administrador
+                try {
+                    $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
+                    Mail::to($adminEmail)->send(new QuotationAdminMail($quotation, $pdfContent, $excelContent, $company));
+                } catch (\Exception $e) {
+                    \Log::error("Error enviando email al admin: " . $e->getMessage());
+                }
+            });
 
             session()->forget('cart');
 
             return redirect()->route('quotation.success')->with([
-                'quotation_id' => $quotation->id,
-                'customer_phone' => $quotation->telefono,
-                'customer_name' => $quotation->nombre
+                'quotation_id' => $quotation_id,
+                'customer_phone' => $customer_phone,
+                'customer_name' => $customer_name
             ]);
 
         } catch (\Exception $e) {

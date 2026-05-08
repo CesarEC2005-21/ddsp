@@ -28,14 +28,18 @@ class BackupController extends Controller
         }
 
         // En XAMPP Windows, mysqldump suele estar en esta ruta
-        $mysqlPath = "C:\\xampp\\mysql\\bin\\mysqldump.exe";
+        $mysqlPath = "d:\\xampp\\mysql\\bin\\mysqldump.exe";
         
         // Si no está ahí, intentamos solo 'mysqldump' asumiendo que está en el PATH
         if (!file_exists($mysqlPath)) {
-            $mysqlPath = "mysqldump";
+            $mysqlPath = "c:\\xampp\\mysql\\bin\\mysqldump.exe";
+            if (!file_exists($mysqlPath)) {
+                $mysqlPath = "mysqldump";
+            }
         }
 
-        $command = "\"$mysqlPath\" --user=$username --password=$password --host=$host $database > \"$path\"";
+        $passArg = empty($password) ? "" : "--password=\"$password\"";
+        $command = "\"$mysqlPath\" --user=\"$username\" $passArg --host=\"$host\" \"$database\" > \"$path\" 2>&1";
         
         exec($command, $output, $returnVar);
 

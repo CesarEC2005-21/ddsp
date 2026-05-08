@@ -24,34 +24,31 @@
                     <label style="display: block; margin-bottom: 10px; font-weight: 500; color: #555;">Buscar:</label>
                     <div style="display: flex;">
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="Producto o código..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px 0 0 8px; outline: none;">
+                        @if(request('lab'))
+                        <input type="hidden" name="lab" value="{{ request('lab') }}">
+                        @endif
                         <button type="submit" style="background: var(--primary-green); color: white; border: none; padding: 0 15px; border-radius: 0 8px 8px 0; cursor: pointer;"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 500; color: #555;">Laboratorios:</label>
-                    <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
-                        <div style="margin-bottom: 8px;">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; border-radius: 8px; background: {{ request('lab') == '' ? '#f0fdf4' : 'transparent' }}; border: 1px solid {{ request('lab') == '' ? 'var(--primary-green)' : 'transparent' }};">
-                                <input type="radio" name="lab" value="" {{ request('lab') == '' ? 'checked' : '' }} onchange="this.form.submit()" style="display: none;">
-                                <span style="font-size: 0.95rem; {{ request('lab') == '' ? 'color: var(--primary-green); font-weight: 600;' : 'color: #666;' }}">Todos</span>
-                            </label>
-                        </div>
-                        @foreach($laboratories as $lab)
-                        <div style="margin-bottom: 8px;">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; border-radius: 8px; background: {{ request('lab') == $lab->id ? '#f0fdf4' : 'transparent' }}; border: 1px solid {{ request('lab') == $lab->id ? 'var(--primary-green)' : 'transparent' }};">
-                                <input type="radio" name="lab" value="{{ $lab->id }}" {{ request('lab') == $lab->id ? 'checked' : '' }} onchange="this.form.submit()" style="display: none;">
-                                <span style="font-size: 0.95rem; {{ request('lab') == $lab->id ? 'color: var(--primary-green); font-weight: 600;' : 'color: #666;' }}">{{ $lab->descripcion }}</span>
-                            </label>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                @if(request('search') || request('lab'))
-                    <a href="{{ route('products') }}" style="display: block; text-align: center; color: #ef4444; text-decoration: none; font-size: 0.9rem; margin-top: 20px; padding: 10px; border: 1px dashed #ef4444; border-radius: 8px;">Limpiar Filtros</a>
-                @endif
             </form>
+                
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #475569;">Laboratorio:</label>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="{{ route('products', ['search' => request('search')]) }}" style="display: block; padding: 10px 15px; border-radius: 10px; border: 2px solid {{ !request('lab') ? 'var(--primary-green)' : '#e2e8f0' }}; background: {{ !request('lab') ? '#f0fdf4' : 'white' }}; color: {{ !request('lab') ? 'var(--dark-green)' : '#475569' }}; text-decoration: none; font-weight: 600; transition: 0.2s;">
+                        Todos los Laboratorios
+                    </a>
+                    @foreach($laboratories as $lab)
+                    <a href="{{ route('products', ['lab' => $lab->id, 'search' => request('search')]) }}" style="display: block; padding: 10px 15px; border-radius: 10px; border: 2px solid {{ request('lab') == $lab->id ? 'var(--primary-green)' : '#e2e8f0' }}; background: {{ request('lab') == $lab->id ? '#f0fdf4' : 'white' }}; color: {{ request('lab') == $lab->id ? 'var(--dark-green)' : '#475569' }}; text-decoration: none; font-weight: 600; transition: 0.2s;">
+                        {{ $lab->descripcion }}
+                    </a>
+                    @endforeach
+                </div>
+            </div>
+
+            @if(request('search') || request('lab'))
+                <a href="{{ route('products') }}" style="display: block; text-align: center; color: #ef4444; text-decoration: none; font-size: 0.9rem; margin-top: 20px; padding: 10px; border: 1px dashed #ef4444; border-radius: 8px;">Limpiar Filtros</a>
+            @endif
         </aside>
 
         <!-- Product Grid -->
@@ -94,12 +91,11 @@
                         <div style="margin-top: auto;">
                             <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">
                                 <span style="font-size: 1.8rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
-                                <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">/ unidad</span>
                             </div>
                             
                             <div style="display: flex; gap: 10px; align-items: center;">
                                 <button onclick="addToCart({{ $product->id }}, '{{ $product->nombre }}')" class="btn-add-cart">
-                                    <i class="fas fa-shopping-basket"></i>
+                                    AGREGAR
                                 </button>
                                 
                                 <div class="qty-selector">

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Laboratory;
-use App\Models\Pharmacy;
+// use App\Models\Pharmacy;
 use App\Models\Representative;
 use App\Models\Quotation;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $stats = [
             'products' => Product::count(),
             'laboratories' => Laboratory::count(),
-            'pharmacies' => Pharmacy::count(),
+            'pharmacies' => 0,
             'representatives' => Representative::count(),
             'quotations' => Quotation::count(),
             'total_quoted' => Quotation::sum('total')

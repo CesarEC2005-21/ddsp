@@ -9,6 +9,7 @@ use App\Models\Setting;
 use App\Exports\QuotationExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\AuditLog;
 
 class QuotationController extends Controller
 {
@@ -43,6 +44,15 @@ class QuotationController extends Controller
     {
         $request->validate(['estado' => 'required|in:pendiente,completado,cancelado']);
         $quotation->update(['estado' => $request->estado]);
+
+        if ($request->estado === 'cancelado') {
+            AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'cancelled_quotation',
+                'description' => "Canceló la cotización #{$quotation->id} de {$quotation->nombre}"
+            ]);
+        }
+
         return back()->with('success', 'Estado actualizado correctamente');
     }
 
