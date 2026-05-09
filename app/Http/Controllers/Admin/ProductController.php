@@ -111,6 +111,15 @@ class ProductController extends Controller
             unset($validated['imagen']);
         }
 
+        // Record price history if changed
+        if (floatval($product->precio) != floatval($validated['precio'])) {
+            \App\Models\ProductPriceHistory::create([
+                'product_id' => $product->id,
+                'precio' => $product->precio,
+                'user_id' => auth()->id()
+            ]);
+        }
+
         $product->update(array_merge($validated, [
             'is_featured' => $request->has('is_featured'),
             'usuario_actualizo' => auth()->id(),
@@ -150,18 +159,59 @@ class ProductController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'laboratory_id' => 'required|exists:laboratories,id',
+            'laboratory_id' => 'nullable|exists:laboratories,id',
             'file' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
 
         try {
-            \Maatwebsite\Excel\Facades\Excel::import(
-                new \App\Imports\ProductsImport($request->laboratory_id), 
-                $request->file('file')
-            );
-            return redirect()->route('admin.products.index')->with('success', 'Productos importados correctamente.');
+            $import = new \App\Imports\ProductsImport($request->laboratory_id);
+            \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
+            
+            $results = $import->results;
+            
+            $msg = 'Importación completada.';
+            if (count($results['new_products']) > 0 || count($results['updated_products']) > 0 || count($results['new_laboratories']) > 0) {
+                return redirect()->route('admin.products.index')->with([
+                    'success' => $msg,
+                    'import_results' => $results
+                ]);
+            }
+
+            return redirect()->route('admin.products.index')->with('success', 'Productos importados correctamente (Sin cambios nuevos).');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['file' => 'Error al importar: ' . $e->getMessage()]);
         }
+    }
+    public function priceHistory(Product $product)
+    {
+        $history = $product->priceHistory()->with('user')->get();
+        return response()->json($history);
+    }
+
+    public function deleteByLab(\App\Models\Laboratory $laboratory)
+    {
+        $count = Product::where('laboratory_id', $laboratory->id)->count();
+        
+        if ($count === 0) {
+            return redirect()->back()->with('info', 'No hay productos para eliminar en este laboratorio.');
+        }
+
+        // Delete images
+        $products = Product::where('laboratory_id', $laboratory->id)->get();
+        foreach ($products as $product) {
+            if ($product->imagen) {
+                Storage::disk('public')->delete($product->imagen);
+            }
+        }
+
+        Product::where('laboratory_id', $laboratory->id)->delete();
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'mass_deleted_products',
+            'description' => "Eliminó TODOS los productos ({$count}) del laboratorio: {$laboratory->descripcion}"
+        ]);
+
+        return redirect()->route('admin.products.index')->with('success', "Se han eliminado correctamente {$count} productos del laboratorio {$laboratory->descripcion}.");
     }
 }

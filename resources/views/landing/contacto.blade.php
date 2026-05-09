@@ -177,8 +177,8 @@
                     @csrf
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Nombre del Cliente <span>*</span></label>
-                            <input type="text" name="cliente" class="form-input" placeholder="Ej. Juan Pérez / Farmacia Salud" required>
+                            <label class="form-label">Nombre del Cliente / Empresa <span>*</span></label>
+                            <input type="text" name="empresa" class="form-input" placeholder="Ej. Juan Pérez / Farmacia Salud" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Tipo de Documento <span>*</span></label>

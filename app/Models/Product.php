@@ -33,4 +33,9 @@ class Product extends Model
     {
         return $this->belongsTo(UnidadMedida::class, 'unidad_medida_id');
     }
+
+    public function priceHistory()
+    {
+        return $this->hasMany(ProductPriceHistory::class)->orderBy('created_at', 'desc');
+    }
 }

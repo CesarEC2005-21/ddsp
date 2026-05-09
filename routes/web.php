@@ -49,6 +49,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Protegido por rol (ejemplo: admin y supervisor pueden ver/crear productos)
     Route::middleware(['role:ing_sistemas,admin,supervisor'])->group(function () {
         Route::post('products/import', [ProductController::class, 'import'])->name('products.import');
+        Route::get('products/{product}/history', [ProductController::class, 'priceHistory'])->name('products.history');
+        Route::delete('products/delete-by-lab/{laboratory}', [ProductController::class, 'deleteByLab'])->name('products.deleteByLab');
         Route::resource('products', ProductController::class);
         Route::patch('laboratories/{laboratory}/toggle-top', [\App\Http\Controllers\Admin\LaboratoryController::class, 'toggleTop'])->name('laboratories.toggle-top');
         Route::resource('laboratories', LaboratoryController::class);
@@ -64,6 +66,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         
         // Reportes, Backups y Configuración
         Route::get('reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/customers', [\App\Http\Controllers\Admin\ReportController::class, 'customers'])->name('reports.customers');
+        Route::get('reports/quotations', [\App\Http\Controllers\Admin\ReportController::class, 'quotations'])->name('reports.quotations');
+        Route::get('reports/products', [\App\Http\Controllers\Admin\ReportController::class, 'products'])->name('reports.products');
         Route::get('backups', [\App\Http\Controllers\Admin\BackupController::class, 'index'])->name('backups.index');
         Route::post('backups/generate', [\App\Http\Controllers\Admin\BackupController::class, 'generate'])->name('backups.generate');
         Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');

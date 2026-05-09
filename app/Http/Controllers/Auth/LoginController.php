@@ -149,11 +149,12 @@ class LoginController extends Controller
         if ($user) {
             $log = AccessLog::where('user_id', $user->id)->whereNull('logout_at')->latest()->first();
             if ($log) {
-                $duration = now()->diffInSeconds($log->login_at);
-                $hours = floor($duration / 3600);
-                $minutes = floor(($duration / 60) % 60);
-                $seconds = $duration % 60;
-                $formattedDuration = "{$hours}h {$minutes}m {$seconds}s";
+                $loginAt = \Carbon\Carbon::parse($log->login_at);
+                $duration = $loginAt->diffInSeconds(now());
+                $hours = (int) floor($duration / 3600);
+                $minutes = (int) floor(($duration % 3600) / 60);
+                $seconds = (int) ($duration % 60);
+                $formattedDuration = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
                 
                 $log->update([
                     'logout_at' => now(),

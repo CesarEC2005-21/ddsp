@@ -75,8 +75,8 @@
 
     <!-- Modal Nuevo Representante -->
     <div id="newRepModal" class="modal">
-        <div class="modal-content" style="max-width: 1000px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
-            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="modal-content" style="max-width: 1000px; padding: 0; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <div style="background: rgba(16, 185, 129, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-user-tie" style="color: #10b981; font-size: 1.2rem;"></i>
@@ -85,7 +85,7 @@
                 </div>
                 <span class="close-modal" onclick="closeModal('newRepModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body" style="padding: 40px;">
+            <div class="modal-body" style="padding: 40px; overflow-y: auto; flex: 1;">
                 <form action="{{ route('admin.representatives.store') }}" method="POST" enctype="multipart/form-data" id="form-new">
                     @csrf
                     <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 35px;">
@@ -170,8 +170,8 @@
 
     <!-- Modal Editar Representante -->
     <div id="editRepModal" class="modal">
-        <div class="modal-content" style="max-width: 1000px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
-            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="modal-content" style="max-width: 1000px; padding: 0; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <div style="background: rgba(245, 158, 11, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-edit" style="color: #f59e0b; font-size: 1.2rem;"></i>
@@ -180,7 +180,7 @@
                 </div>
                 <span class="close-modal" onclick="closeModal('editRepModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body" style="padding: 40px;">
+            <div class="modal-body" style="padding: 40px; overflow-y: auto; flex: 1;">
                 <form id="editRepForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')

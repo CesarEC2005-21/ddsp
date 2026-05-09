@@ -11,8 +11,13 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ProductsImport implements ToCollection, WithHeadingRow
 {
     protected $laboratory_id;
+    public $results = [
+        'new_products' => [],
+        'updated_products' => [],
+        'new_laboratories' => [],
+    ];
 
-    public function __construct($laboratory_id)
+    public function __construct($laboratory_id = null)
     {
         $this->laboratory_id = $laboratory_id;
     }
@@ -22,34 +27,33 @@ class ProductsImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             $rowArray = $row->toArray();
             
-            // Debugging to see what keys are arriving
-            \Illuminate\Support\Facades\Log::info('Excel Row Data: ' . json_encode($rowArray));
-
-            // Attempt to find keys tolerating spaces or different names
-            $codigoKey = $this->findKey($rowArray, ['codigo', 'c_digo', 'código', 'code']);
-            $descKey = $this->findKey($rowArray, ['descripcion', 'descripci_n', 'descripción', 'nombre']);
+            // Map keys
+            $codigoKey = $this->findKey($rowArray, ['codigo', 'sku', 'code']);
+            $descKey = $this->findKey($rowArray, ['descripcion', 'nombre', 'description', 'product']);
             $umKey = $this->findKey($rowArray, ['um', 'unidad', 'medida']);
             $precioKey = $this->findKey($rowArray, ['precio', 'costo', 'price']);
+            $labKey = $this->findKey($rowArray, ['laboratorio', 'lab', 'laboratory']);
 
-            $codigo = $codigoKey ? $rowArray[$codigoKey] : null;
-            if (empty($codigo)) {
-                // Check if perhaps it's an indexed array
-                if (isset($rowArray[0]) && isset($rowArray[1])) {
-                    $codigo = $rowArray[0];
-                    $descKey = 1;
-                    $umKey = 2;
-                    $precioKey = 3;
-                    if (strtolower(trim($codigo)) === 'codigo' || strtolower(trim($codigo)) === 'código') {
-                        continue; // Skip header
-                    }
-                } else {
-                    continue;
+            $codigo = $codigoKey ? trim($rowArray[$codigoKey]) : null;
+            if (empty($codigo)) continue;
+
+            // Determine Laboratory
+            $currentLabId = $this->laboratory_id;
+            if (!$currentLabId && $labKey && !empty($rowArray[$labKey])) {
+                $labName = trim($rowArray[$labKey]);
+                $lab = \App\Models\Laboratory::where('descripcion', $labName)->first();
+                if (!$lab) {
+                    $lab = \App\Models\Laboratory::create(['descripcion' => $labName]);
+                    $this->results['new_laboratories'][] = $labName;
                 }
+                $currentLabId = $lab->id;
             }
 
-            $umName = $umKey && isset($rowArray[$umKey]) ? $rowArray[$umKey] : null;
+            if (!$currentLabId) continue;
+
+            // Determine Unit of Measure
+            $umName = $umKey && !empty($rowArray[$umKey]) ? trim($rowArray[$umKey]) : null;
             $unidadMedidaId = null;
-            
             if ($umName) {
                 $um = UnidadMedida::where('um', $umName)->first();
                 if (!$um) {
@@ -61,18 +65,40 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 $unidadMedidaId = $firstUm ? $firstUm->id : null;
             }
 
-            Product::updateOrCreate(
-                ['codigo' => $codigo],
-                [
-                    'nombre' => ($descKey && isset($rowArray[$descKey])) ? $rowArray[$descKey] : 'Sin Nombre',
-                    'laboratory_id' => $this->laboratory_id,
+            $precio = ($precioKey && isset($rowArray[$precioKey])) ? floatval($rowArray[$precioKey]) : 0;
+            $nombre = ($descKey && isset($rowArray[$descKey])) ? $rowArray[$descKey] : 'Sin Nombre';
+
+            $product = Product::where('codigo', $codigo)->first();
+
+            if ($product) {
+                // Repeated Product: Update Price and save History if changed
+                if (floatval($product->precio) != floatval($precio)) {
+                    // Save history
+                    \App\Models\ProductPriceHistory::create([
+                        'product_id' => $product->id,
+                        'precio' => $product->precio,
+                        'user_id' => auth()->id() ?? 1
+                    ]);
+                    
+                    $product->precio = $precio;
+                    $product->usuario_actualizo = auth()->id() ?? 1;
+                    $product->save();
+                    $this->results['updated_products'][] = "{$product->nombre} ({$product->codigo})";
+                }
+            } else {
+                // New Product
+                $product = Product::create([
+                    'codigo' => $codigo,
+                    'nombre' => $nombre,
+                    'laboratory_id' => $currentLabId,
                     'unidad_medida_id' => $unidadMedidaId,
-                    'precio' => ($precioKey && isset($rowArray[$precioKey])) ? floatval($rowArray[$precioKey]) : 0,
+                    'precio' => $precio,
                     'estado' => true,
                     'usuario_origen' => auth()->id() ?? 1,
                     'usuario_actualizo' => auth()->id() ?? 1,
-                ]
-            );
+                ]);
+                $this->results['new_products'][] = "{$product->nombre} ({$product->codigo})";
+            }
         }
     }
 
@@ -81,7 +107,8 @@ class ProductsImport implements ToCollection, WithHeadingRow
         $keys = array_keys($row);
         foreach ($possibleKeys as $pk) {
             foreach ($keys as $k) {
-                if (str_contains(strtolower($k), $pk)) {
+                $cleanK = strtolower(trim($k));
+                if (str_contains($cleanK, $pk)) {
                     return $k;
                 }
             }
