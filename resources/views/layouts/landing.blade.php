@@ -75,6 +75,7 @@
                 </li>
                 <li><a href="{{ route('home') }}">Inicio</a></li>
                 <li><a href="{{ route('nosotros') }}">Nosotros</a></li>
+                <li><a href="{{ route('noticias') }}">Noticias</a></li>
                 <li><a href="{{ route('about') }}">Ejecutivos</a></li>
                 <li class="nav-dropdown">
                     <a href="{{ route('products') }}" class="nav-dropdown-toggle">Laboratorios <i class="fas fa-chevron-down"></i></a>

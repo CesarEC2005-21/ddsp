@@ -59,6 +59,13 @@
             </a>
             @endif
 
+            <div class="nav-section-title">Marketing & Contenido</div>
+            @if($can('noticias'))
+            <a href="{{ route('admin.noticias.index') }}" class="nav-item {{ request()->routeIs('admin.noticias.*') ? 'active' : '' }}">
+                <i class="fas fa-newspaper"></i> Noticias / Promociones
+            </a>
+            @endif
+
             <div class="nav-section-title">Ventas & Distribución</div>
             @if($can('representatives'))
             <a href="{{ route('admin.representatives.index') }}" class="nav-item {{ request()->routeIs('admin.representatives.*') ? 'active' : '' }}">
@@ -220,6 +227,11 @@
             @if(session('error'))
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}
                 </div>
             @endif
 

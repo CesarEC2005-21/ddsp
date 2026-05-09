@@ -5,11 +5,6 @@
         <h2 class="page-title">Configuración del Sistema</h2>
     </div>
 
-    @if(session('success'))
-        <div style="background: #D1FAE5; color: #065F46; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="card" style="max-width: 800px;">
         <form action="{{ route('admin.settings.store') }}" method="POST">

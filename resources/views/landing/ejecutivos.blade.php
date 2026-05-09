@@ -3,87 +3,261 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
+    :root {
+        --dark-green-rgb: 27, 94, 32;
+        --primary-green-rgb: 46, 125, 50;
+    }
+
     .about-hero {
-        background: linear-gradient(rgba(27, 94, 32, 0.8), rgba(27, 94, 32, 0.9)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-        color: white; text-align: center; padding: 60px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;
+        background: linear-gradient(rgba(var(--dark-green-rgb), 0.85), rgba(var(--dark-green-rgb), 0.95)), 
+                    url('https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+        color: white; 
+        text-align: center; 
+        padding: 100px 5% 140px; 
+        clip-path: ellipse(150% 100% at 50% 0%);
+        margin-bottom: -60px;
+        position: relative;
+        z-index: 1;
     }
 
-    .nosotros-layout { display: grid; grid-template-columns: 350px 1fr; gap: 30px; padding: 0 5% 100px; max-width: 1400px; margin: 0 auto; min-height: 800px; }
-    
-    .sidebar-filters { background: white; border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; height: fit-content; position: sticky; top: 120px; z-index: 10; animation: fadeInLeft 0.8s ease-out; }
-    
-    .filter-section { margin-bottom: 30px; }
-    .filter-label { display: block; font-size: 0.85rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
-    
-    .type-selector { display: flex; gap: 10px; margin-bottom: 25px; }
-    .type-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; background: white; cursor: pointer; font-weight: 600; color: #64748b; transition: 0.3s; font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .type-btn.active { border-color: var(--primary-green); background: #f0fdf4; color: var(--primary-green); }
-    .type-btn i { font-size: 1.2rem; }
-
-    .select-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; font-size: 0.95rem; color: #1e293b; cursor: pointer; }
-
-    .content-display { background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-height: 800px; animation: fadeInRight 0.8s ease-out; }
-    
-    .map-container { position: relative; flex-grow: 1; min-height: 600px; }
-    #map-display { width: 100%; height: 100%; min-height: 800px; }
-
-    .rep-overlay-card {
-        position: absolute; bottom: 30px; left: 30px; width: 380px; background: white; border-radius: 25px; 
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1000; overflow: hidden;
-        display: none; animation: fadeInUp 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    .about-hero h1 {
+        font-size: 3.8rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 15px;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-    .rep-overlay-img { height: 220px; background-size: cover; background-position: center; position: relative; }
-    .rep-overlay-img::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: linear-gradient(transparent, white); }
-    .rep-overlay-info { padding: 25px; position: relative; margin-top: -40px; background: white; border-radius: 25px 25px 0 0; }
 
-    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .nosotros-layout { 
+        display: grid; 
+        grid-template-columns: 380px 1fr; 
+        gap: 40px; 
+        padding: 0 5% 100px; 
+        max-width: 1500px; 
+        margin: 0 auto; 
+        position: relative;
+        z-index: 2;
+    }
+    
+    .sidebar-filters { 
+        background: rgba(255, 255, 255, 0.95); 
+        border-radius: 30px; 
+        padding: 40px; 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); 
+        border: 1px solid rgba(var(--dark-green-rgb), 0.1); 
+        height: fit-content; 
+        position: sticky; 
+        top: 130px; 
+        backdrop-filter: blur(10px);
+        animation: fadeInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+    }
+    
+    .filter-label { 
+        display: block; 
+        font-size: 0.75rem; 
+        font-weight: 800; 
+        color: var(--dark-green); 
+        text-transform: uppercase; 
+        margin-bottom: 20px; 
+        letter-spacing: 2px; 
+        opacity: 0.8;
+    }
+    
+    .select-input { 
+        width: 100%; 
+        padding: 18px 20px 18px 50px; 
+        border-radius: 18px; 
+        border: 2px solid #f1f5f9; 
+        background: #f8fafc; 
+        outline: none; 
+        font-size: 1rem; 
+        color: #1e293b; 
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+
+    .select-input:focus {
+        border-color: var(--dark-green);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(var(--dark-green-rgb), 0.1);
+    }
+
+    .content-display { 
+        background: white; 
+        border-radius: 40px; 
+        overflow: hidden; 
+        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15); 
+        border: 1px solid rgba(var(--dark-green-rgb), 0.05); 
+        display: flex; 
+        flex-direction: column; 
+        height: 850px; 
+        animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+    }
+    
+    #map-display { width: 100%; height: 100%; }
+
+    .rep-card-premium {
+        background: white;
+        border-radius: 35px;
+        overflow: hidden;
+        border: 1px solid #f1f5f9;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .rep-card-premium:hover {
+        transform: translateY(-20px);
+        box-shadow: 0 40px 80px -15px rgba(var(--dark-green-rgb), 0.2);
+        border-color: rgba(var(--dark-green-rgb), 0.3);
+    }
+
+    .rep-card-img-wrapper {
+        height: 420px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rep-card-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .rep-card-premium:hover .rep-card-img-wrapper img {
+        transform: scale(1.1);
+    }
+
+    .rep-card-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(var(--dark-green-rgb), 0.9) 0%, transparent 60%);
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 10px 18px;
+        border-radius: 50px;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #4ade80;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #4ade80;
+    }
+
+    .contact-btn-circle {
+        width: 60px;
+        height: 60px;
+        background: #f1f5f9;
+        color: var(--dark-green);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        transition: all 0.4s;
+        border: 1px solid #e2e8f0;
+    }
+
+    .contact-btn-circle:hover {
+        background: var(--dark-green);
+        color: white;
+        transform: rotate(15deg) scale(1.1);
+    }
+
+    .wa-btn-premium {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 18px;
+        background: linear-gradient(135deg, #25D366, #128c7e);
+        color: white;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: all 0.4s;
+        box-shadow: 0 15px 30px rgba(37, 211, 102, 0.2);
+    }
+
+    .wa-btn-premium:hover {
+        transform: scale(1.02);
+        box-shadow: 0 20px 40px rgba(37, 211, 102, 0.3);
+    }
+
+    @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
+
+    @media (max-width: 1024px) {
+        .nosotros-layout { grid-template-columns: 1fr; }
+        .sidebar-filters { position: static; margin-bottom: 30px; }
+        .about-hero h1 { font-size: 2.8rem; }
+    }
 </style>
 @endpush
 
 @section('content')
     <div class="about-hero">
-        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800;">Nuestra Red de Ejecutivos</h1>
-        <p style="font-size: 1.1rem; opacity: 0.9; color: white;">Contáctate con nuestros representantes autorizados en todo el país.</p>
+        <h1 style="color: white !important;">Nuestra Red de Ejecutivos</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto; line-height: 1.6;">Encuentra al representante ideal para tu zona y recibe asesoría farmacéutica personalizada con los más altos estándares de calidad.</p>
     </div>
 
     <div class="nosotros-layout">
         <!-- Sidebar de Filtros -->
         <aside class="sidebar-filters">
-            <div class="filter-section" id="section-reps">
-                <span class="filter-label">Encuentra a tu asesor</span>
+            <div class="filter-section">
+                <span class="filter-label">Localiza a tu asesor</span>
                 <div style="position: relative;">
-                    <select id="select-rep" class="select-input" onchange="showRep(this.value)" style="padding-left: 45px;">
-                        <option value="">Todos los Ejecutivos</option>
+                    <select id="select-rep" class="select-input" onchange="showRep(this.value)">
+                        <option value="">Explorar todos los ejecutivos</option>
                         @foreach($representatives as $rep)
                             <option value="{{ $rep->id }}">{{ $rep->nombre }}</option>
                         @endforeach
                     </select>
-                    <i class="fas fa-search" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                    <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--dark-green); font-size: 1.1rem; opacity: 0.6;"></i>
                 </div>
             </div>
 
-            <div id="contact-info-short" style="display: none; margin-top: 30px; padding: 30px; border-radius: 24px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(16, 185, 129, 0.2); animation: fadeInUp 0.5s; box-shadow: 0 20px 40px rgba(0,0,0,0.08);">
-                <div id="rep-photo-container" style="margin-bottom: 25px; border-radius: 20px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #f8fafc;">
-                    <img id="side-rep-img" src="" alt="Imagen" style="width: 100%; height: auto; max-height: 400px; display: block; object-fit: cover; transition: 0.5s;">
+            <div id="contact-info-short" style="display: none; margin-top: 40px; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);">
+                <div id="rep-photo-container" style="margin-bottom: 25px; border-radius: 25px; overflow: hidden; border: 5px solid white; box-shadow: 0 20px 40px rgba(0,0,0,0.1); background: #f8fafc;">
+                    <img id="side-rep-img" src="" alt="Representante" style="width: 100%; height: auto; max-height: 350px; display: block; object-fit: cover;">
                 </div>
                 <div id="rep-contact-data">
-                    <h4 id="side-rep-name" style="font-weight: 800; color: #1e293b; margin-bottom: 8px; font-size: 1.4rem;"></h4>
-                    <span id="text-email" style="display: block; color: var(--primary-green); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;"></span>
+                    <h4 id="side-rep-name" style="font-weight: 800; color: #1e293b; margin-bottom: 5px; font-size: 1.5rem; line-height: 1.2;"></h4>
+                    <span id="text-email" style="display: block; color: var(--dark-green); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px;"></span>
                     
-                    <div style="background: #f8fafc; padding: 15px; border-radius: 15px; margin-bottom: 25px;">
-                        <p style="font-size: 0.95rem; margin-bottom: 10px; color: #475569; display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-phone-alt" style="color: var(--primary-green);"></i> <span id="text-phone"></span>
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 20px; margin-bottom: 30px; border: 1px solid #f1f5f9;">
+                        <p style="font-size: 0.95rem; margin-bottom: 12px; color: #475569; display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-phone-alt" style="color: var(--dark-green); width: 20px;"></i> <span id="text-phone"></span>
                         </p>
-                        <p style="font-size: 0.95rem; margin: 0; color: #475569; display: flex; align-items: center; gap: 12px;">
-                            <i class="fas fa-clock" style="color: var(--primary-green);"></i> Lun - Vie: 8:00 - 18:00
+                        <p style="font-size: 0.95rem; margin: 0; color: #475569; display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-clock" style="color: var(--dark-green); width: 20px;"></i> Lun - Vie: 8:00 AM - 6:00 PM
                         </p>
                     </div>
 
-                    <a id="side-rep-call" href="#" target="_blank" class="btn" style="width: 100%; text-align: center; font-size: 1rem; padding: 16px; background: linear-gradient(135deg, #25D366, #128c7e); color: white; border-radius: 16px; font-weight: 800; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);">
-                        <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Contactar Ahora
+                    <a id="side-rep-call" href="#" target="_blank" class="wa-btn-premium">
+                        <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Iniciar Chat
                     </a>
                 </div>
             </div>
@@ -91,71 +265,70 @@
 
         <!-- Área de Visualización -->
         <main class="content-display" style="position: relative;">
-            <div class="map-container">
-                <div id="map-display"></div>
-            </div>
-            <div style="position: absolute; top: 20px; right: 20px; z-index: 1000; background: white; padding: 10px 20px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 700; color: #64748b; border: 1px solid #f1f5f9;">
-                <div style="width: 10px; height: 10px; background: var(--primary-green); border-radius: 50%; animation: pulse 2s infinite;"></div>
-                Puntos de Atención Activos
+            <div id="map-display"></div>
+            <div style="position: absolute; top: 30px; right: 30px; z-index: 1000; background: white; padding: 12px 25px; border-radius: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 12px; font-size: 0.85rem; font-weight: 800; color: var(--dark-green); border: 1px solid rgba(var(--dark-green-rgb), 0.1);">
+                <div style="width: 12px; height: 12px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 10px #4ade80;"></div>
+                Cobertura Nacional Activa
             </div>
         </main>
     </div>
 
     <!-- Sección Nuestro Equipo de Trabajo -->
-    <section style="padding: 120px 5%; background: white; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; right: 0; width: 400px; height: 400px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%); border-radius: 50%; z-index: 0;"></div>
+    <section style="padding: 140px 5%; background: #fcfdfc; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -100px; right: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(var(--dark-green-rgb), 0.04) 0%, transparent 70%); border-radius: 50%; z-index: 0;"></div>
+        <div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(var(--dark-green-rgb), 0.03) 0%, transparent 70%); border-radius: 50%; z-index: 0;"></div>
         
-        <div style="text-align: center; margin-bottom: 80px; position: relative; z-index: 1;">
-            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 3px; font-size: 0.85rem; background: #f0fdf4; padding: 8px 20px; border-radius: 50px;">Asesoría Profesional</span>
-            <h2 style="font-size: 3.5rem; color: #1e293b; margin: 25px 0; font-family: 'Poppins', sans-serif; font-weight: 800;">Conoce a tu Próximo Socio Estratégico</h2>
-            <p style="color: #64748b; font-size: 1.2rem; max-width: 700px; margin: 0 auto; line-height: 1.6;">Nuestro equipo está conformado por especialistas comprometidos con el crecimiento de tu farmacia o botica.</p>
+        <div style="text-align: center; margin-bottom: 100px; position: relative; z-index: 1;">
+            <span style="color: var(--dark-green); font-weight: 800; text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; background: rgba(var(--dark-green-rgb), 0.08); padding: 10px 25px; border-radius: 50px;">Staff Profesional</span>
+            <h2 style="font-size: 3.8rem; color: #1e293b; margin: 30px 0; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: -1px;">Expertos a su Servicio</h2>
+            <p style="color: #64748b; font-size: 1.2rem; max-width: 800px; margin: 0 auto; line-height: 1.7;">Cada uno de nuestros ejecutivos cuenta con la experiencia técnica necesaria para potenciar su negocio farmacéutico.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto; position: relative; z-index: 1;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 50px; max-width: 1500px; margin: 0 auto; position: relative; z-index: 1;">
             @foreach($representatives as $rep)
                 @php
                     $phone = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
                     $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
                     $waLink = "https://wa.me/51{$phone}?text={$message}";
                 @endphp
-                <div class="rep-card-premium" style="background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 45px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); group;" onmouseover="this.style.transform='translateY(-15px)'; this.style.boxShadow='0 30px 60px rgba(16, 185, 129, 0.12)'; this.style.borderColor='rgba(16, 185, 129, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 15px 45px rgba(0,0,0,0.04)'; this.style.borderColor='#f1f5f9';">
-                    <div style="height: 380px; overflow: hidden; position: relative;">
+                <div class="rep-card-premium">
+                    <div class="rep-card-img-wrapper">
                         @if($rep->imagen)
-                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover; transition: 0.8s;">
+                            <img src="{{ asset('storage/' . $rep->imagen) }}" alt="{{ $rep->nombre }}">
                         @else
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($rep->nombre) }}&size=400&background=10b981&color=fff" alt="{{ $rep->nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($rep->nombre) }}&size=500&background=1B5E20&color=fff" alt="{{ $rep->nombre }}">
                         @endif
-                        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%);"></div>
+                        <div class="rep-card-gradient"></div>
                         
-                        <div style="position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 8px 15px; border-radius: 50px; color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.3);">
-                            <i class="fas fa-check-circle"></i> VERIFICADO
+                        <div class="status-badge">
+                            <div class="status-dot"></div> OFICIAL
                         </div>
 
-                        <div style="position: absolute; bottom: 30px; left: 30px; right: 30px;">
-                            <span style="color: var(--primary-green); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;">Representante Ventas</span>
-                            <h3 style="color: white; margin: 0; font-size: 1.8rem; font-weight: 800; line-height: 1.2;">{{ $rep->nombre }}</h3>
+                        <div style="position: absolute; bottom: 35px; left: 35px; right: 35px;">
+                            <span style="color: #4ade80; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: block;">Asesor Comercial</span>
+                            <h3 style="color: white; margin: 0; font-size: 2rem; font-weight: 800; line-height: 1.1; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">{{ $rep->nombre }}</h3>
                         </div>
                     </div>
                     
-                    <div style="padding: 35px;">
-                        <div style="margin-bottom: 30px;">
-                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; padding: 12px; background: #f8fafc; border-radius: 15px; border: 1px solid #f1f5f9;">
-                                <div style="width: 35px; height: 35px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-green); box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                                    <i class="fas fa-map-marker-alt"></i>
+                    <div style="padding: 40px;">
+                        <div style="margin-bottom: 35px;">
+                            <div style="display: flex; align-items: center; gap: 20px; padding: 15px 20px; background: #f8fafc; border-radius: 20px; border: 1px solid #f1f5f9;">
+                                <div style="width: 45px; height: 45px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--dark-green); box-shadow: 0 8px 20px rgba(0,0,0,0.06); font-size: 1.1rem;">
+                                    <i class="fas fa-map-marked-alt"></i>
                                 </div>
                                 <div>
-                                    <span style="display: block; font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Zona de Atención</span>
-                                    <strong style="color: #1e293b; font-size: 0.95rem;">{{ $rep->locations->first()->zona->nombre_zona ?? 'Cobertura Nacional' }}</strong>
+                                    <span style="display: block; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Área de Cobertura</span>
+                                    <strong style="color: #1e293b; font-size: 1rem;">{{ $rep->locations->first()->zona->nombre_zona ?? 'Nacional' }}</strong>
                                 </div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; gap: 15px;">
-                            <a href="tel:{{ $phone }}" style="flex: 0 0 55px; height: 55px; background: #f1f5f9; color: #475569; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s;" onmouseover="this.style.background='var(--primary-green)'; this.style.color='white';" onmouseout="this.style.background='#f1f5f9'; this.style.color='#475569';">
+                        <div style="display: flex; gap: 20px;">
+                            <a href="tel:{{ $phone }}" class="contact-btn-circle" title="Llamar ahora">
                                 <i class="fas fa-phone-alt"></i>
                             </a>
-                            <a href="{{ $waLink }}" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: #25D366; color: white; border-radius: 15px; text-decoration: none; font-weight: 800; transition: 0.3s; font-size: 1rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.15);" onmouseover="this.style.transform='scale(1.02)'; this.style.background='#1da851';" onmouseout="this.style.transform='scale(1)'; this.style.background='#25D366';">
-                                <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> WhatsApp
+                            <a href="{{ $waLink }}" target="_blank" class="wa-btn-premium">
+                                <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> WhatsApp
                             </a>
                         </div>
                     </div>
@@ -222,7 +395,7 @@
     }
 
     function showRep(id) {
-        if (!id) return showAllMarkers();
+        if (!id) return resetView();
         const r = reps.find(x => x.id == id);
         if (!r) return;
         
@@ -271,7 +444,7 @@
         btn.href = waLink;
         if (phone) {
             btn.onclick = (e) => { window.open(waLink, '_blank'); return false; };
-            btn.innerHTML = '<i class="fab fa-whatsapp"></i> Contactar Ahora';
+            btn.innerHTML = '<i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i> Iniciar Chat';
             btn.style.display = 'flex';
         } else {
             btn.style.display = 'none';

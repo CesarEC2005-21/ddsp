@@ -155,7 +155,7 @@
                 <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">Nuestra Historia</span>
                 <h2>Comprometidos con la <span>Salud</span> del Perú</h2>
                 <p>{{ $settings['historia'] }}</p>
-                <p>Desde nuestros inicios, hemos trabajado incansablemente para construir una red de distribución que llegue a cada rincón del país, garantizando que cada peruano tenga acceso a los medicamentos que necesita.</p>
+                <p>La empresa destaca por su visión de crecimiento, atención profesional y compromiso con la calidad, consolidándose como una fuente de empleo y desarrollo en la ciudad de Chiclayo. Además, trabaja bajo valores de responsabilidad, confianza y servicio humano, buscando aportar al bienestar de la comunidad mediante la distribución eficiente de medicamentos e insumos farmacéuticos.</p>
             </div>
         </div>
     </section>
@@ -173,13 +173,13 @@
                 <p>{{ $settings['mision'] }}</p>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80" alt="Misión">
+                <img src="{{ asset('img/mision.png') }}" alt="Misión">
             </div>
         </div>
 
         <div class="about-grid reverse reveal" style="margin-top: 80px;">
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80" alt="Visión">
+                <img src="{{ asset('img/vision.png') }}" alt="Visión">
             </div>
             <div class="about-content">
                 <h2>Nuestra <span>Visión</span></h2>

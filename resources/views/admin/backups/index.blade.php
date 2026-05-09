@@ -4,11 +4,6 @@
         <h2 class="page-title">Backups del Sistema</h2>
     </div>
 
-    @if(session('error'))
-        <div style="background: #FEE2E2; color: #991B1B; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <div class="card" style="max-width: 600px;">
         <div style="text-align: center; padding: 40px 20px;">

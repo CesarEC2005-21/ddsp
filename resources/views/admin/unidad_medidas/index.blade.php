@@ -7,11 +7,6 @@
         </button>
     </div>
 
-    @if(session('success'))
-        <div style="background: #D1FAE5; color: #065F46; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="card" style="max-width: 800px;">
         <div class="table-container">
@@ -55,21 +50,50 @@
 
     <!-- Modal Nueva UM -->
     <div id="newUMModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-ruler-combined"></i> Nueva Unidad de Medida</h3>
-                <span class="close-modal" onclick="closeModal('newUMModal')">&times;</span>
+        <div class="modal-content" style="max-width: 500px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: rgba(16, 185, 129, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-ruler-combined" style="color: #10b981; font-size: 1.2rem;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Registrar Nueva Unidad</h3>
+                </div>
+                <span class="close-modal" onclick="closeModal('newUMModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 40px;">
                 <form action="{{ route('admin.unidad-medidas.store') }}" method="POST">
                     @csrf
-                    <div class="form-group">
-                        <label class="form-label">Unidad de Medida (U.M.)</label>
-                        <input type="text" name="um" class="form-control" placeholder="Ej. Frasco x 100ml" required>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="display: flex; align-items: center; gap: 12px; color: #1e293b; margin-bottom: 8px; font-weight: 700;">
+                            <div style="background: #10b981; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            Detalle de la Unidad
+                        </h4>
+                        <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Especifique el formato de medida del producto.</p>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: #475569; font-weight: 600;">Nombre de la Unidad (U.M.)</label>
+                            <div style="position: relative;">
+                                <i class="fas fa-box" style="position: absolute; left: 18px; top: 16px; color: #94a3b8;"></i>
+                                <input type="text" name="um" class="form-control" style="padding: 14px 14px 14px 50px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #fcfcfc;" placeholder="Ej. Frasco x 100ml / Caja x 30 Tab." required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; background: #f0fdf4; padding: 15px; border-radius: 12px; border: 1.5px solid #dcfce7;">
+                                <input type="checkbox" name="estado" value="1" checked style="width: 20px; height: 20px; accent-color: #10b981;">
+                                <span style="font-weight: 700; color: #166534;">Unidad Activa</span>
+                            </label>
+                        </div>
                     </div>
-                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                        <button type="button" class="btn" style="background: #e5e7eb;" onclick="closeModal('newUMModal')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar U.M.</button>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
+                        <button type="button" class="btn" style="background: #f1f5f9; color: #475569; padding: 12px 30px; border-radius: 12px; font-weight: 700;" onclick="closeModal('newUMModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 12px 35px; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                            <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Finalizar y Guardar
+                        </button>
                     </div>
                 </form>
             </div>
@@ -78,22 +102,50 @@
 
     <!-- Modal Editar UM -->
     <div id="editUMModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-edit"></i> Editar Unidad de Medida</h3>
-                <span class="close-modal" onclick="closeModal('editUMModal')">&times;</span>
+        <div class="modal-content" style="max-width: 500px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: rgba(245, 158, 11, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-edit" style="color: #f59e0b; font-size: 1.2rem;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Editar Unidad</h3>
+                </div>
+                <span class="close-modal" onclick="closeModal('editUMModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 40px;">
                 <form id="editUMForm" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="form-group">
-                        <label class="form-label">Unidad de Medida (U.M.)</label>
-                        <input type="text" name="um" id="edit-um" class="form-control" required>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="display: flex; align-items: center; gap: 12px; color: #1e293b; margin-bottom: 8px; font-weight: 700;">
+                            <div style="background: #f59e0b; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                                <i class="fas fa-info"></i>
+                            </div>
+                            Actualizar Información
+                        </h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: #475569; font-weight: 600;">Nombre de la Unidad (U.M.)</label>
+                            <div style="position: relative;">
+                                <i class="fas fa-box" style="position: absolute; left: 18px; top: 16px; color: #94a3b8;"></i>
+                                <input type="text" name="um" id="edit-um" class="form-control" style="padding: 14px 14px 14px 50px; border-radius: 12px; border: 1.5px solid #e2e8f0;" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; background: #fdfaf3; padding: 15px; border-radius: 12px; border: 1.5px solid #fef3c7;">
+                                <input type="checkbox" name="estado" id="edit-um-estado" value="1" style="width: 20px; height: 20px; accent-color: #f59e0b;">
+                                <span style="font-weight: 700; color: #92400e;">Unidad Activa</span>
+                            </label>
+                        </div>
                     </div>
-                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                        <button type="button" class="btn" style="background: #e5e7eb;" onclick="closeModal('editUMModal')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Actualizar U.M.</button>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
+                        <button type="button" class="btn" style="background: #f1f5f9; color: #475569; padding: 12px 30px; border-radius: 12px; font-weight: 700;" onclick="closeModal('editUMModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 12px 35px; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                            <i class="fas fa-save" style="margin-right: 8px;"></i> Guardar Cambios
+                        </button>
                     </div>
                 </form>
             </div>
@@ -107,6 +159,7 @@
         const form = document.getElementById('editUMForm');
         form.action = `/admin/unidad-medidas/${um.id}`;
         document.getElementById('edit-um').value = um.um;
+        document.getElementById('edit-um-estado').checked = !!um.estado;
         openModal('editUMModal');
     }
     function toggleStatusUM(id) {

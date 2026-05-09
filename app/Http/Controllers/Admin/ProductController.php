@@ -40,7 +40,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'codigo' => 'required|string|max:50|unique:products,codigo',
+            'codigo' => 'nullable|string|max:50|unique:products,codigo',
             'nombre' => 'required|string|max:255',
             'laboratory_id' => 'required|exists:laboratories,id',
             'unidad_medida_id' => 'required|exists:unidad_medidas,id',
@@ -53,6 +53,16 @@ class ProductController extends Controller
             'is_featured' => 'nullable',
             'imagen' => 'nullable|image|max:2048'
         ]);
+
+        if (empty($validated['codigo'])) {
+            $lastId = Product::max('id') ?? 0;
+            $validated['codigo'] = 'PRD-' . str_pad($lastId + 1, 6, '0', STR_PAD_LEFT);
+            // Ensure uniqueness in case of gaps
+            while (Product::where('codigo', $validated['codigo'])->exists()) {
+                $lastId++;
+                $validated['codigo'] = 'PRD-' . str_pad($lastId + 1, 6, '0', STR_PAD_LEFT);
+            }
+        }
 
         $path = null;
         if ($request->hasFile('imagen')) {

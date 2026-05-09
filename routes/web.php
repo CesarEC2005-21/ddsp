@@ -22,6 +22,7 @@ Route::get('/producto/{product}', [LandingController::class, 'productDetail'])->
 Route::get('/contacto', [LandingController::class, 'contact'])->name('contact');
 Route::post('/contacto', [LandingController::class, 'processContact'])->name('contact.post');
 Route::get('/api/search-products', [LandingController::class, 'searchProducts'])->name('api.products.search');
+Route::get('/noticias', [LandingController::class, 'noticias'])->name('noticias');
 
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -55,6 +56,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::resource('unidad-medidas', UnidadMedidaController::class);
         // Route::resource('pharmacies', PharmacyController::class);
         Route::resource('representatives', RepresentativeController::class);
+        Route::resource('noticias', \App\Http\Controllers\Admin\NoticiaController::class);
         
         Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('users/{user}/block-history', [UserController::class, 'blockHistory'])->name('users.block-history');

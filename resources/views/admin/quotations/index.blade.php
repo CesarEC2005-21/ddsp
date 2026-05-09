@@ -5,11 +5,6 @@
         <h2 class="page-title">Gestión de Cotizaciones (Pedidos)</h2>
     </div>
 
-    @if(session('success'))
-        <div style="background: #D1FAE5; color: #065F46; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
         <form action="{{ route('admin.quotations.index') }}" method="GET">
@@ -92,12 +87,17 @@
 
     <!-- Modal Detalle Cotización -->
     <div id="detailModal" class="modal">
-        <div class="modal-content" style="max-width: 900px;">
-            <div class="modal-header">
-                <h3><i class="fas fa-file-invoice"></i> Detalle de Cotización <span id="detail-id"></span></h3>
-                <span class="close-modal" onclick="closeModal('detailModal')">&times;</span>
+        <div class="modal-content" style="max-width: 1000px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: rgba(16, 185, 129, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-file-invoice" style="color: #10b981; font-size: 1.2rem;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Detalle de Cotización <span id="detail-id" style="color: #10b981;"></span></h3>
+                </div>
+                <span class="close-modal" onclick="closeModal('detailModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body" id="detail-body">
+            <div class="modal-body" id="detail-body" style="padding: 40px;">
                 <!-- Content loaded via JS -->
             </div>
         </div>
@@ -105,26 +105,47 @@
 
     <!-- Modal Cambio de Estado -->
     <div id="statusModal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3>Actualizar Estado</h3>
-                <span class="close-modal" onclick="closeModal('statusModal')">&times;</span>
+        <div class="modal-content" style="max-width: 450px; padding: 0; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: rgba(245, 158, 11, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sync-alt" style="color: #f59e0b; font-size: 1.2rem;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Actualizar Estado</h3>
+                </div>
+                <span class="close-modal" onclick="closeModal('statusModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 40px;">
                 <form id="statusForm" method="POST">
                     @csrf
                     @method('PATCH')
-                    <div class="form-group">
-                        <label class="form-label">Nuevo Estado</label>
-                        <select name="estado" id="status-select" class="form-control">
-                            <option value="pendiente">Pendiente</option>
-                            <option value="completado">Completado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="display: flex; align-items: center; gap: 12px; color: #1e293b; margin-bottom: 20px; font-weight: 700;">
+                            <div style="background: #f59e0b; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            Gestión de Pedido
+                        </h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: #475569; font-weight: 600;">Nuevo Estado del Pedido</label>
+                            <div style="position: relative;">
+                                <i class="fas fa-clipboard-check" style="position: absolute; left: 18px; top: 16px; color: #94a3b8;"></i>
+                                <select name="estado" id="status-select" class="form-control" style="padding-left: 50px; border-radius: 12px; border: 1.5px solid #e2e8f0;" required>
+                                    <option value="pendiente">🟠 Pendiente (En espera)</option>
+                                    <option value="completado">🟢 Completado (Despachado)</option>
+                                    <option value="cancelado">🔴 Cancelado (Anulado)</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-                        <button type="button" class="btn" style="background: #eee;" onclick="closeModal('statusModal')">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
+                        <button type="button" class="btn" style="background: #f1f5f9; color: #475569; padding: 12px 30px; border-radius: 12px; font-weight: 700;" onclick="closeModal('statusModal')">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 12px 35px; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                            <i class="fas fa-save" style="margin-right: 8px;"></i> Guardar Cambios
+                        </button>
                     </div>
                 </form>
             </div>

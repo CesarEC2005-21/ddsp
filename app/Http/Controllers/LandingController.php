@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 // use App\Models\Pharmacy;
 use App\Models\Representative;
+use App\Models\Noticia;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactAdminMail;
 
@@ -30,13 +31,25 @@ class LandingController extends Controller
     public function nosotros()
     {
         $settings = [
-            'mision' => Setting::get('mision', 'Brindar acceso a medicamentos de calidad a través de una red de distribución eficiente, garantizando la salud y bienestar de todos los peruanos.'),
-            'vision' => Setting::get('vision', 'Ser la empresa líder en distribución farmacéutica en el Perú, reconocida por su compromiso con la salud y la innovación en el sector.'),
+            'mision' => Setting::get('mision', 'Proveer soluciones que satisfagan las necesidades de clientes y proveedores a través de la comercialización de productos farmacéuticos y populares, garantizando calidad, eficiencia y competitividad. Además, se busca asegurar el crecimiento de la empresa, el bienestar de la comunidad y el desarrollo de los colaboradores.'),
+            'vision' => Setting::get('vision', 'Droguería Sánchez Pharma será reconocida como una empresa líder en la industria farmacéutica a nivel regional, con potencial de expansión nacional e internacional, basada en principios éticos. Se enfoca en satisfacer las necesidades terapéuticas de la población, respetando a colaboradores, proveedores y clientes, y contribuyendo al país y al medio ambiente.'),
             'valores' => Setting::get('valores', 'Compromiso, Honestidad, Innovación, Servicio, Calidad'),
             'principios' => Setting::get('principios', '• Atención al cliente con excelencia\n• Distribución oportuna de medicamentos\n• Precios justos y accesibles\n• Compromiso con la salud pública\n• Ética profesional en todas nuestras acciones'),
-            'historia' => Setting::get('historia', 'Sanchez Pharma E.I.R.L. nació con la misión de democratizar el acceso a medicamentos de calidad en el Perú. Con años de experiencia en el sector farmacéutico, hemos construido una red de distribución que llegaa cada rincón del país, partnering con laboratorios reconocidos y un equipo de ejecutivos comprometidos con la salud de los peruanos.'),
+            'historia' => Setting::get('historia', 'Droguería y Distribuidora Sánchez Pharma es una empresa chiclayana fundada en 2022, dedicada a la comercialización y distribución de productos farmacéuticos, médicos y de cuidado personal en la región Lambayeque. Fue creada con el objetivo de brindar un servicio confiable, accesible y comprometido con la salud de las familias peruanas'),
         ];
         return view('landing.nosotros', compact('settings'));
+    }
+
+    public function noticias()
+    {
+        // Show active notices
+        $noticias = Noticia::with(['laboratory', 'product'])
+            ->where('estado', true)
+            ->whereDate('fecha_inicial', '<=', now())
+            ->whereDate('fecha_final', '>=', now())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('landing.noticias', compact('noticias'));
     }
 
     public function products(Request $request)
