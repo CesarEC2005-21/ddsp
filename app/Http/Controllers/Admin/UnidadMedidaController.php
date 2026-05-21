@@ -16,14 +16,22 @@ class UnidadMedidaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['um' => 'required|string|max:255']);
+        $request->validate([
+            'um' => 'required|string|max:255|unique:unidad_medidas,um'
+        ], [
+            'um.unique' => 'Esta unidad de medida ya se encuentra registrada.'
+        ]);
         UnidadMedida::create($request->all() + ['estado' => true]);
         return redirect()->back()->with('success', 'Unidad de medida creada correctamente');
     }
 
     public function update(Request $request, UnidadMedida $unidad_medida)
     {
-        $request->validate(['um' => 'required|string|max:255']);
+        $request->validate([
+            'um' => 'required|string|max:255|unique:unidad_medidas,um,' . $unidad_medida->id
+        ], [
+            'um.unique' => 'Esta unidad de medida ya se encuentra registrada.'
+        ]);
         $unidad_medida->update($request->all());
         return redirect()->back()->with('success', 'Unidad de medida actualizada correctamente.');
     }

@@ -65,18 +65,26 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 $unidadMedidaId = $firstUm ? $firstUm->id : null;
             }
 
-            $precio = ($precioKey && isset($rowArray[$precioKey])) ? floatval($rowArray[$precioKey]) : 0;
+            $rawPrecio = ($precioKey && isset($rowArray[$precioKey])) ? $rowArray[$precioKey] : 0;
+            if (is_string($rawPrecio)) {
+                $rawPrecio = str_replace(['S/', 's/', '$', ' '], '', $rawPrecio);
+                $rawPrecio = str_replace(',', '.', $rawPrecio);
+            }
+            $precio = floatval($rawPrecio);
             $nombre = ($descKey && isset($rowArray[$descKey])) ? $rowArray[$descKey] : 'Sin Nombre';
 
             $product = Product::where('codigo', $codigo)->first();
 
             if ($product) {
-                // Repeated Product: Update Price and save History if changed
-                if (floatval($product->precio) != floatval($precio)) {
+                // Repeated Product: Update Price and save History if changed (rounded to 2 decimal places to avoid float precision issues)
+                $oldPrice = round(floatval($product->precio), 2);
+                $newPrice = round(floatval($precio), 2);
+                if ($oldPrice != $newPrice) {
                     // Save history
                     \App\Models\ProductPriceHistory::create([
                         'product_id' => $product->id,
-                        'precio' => $product->precio,
+                        'precio' => $oldPrice,
+                        'precio_nuevo' => $newPrice,
                         'user_id' => auth()->id() ?? 1
                     ]);
                     

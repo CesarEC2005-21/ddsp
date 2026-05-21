@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Console\Commands;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
-use App\Models\AuditLog;
+use Illuminate\Console\Command;
 
-class BackupController extends Controller
+class GenerateBackup extends Command
 {
-    public function index()
-    {
-        return view('admin.backups.index');
-    }
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'backup:generate';
+    protected $description = 'Generate a database backup';
 
-    public function generate()
+    public function handle()
     {
         $database = env('DB_DATABASE');
         $username = env('DB_USERNAME');
@@ -28,10 +28,7 @@ class BackupController extends Controller
             mkdir(storage_path('app/backups'), 0755, true);
         }
 
-        // En XAMPP Windows, mysqldump suele estar en esta ruta
         $mysqlPath = "d:\\xampp\\mysql\\bin\\mysqldump.exe";
-        
-        // Si no está ahí, intentamos solo 'mysqldump' asumiendo que está en el PATH
         if (!file_exists($mysqlPath)) {
             $mysqlPath = "c:\\xampp\\mysql\\bin\\mysqldump.exe";
             if (!file_exists($mysqlPath)) {
@@ -45,15 +42,9 @@ class BackupController extends Controller
         exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            return redirect()->back()->with('error', 'Error al generar el backup. Verifique la configuración de MySQL.');
+            $this->error('Backup generation failed.');
+        } else {
+            $this->info('Backup generated successfully: ' . $path);
         }
-
-        AuditLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'downloaded_backup',
-            'description' => "Generó y descargó un backup de la base de datos: {$filename}"
-        ]);
-
-        return Response::download($path)->deleteFileAfterSend(true);
     }
 }

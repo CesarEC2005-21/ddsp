@@ -10,9 +10,25 @@
 @endpush
 
 @section('content')
-    <div style="margin-bottom: 40px;">
-        <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 5px;">Dashboard Administrativo</h2>
-        <p style="color: #64748b;">Resumen general de las operaciones de Sanchez Pharma.</p>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+        <div>
+            <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 5px;">Dashboard Administrativo</h2>
+            <p style="color: #64748b; margin: 0;">Resumen general de las operaciones de Sanchez Pharma.</p>
+        </div>
+        
+        <div style="background: white; padding: 15px 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;">
+            <form action="{{ route('admin.dashboard') }}" method="GET" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Desde</label>
+                    <input type="date" name="date_from" value="{{ $dateFrom }}" style="padding: 8px 15px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; font-size: 0.9rem; color: #334155;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Hasta</label>
+                    <input type="date" name="date_to" value="{{ $dateTo }}" style="padding: 8px 15px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; font-size: 0.9rem; color: #334155;">
+                </div>
+                <button type="submit" style="background: #1e293b; color: white; border: none; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s;"><i class="fas fa-filter" style="margin-right: 5px;"></i> Filtrar</button>
+            </form>
+        </div>
     </div>
 
     <!-- Stat Cards -->
@@ -64,7 +80,7 @@
     new Chart(ctxQ, {
         type: 'line',
         data: {
-            labels: @json($quotationsChart->pluck('month')),
+            labels: @json($quotationsChart->pluck('label')),
             datasets: [{
                 label: 'Cotizaciones',
                 data: @json($quotationsChart->pluck('count')),

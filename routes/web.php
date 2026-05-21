@@ -4,7 +4,6 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\LaboratoryController;
 // use App\Http\Controllers\Admin\PharmacyController;
 use App\Http\Controllers\Admin\RepresentativeController;

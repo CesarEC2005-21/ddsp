@@ -35,7 +35,15 @@
                                     $actionBadges = [
                                         'created_product' => ['color' => 'badge-success', 'icon' => 'fa-box'],
                                         'deleted_product' => ['color' => 'badge-danger', 'icon' => 'fa-trash'],
-                                        'created_executive' => ['color' => 'badge-info', 'icon' => 'fa-user-tie'],
+                                        'created_laboratory' => ['color' => 'badge-success', 'icon' => 'fa-flask'],
+                                        'deleted_laboratory' => ['color' => 'badge-danger', 'icon' => 'fa-flask'],
+                                        'created_representative' => ['color' => 'badge-success', 'icon' => 'fa-user-tie'],
+                                        'deleted_representative' => ['color' => 'badge-danger', 'icon' => 'fa-user-tie'],
+                                        'created_executive' => ['color' => 'badge-success', 'icon' => 'fa-user-tie'],
+                                        'deleted_executive' => ['color' => 'badge-danger', 'icon' => 'fa-user-tie'],
+                                        'created_promotion' => ['color' => 'badge-success', 'icon' => 'fa-bullhorn'],
+                                        'deleted_promotion' => ['color' => 'badge-danger', 'icon' => 'fa-bullhorn'],
+                                        'downloaded_backup' => ['color' => 'badge-info', 'icon' => 'fa-download'],
                                         'cancelled_quotation' => ['color' => 'badge-danger', 'icon' => 'fa-ban'],
                                         'updated_settings' => ['color' => 'badge-warning', 'icon' => 'fa-cog']
                                     ];
@@ -44,7 +52,15 @@
                                     $actionNames = [
                                         'created_product' => 'Nuevo Producto',
                                         'deleted_product' => 'Producto Eliminado',
+                                        'created_laboratory' => 'Nuevo Laboratorio',
+                                        'deleted_laboratory' => 'Laboratorio Eliminado',
+                                        'created_representative' => 'Nuevo Ejecutivo',
+                                        'deleted_representative' => 'Ejecutivo Eliminado',
                                         'created_executive' => 'Nuevo Ejecutivo',
+                                        'deleted_executive' => 'Ejecutivo Eliminado',
+                                        'created_promotion' => 'Nueva Promoción',
+                                        'deleted_promotion' => 'Promoción Eliminada',
+                                        'downloaded_backup' => 'Descarga Backup',
                                         'cancelled_quotation' => 'Cotización Cancelada',
                                         'updated_settings' => 'Ajuste Sistema'
                                     ];

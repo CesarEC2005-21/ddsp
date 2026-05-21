@@ -8,6 +8,7 @@ use App\Models\Noticia;
 use App\Models\Laboratory;
 
 use App\Models\Product;
+use App\Models\AuditLog;
 
 class NoticiaController extends Controller
 {
@@ -70,7 +71,13 @@ class NoticiaController extends Controller
             $data['imagen'] = $request->file('imagen')->store('noticias', 'public');
         }
 
-        Noticia::create($data);
+        $noticia = Noticia::create($data);
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_promotion',
+            'description' => "Creó la promoción/noticia: {$noticia->descripcion} ({$noticia->codigo})"
+        ]);
 
         return redirect()->route('admin.noticias.index')->with('success', 'Noticia creada exitosamente.');
     }
@@ -109,7 +116,18 @@ class NoticiaController extends Controller
         if ($noticia->imagen) {
             \Storage::disk('public')->delete($noticia->imagen);
         }
+        
+        $codigo = $noticia->codigo;
+        $descripcion = $noticia->descripcion;
+
         $noticia->delete();
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted_promotion',
+            'description' => "Eliminó la promoción/noticia: {$descripcion} ({$codigo})"
+        ]);
+
         return redirect()->route('admin.noticias.index')->with('success', 'Noticia eliminada exitosamente.');
     }
 }

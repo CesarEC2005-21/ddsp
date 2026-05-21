@@ -54,15 +54,19 @@ class LandingController extends Controller
 
     public function products(Request $request)
     {
-        $laboratories = Laboratory::all();
-        $query = Product::where('estado', true);
+        $laboratories = Laboratory::where('estado', true)->orderBy('descripcion', 'asc')->get();
+        $query = Product::with('laboratory')->where('estado', true);
         
-        if ($request->has('lab') && $request->lab != '') {
+        if ($request->filled('lab')) {
             $query->where('laboratory_id', $request->lab);
         }
         
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nombre', 'like', '%' . $request->search . '%');
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nombre', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('codigo', 'like', '%' . $searchTerm . '%');
+            });
         }
 
         $products = $query->paginate(12);

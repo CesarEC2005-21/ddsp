@@ -23,6 +23,15 @@ class QuotationController extends Controller
             return redirect()->route('products')->with('error', 'El carrito está vacío');
         }
 
+        // Sanitizar cantidades de forma defensiva antes de procesar
+        foreach ($cart as $id => $details) {
+            if (!isset($details['quantity']) || !is_numeric($details['quantity']) || $details['quantity'] < 1) {
+                $cart[$id]['quantity'] = 1;
+            } else {
+                $cart[$id]['quantity'] = (int)$details['quantity'];
+            }
+        }
+
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'apellidos' => 'required|string|max:255',
@@ -72,26 +81,30 @@ class QuotationController extends Controller
             $customer_name = $quotation->nombre;
 
             app()->terminating(function () use ($quotation, $company) {
-                // Generar PDF
-                $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
-                $pdfContent = $pdf->output();
-
-                // Enviar Email al cliente
                 try {
-                    Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
-                } catch (\Exception $e) {
-                    \Log::error("Error enviando email al cliente: " . $e->getMessage());
-                }
+                    // Generar PDF
+                    $pdf = Pdf::loadView('pdf.quotation', compact('quotation', 'company'));
+                    $pdfContent = $pdf->output();
 
-                // Generar Excel
-                $excelContent = Excel::raw(new QuotationExport($quotation), \Maatwebsite\Excel\Excel::XLSX);
+                    // Enviar Email al cliente
+                    try {
+                        Mail::to($quotation->email)->send(new QuotationMail($quotation, $pdfContent, $company));
+                    } catch (\Exception $e) {
+                        \Log::error("Error enviando email al cliente: " . $e->getMessage());
+                    }
 
-                // Enviar Email al administrador
-                try {
-                    $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
-                    Mail::to($adminEmail)->send(new QuotationAdminMail($quotation, $pdfContent, $excelContent, $company));
+                    // Generar Excel
+                    $excelContent = Excel::raw(new QuotationExport($quotation), \Maatwebsite\Excel\Excel::XLSX);
+
+                    // Enviar Email al administrador
+                    try {
+                        $adminEmail = env('ADMIN_EMAIL', Setting::get('company_email', 'cesarAEC1234@gmail.com'));
+                        Mail::to($adminEmail)->send(new QuotationAdminMail($quotation, $pdfContent, $excelContent, $company));
+                    } catch (\Exception $e) {
+                        \Log::error("Error enviando email al admin: " . $e->getMessage());
+                    }
                 } catch (\Exception $e) {
-                    \Log::error("Error enviando email al admin: " . $e->getMessage());
+                    \Log::error("Error general en el proceso terminating de cotización #" . $quotation->id . ": " . $e->getMessage());
                 }
             });
 

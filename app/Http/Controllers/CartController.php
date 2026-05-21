@@ -10,6 +10,18 @@ class CartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
+        $sanitized = false;
+        foreach ($cart as $id => $details) {
+            if (!isset($details['quantity']) || !is_numeric($details['quantity']) || $details['quantity'] < 1) {
+                $cart[$id]['quantity'] = 1;
+                $sanitized = true;
+            } else {
+                $cart[$id]['quantity'] = (int)$details['quantity'];
+            }
+        }
+        if ($sanitized) {
+            session()->put('cart', $cart);
+        }
         return view('landing.cart', compact('cart'));
     }
 
@@ -46,8 +58,12 @@ class CartController extends Controller
     public function update(Request $request)
     {
         if($request->id && $request->quantity){
-            $cart = session()->get('cart');
-            $cart[$request->id]["quantity"] = $request->quantity;
+            $cart = session()->get('cart', []);
+            $qty = $request->quantity;
+            if (!is_numeric($qty) || $qty < 1) {
+                $qty = 1;
+            }
+            $cart[$request->id]["quantity"] = (int)$qty;
             session()->put('cart', $cart);
             session()->flash('success', 'Carrito actualizado');
         }

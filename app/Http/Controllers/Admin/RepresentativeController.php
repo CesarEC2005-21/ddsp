@@ -104,7 +104,17 @@ class RepresentativeController extends Controller
         if ($representative->imagen) {
             Storage::disk('public')->delete($representative->imagen);
         }
+        
+        $nombre = $representative->nombre;
+        
         $representative->delete();
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted_representative',
+            'description' => "Eliminó al ejecutivo: {$nombre}"
+        ]);
+
         return redirect()->route('admin.representatives.index')->with('success', 'Representante eliminado correctamente.');
     }
 }

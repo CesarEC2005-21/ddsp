@@ -93,9 +93,9 @@
                         
                         <div class="qty-row">
                             <div class="qty-spinner">
-                                <button onclick="updateCart({{ $id }}, -1)">-</button>
+                                <button onclick="updateCart({{ $id }}, -1, this)">-</button>
                                 <span>{{ $details['quantity'] }}</span>
-                                <button onclick="updateCart({{ $id }}, 1)">+</button>
+                                <button onclick="updateCart({{ $id }}, 1, this)">+</button>
                             </div>
                             <div style="text-align: right;">
                                 <span style="display: block; font-size: 0.8rem; color: #94a3b8; font-weight: 700;">UNIT: S/ {{ number_format($details['price'], 2) }}</span>
@@ -214,20 +214,9 @@
         }
     }
 
-    async function updateCart(id, delta) {
-        // Encontrar el valor actual sin recargar para UI fluida si fuera necesario
-        // Pero por ahora mantenemos recarga para asegurar consistencia de sesión
-        const response = await fetch('{{ route('cart.update') }}', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ id: id, quantity: 'delta', delta: delta }) // El controlador actual usa quantity absoluto
-        });
-        
-        // El controlador actual espera quantity, así que calculamos
-        let currentQty = parseInt(event.target.parentElement.querySelector('span').innerText);
+    async function updateCart(id, delta, btn) {
+        let span = btn.parentElement.querySelector('span');
+        let currentQty = parseInt(span.innerText);
         let newQty = currentQty + delta;
         if (newQty < 1) return;
 
@@ -266,5 +255,32 @@
     }
 
     toggleDocLength();
+
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#10b981'
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#ef4444'
+        });
+    @endif
+
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de Validación',
+            text: '{{ $errors->first() }}',
+            confirmButtonColor: '#ef4444'
+        });
+    @endif
 </script>
 @endpush

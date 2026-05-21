@@ -31,7 +31,7 @@ class ProductController extends Controller
         }
 
         $products = $query->orderBy('created_at', 'desc')->paginate(10);
-        $laboratories = \App\Models\Laboratory::all();
+        $laboratories = \App\Models\Laboratory::orderBy('descripcion', 'asc')->get();
         $unidadMedidas = \App\Models\UnidadMedida::where('estado', true)->get();
         
         return view('admin.products.index', compact('products', 'laboratories', 'unidadMedidas'));
@@ -41,7 +41,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'codigo' => 'nullable|string|max:50|unique:products,codigo',
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|unique:products,nombre',
             'laboratory_id' => 'required|exists:laboratories,id',
             'unidad_medida_id' => 'required|exists:unidad_medidas,id',
             'precio' => 'required|numeric',
@@ -52,6 +52,9 @@ class ProductController extends Controller
             'registro_sanitario' => 'nullable|string',
             'is_featured' => 'nullable',
             'imagen' => 'nullable|image|max:2048'
+        ], [
+            'nombre.unique' => 'Este producto ya se encuentra registrado.',
+            'codigo.unique' => 'El código de producto ya existe.'
         ]);
 
         if (empty($validated['codigo'])) {
@@ -89,7 +92,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|unique:products,nombre,' . $product->id,
             'laboratory_id' => 'required|exists:laboratories,id',
             'unidad_medida_id' => 'required|exists:unidad_medidas,id',
             'precio' => 'required|numeric',
@@ -100,6 +103,8 @@ class ProductController extends Controller
             'registro_sanitario' => 'nullable|string',
             'is_featured' => 'nullable',
             'imagen' => 'nullable|image|max:2048'
+        ], [
+            'nombre.unique' => 'Este producto ya se encuentra registrado.'
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -111,11 +116,14 @@ class ProductController extends Controller
             unset($validated['imagen']);
         }
 
-        // Record price history if changed
-        if (floatval($product->precio) != floatval($validated['precio'])) {
+        // Record price history if changed (rounded to 2 decimal places to avoid float precision issues)
+        $oldPrice = round(floatval($product->precio), 2);
+        $newPrice = round(floatval($validated['precio']), 2);
+        if ($oldPrice != $newPrice) {
             \App\Models\ProductPriceHistory::create([
                 'product_id' => $product->id,
-                'precio' => $product->precio,
+                'precio' => $oldPrice,
+                'precio_nuevo' => $newPrice,
                 'user_id' => auth()->id()
             ]);
         }

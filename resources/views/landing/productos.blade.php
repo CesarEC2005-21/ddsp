@@ -34,7 +34,7 @@
                 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #475569;">Laboratorio:</label>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;">
                     <a href="{{ route('products', ['search' => request('search')]) }}" style="display: block; padding: 10px 15px; border-radius: 10px; border: 2px solid {{ !request('lab') ? 'var(--primary-green)' : '#e2e8f0' }}; background: {{ !request('lab') ? '#f0fdf4' : 'white' }}; color: {{ !request('lab') ? 'var(--dark-green)' : '#475569' }}; text-decoration: none; font-weight: 600; transition: 0.2s;">
                         Todos los Laboratorios
                     </a>
@@ -53,7 +53,7 @@
 
         <!-- Product Grid -->
         <div class="products-main" style="flex: 1;">
-            <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
+            <div class="product-grid">
                 @forelse($products as $product)
                 <div class="product-card reveal" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: 0.4s; border: 1px solid #f1f5f9; position: relative;">
                     <!-- Tag Premium -->
@@ -204,6 +204,16 @@
 </script>
 <style>
     @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    @media (max-width: 1024px) {
+        .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .product-grid { grid-template-columns: 1fr; }
+        .products-container { flex-direction: column !important; }
+        .filters-sidebar { width: 100% !important; flex: auto !important; position: static !important; }
+    }
 
     .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }
     .product-card:hover .product-img-wrapper img { transform: scale(1.1); }

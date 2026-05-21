@@ -24,8 +24,20 @@ class ReportController extends Controller
         $quotationsCancelled = Quotation::where('estado', 'cancelado')->count();
         $totalQuotations     = Quotation::count();
 
-        // 3. Historial de Precios
-        $priceHistoryCount = ProductPriceHistory::count();
+        // 3. Historial de Precios (solo cambios reales)
+        $priceHistoryCount = ProductPriceHistory::whereHas('product', function($q) {
+            $q->where(function($sub) {
+                // Registros nuevos con precio_nuevo diferente al precio anterior guardado
+                $sub->whereNotNull('product_price_histories.precio_nuevo')
+                    ->whereColumn('product_price_histories.precio_nuevo', '!=', 'product_price_histories.precio');
+            });
+        })->orWhere(function($q) {
+            // Registros antiguos donde el precio actual del producto es diferente al guardado
+            $q->whereNull('product_price_histories.precio_nuevo')
+              ->whereHas('product', function($sub) {
+                  $sub->whereColumn('products.precio', '!=', 'product_price_histories.precio');
+              });
+        })->count();
 
         // 4. Productos más buscados/solicitados (por cantidad en cotizaciones)
         $topProducts = QuotationItem::select('product_id', DB::raw('SUM(cantidad) as total_solicitado'))
@@ -111,9 +123,10 @@ class ReportController extends Controller
             $query->whereDate('created_at', '<=', $dateTo);
         }
 
+        $totalFiltrado = (clone $query)->sum('total');
         $quotations = $query->latest()->paginate(20);
 
-        return view('admin.reports.quotations', compact('quotations', 'status'));
+        return view('admin.reports.quotations', compact('quotations', 'status', 'totalFiltrado'));
     }
 
     public function products(Request $request)
@@ -125,24 +138,69 @@ class ReportController extends Controller
 
         $query = ProductPriceHistory::with('product.laboratory')->latest();
 
+        // Filtrar solo cambios reales de precio
+        $query->where(function($q) {
+            $q->where(function($sub) {
+                $sub->whereNotNull('product_price_histories.precio_nuevo')
+                    ->whereColumn('product_price_histories.precio_nuevo', '!=', 'product_price_histories.precio');
+            })->orWhere(function($sub) {
+                $sub->whereNull('product_price_histories.precio_nuevo')
+                    ->whereHas('product', function($q2) {
+                        $q2->whereColumn('products.precio', '!=', 'product_price_histories.precio');
+                    });
+            });
+        });
+
         if ($search) {
             $query->whereHas('product', function($q) use ($search) {
                 $q->where('nombre', 'like', "%{$search}%");
             });
         }
+
         if ($tipo === 'up') {
-            $query->whereRaw('new_price > old_price');
+            $query->where(function($q) {
+                $q->where(function($sub) {
+                    $sub->whereNotNull('product_price_histories.precio_nuevo')
+                        ->whereColumn('product_price_histories.precio_nuevo', '>', 'product_price_histories.precio');
+                })->orWhere(function($sub) {
+                    $sub->whereNull('product_price_histories.precio_nuevo')
+                        ->whereHas('product', function($q2) {
+                            $q2->whereColumn('products.precio', '>', 'product_price_histories.precio');
+                        });
+                });
+            });
         } elseif ($tipo === 'down') {
-            $query->whereRaw('new_price < old_price');
+            $query->where(function($q) {
+                $q->where(function($sub) {
+                    $sub->whereNotNull('product_price_histories.precio_nuevo')
+                        ->whereColumn('product_price_histories.precio_nuevo', '<', 'product_price_histories.precio');
+                })->orWhere(function($sub) {
+                    $sub->whereNull('product_price_histories.precio_nuevo')
+                        ->whereHas('product', function($q2) {
+                            $q2->whereColumn('products.precio', '<', 'product_price_histories.precio');
+                        });
+                });
+            });
         }
         if ($dateFrom) {
-            $query->whereDate('created_at', '>=', $dateFrom);
+            $query->whereDate('product_price_histories.created_at', '>=', $dateFrom);
         }
         if ($dateTo) {
-            $query->whereDate('created_at', '<=', $dateTo);
+            $query->whereDate('product_price_histories.created_at', '<=', $dateTo);
         }
 
         $history = $query->paginate(20);
+
+        // Assign old_price and new_price for the view
+        $history->getCollection()->transform(function($h) {
+            $h->old_price = $h->precio;
+            if ($h->precio_nuevo) {
+                $h->new_price = $h->precio_nuevo;
+            } else {
+                $h->new_price = $h->product ? round(floatval($h->product->precio), 2) : $h->precio;
+            }
+            return $h;
+        });
 
         return view('admin.reports.products', compact('history'));
     }

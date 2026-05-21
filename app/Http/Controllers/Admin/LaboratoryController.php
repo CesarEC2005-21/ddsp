@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Laboratory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AuditLog;
 
 class LaboratoryController extends Controller
 {
@@ -32,8 +33,10 @@ class LaboratoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255|unique:laboratories,descripcion',
             'logo' => 'nullable|image|max:2048',
+        ], [
+            'descripcion.unique' => 'Este laboratorio ya se encuentra registrado.'
         ]);
 
         $lastId = Laboratory::max('id') ?? 0;
@@ -44,12 +47,18 @@ class LaboratoryController extends Controller
             $logoPath = $request->file('logo')->store('laboratories', 'public');
         }
 
-        Laboratory::create([
+        $laboratory = Laboratory::create([
             'codigo' => $autoCode,
             'descripcion' => $request->descripcion,
             'logo' => $logoPath,
             'is_top' => false,
             'estado' => true,
+        ]);
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_laboratory',
+            'description' => "Creó el laboratorio: {$laboratory->descripcion} ({$laboratory->codigo})"
         ]);
 
         return redirect()->route('admin.laboratories.index')->with('success', 'Laboratorio creado correctamente con código ' . $autoCode);
@@ -64,8 +73,10 @@ class LaboratoryController extends Controller
     public function update(Request $request, Laboratory $laboratory)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:255|unique:laboratories,descripcion,' . $laboratory->id,
             'logo' => 'nullable|image|max:2048',
+        ], [
+            'descripcion.unique' => 'Este laboratorio ya se encuentra registrado.'
         ]);
 
         if ($request->hasFile('logo')) {
@@ -86,7 +97,18 @@ class LaboratoryController extends Controller
         if ($laboratory->logo) {
             Storage::disk('public')->delete($laboratory->logo);
         }
+        
+        $codigo = $laboratory->codigo;
+        $descripcion = $laboratory->descripcion;
+
         $laboratory->delete();
+
+        AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted_laboratory',
+            'description' => "Eliminó el laboratorio: {$descripcion} ({$codigo})"
+        ]);
+
         return redirect()->route('admin.laboratories.index')->with('success', 'Laboratorio eliminado correctamente.');
     }
 }
