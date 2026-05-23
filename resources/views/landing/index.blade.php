@@ -4,6 +4,7 @@
 <link rel="preload" href="{{ asset('img/hero.png') }}" as="image">
 <link rel="stylesheet" href="{{ asset('css/landing/home.css') }}">
 <link rel="stylesheet" href="{{ asset('css/landing/home_labs.css') }}">
+<link rel="stylesheet" href="{{ asset('css/landing/home_products.css') }}">
 @endpush
 
 @section('content')
@@ -78,15 +79,19 @@
     </div>
 
     <!-- Laboratorios Top -->
-    <section class="top-laboratories" style="padding: 120px 5% 80px; background: #f0fdf4; text-align: center;">
-        <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Nuestras Alianzas</span>
-        <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0 20px;">Laboratorios Destacados</h2>
-        <p style="color: #64748b; margin-bottom: 60px; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Colaboramos con laboratorios de clase mundial para asegurar el acceso a medicinas de alta calidad en todo el Perú.</p>
+    <section class="top-laboratories" style="padding: 120px 5% 80px; background: linear-gradient(160deg, #f0fdf4 0%, #f8fafc 40%, #f0fdfa 100%); text-align: center;">
+        <div class="labs-section-header" style="margin-bottom: 50px;">
+            <div class="section-badge">
+                <i class="fas fa-flask"></i> Nuestras Alianzas
+            </div>
+            <h2>Laboratorios <span>Destacados</span></h2>
+            <p>Colaboramos con laboratorios de clase mundial para asegurar el acceso a medicinas de alta calidad en todo el Perú.</p>
+        </div>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 35px; max-width: 1400px; margin: 0 auto; justify-content: center;">
+        <div class="labs-grid">
             @forelse($topLaboratories as $lab)
-                <a href="{{ route('products', ['lab' => $lab->id]) }}" class="lab-card-link" style="text-decoration: none;">
-                    <div class="lab-card premium-hover">
+                <a href="{{ route('products', ['lab' => $lab->id]) }}" class="lab-card-link reveal-lab">
+                    <div class="lab-card">
                         <div class="lab-logo-container">
                             @if($lab->logo)
                                 <img src="{{ asset('storage/' . $lab->logo) }}" alt="{{ $lab->descripcion }}">
@@ -103,50 +108,62 @@
                     </div>
                 </a>
             @empty
-                <div style="padding: 40px; background: #f8fafc; border-radius: 20px; width: 100%; border: 2px dashed #e2e8f0;">
-                    <p style="color: #94a3b8; margin: 0; font-weight: 600;">Descubre pronto nuestras marcas aliadas.</p>
+                <div class="labs-empty">
+                    <p>Descubre pronto nuestras marcas aliadas.</p>
                 </div>
             @endforelse
         </div>
     </section>
 
     <!-- Featured Products Section -->
-    <section class="featured-products reveal" style="padding: 100px 5%; background: white;">
-        <div style="text-align: center; margin-bottom: 60px;">
-            <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Selección Especial</span>
-            <h2 style="font-size: 3rem; color: #1e293b; margin: 15px 0;">Productos Destacados</h2>
-            <div style="width: 80px; height: 4px; background: var(--primary-green); margin: 0 auto; border-radius: 2px;"></div>
+    <section class="featured-products" style="padding: 100px 5%; background: white;">
+        <div class="prod-section-header" style="text-align: center; margin-bottom: 50px;">
+            <div class="prod-badge">
+                <i class="fas fa-star"></i> Selección Especial
+            </div>
+            <h2>Productos <span>Destacados</span></h2>
+            <div class="prod-divider"></div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1400px; margin: 0 auto;">
+        <div class="prod-grid">
             @forelse($featuredProducts as $product)
-                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s; border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-width: 0;">
-                    <div style="height: 250px; padding: 30px; display: flex; align-items: center; justify-content: center; background: white; position: relative;">
-                        <span style="position: absolute; top: 15px; left: 15px; background: #FEF3C7; color: #92400E; padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; z-index: 2;"><i class="fas fa-star"></i> DESTACADO</span>
+                <div class="prod-card">
+                    <a href="{{ route('product.detail', $product->id) }}" class="prod-image-wrap" style="text-decoration: none; display: flex;">
+                        <span class="prod-badge"><i class="fas fa-star"></i> DESTACADO</span>
                         @if($product->imagen)
-                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}">
                         @else
-                            <i class="fas fa-pills" style="font-size: 4rem; color: #e2e8f0;"></i>
+                            <div class="prod-image-placeholder">
+                                <i class="fas fa-pills"></i>
+                                <span>Sin Imagen</span>
+                            </div>
                         @endif
-                    </div>
-                    <div style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
-                        <p style="color: #94a3b8; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">{{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}</p>
-                        <h4 style="font-size: 1.15rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; min-height: 3rem; word-break: break-word;">{{ $product->nombre }}</h4>
-                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                            <span style="font-size: 1.5rem; font-weight: 800; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
-                            <a href="{{ route('product.detail', $product->id) }}" class="btn" style="padding: 10px 20px; font-size: 0.85rem; background: var(--primary-green); color: white; border-radius: 12px;">Detalles</a>
+                    </a>
+                    <div class="prod-info">
+                        <span class="prod-laboratory"><i class="fas fa-flask"></i> {{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}</span>
+                        <a href="{{ route('product.detail', $product->id) }}" style="text-decoration: none;">
+                            <h4 class="prod-name">{{ $product->nombre }}</h4>
+                        </a>
+                        <span class="prod-code">#{{ $product->codigo }}</span>
+                        <div class="prod-footer">
+                            <span class="prod-price"><span class="currency">S/</span> {{ number_format($product->precio, 2) }}</span>
+                            <a href="{{ route('product.detail', $product->id) }}" class="prod-btn">
+                                Detalles <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             @empty
-                <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 20px; border: 2px dashed #e2e8f0;">
-                    <p style="color: #94a3b8; font-weight: 600;">Pronto verás aquí nuestra selección de productos destacados.</p>
+                <div class="prod-empty">
+                    <p>Pronto verás aquí nuestra selección de productos destacados.</p>
                 </div>
             @endforelse
         </div>
         
-        <div style="text-align: center; margin-top: 50px;">
-            <a href="{{ route('products') }}" class="btn btn-outline" style="color: var(--primary-green); border-color: var(--primary-green);">Ver Todo el Catálogo</a>
+        <div class="prod-cta">
+            <a href="{{ route('products') }}" class="btn-catalog">
+                Ver Todo el Catálogo <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </section>
 
@@ -280,5 +297,61 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Staggered labs entrance
+    const labsObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                const cards = entry.target.querySelectorAll('.lab-card-link');
+                cards.forEach((card, i) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(40px)';
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, i * 120);
+                });
+                labsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    const labsGrid = document.querySelector('.labs-grid');
+    if (labsGrid) {
+        labsGrid.querySelectorAll('.lab-card-link').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(40px)';
+        });
+        labsObserver.observe(labsGrid);
+    }
+
+    // Staggered featured products entrance
+    const prodObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const cards = entry.target.querySelectorAll('.prod-card');
+                cards.forEach((card, i) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(40px)';
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, i * 120);
+                });
+                prodObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    const prodGrid = document.querySelector('.prod-grid');
+    if (prodGrid) {
+        prodGrid.querySelectorAll('.prod-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(40px)';
+        });
+        prodObserver.observe(prodGrid);
+    }
 </script>
 @endpush
