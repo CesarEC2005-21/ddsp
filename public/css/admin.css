@@ -704,6 +704,7 @@ input:checked + .slider::before { transform: translateX(21px); }
     justify-content: center;
     gap: 6px;
     padding: 0;
+    flex-wrap: wrap;
 }
 
 .page-item .page-link {
@@ -1032,4 +1033,35 @@ input:checked + .slider::before { transform: translateX(21px); }
     .profile-info-text {
         display: none;
     }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-area {
+        padding: 15px;
+        max-width: 100vw;
+    }
+
+    .card {
+        padding: 15px;
+        overflow-x: hidden;
+    }
+
+    .modal-footer {
+        flex-wrap: wrap;
+        justify-content: stretch;
+    }
+    
+    .modal-footer .btn {
+        flex: 1;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
+

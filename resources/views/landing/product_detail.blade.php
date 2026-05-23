@@ -41,19 +41,19 @@
     .accordion-item.active .fa-chevron-down { transform: rotate(180deg); }
 
     /* Price and Presentation Layout */
-    .info-row { display: flex; align-items: center; gap: 30px; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 15px; }
+    .info-row { display: flex; align-items: center; gap: 30px; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 15px; flex-wrap: wrap; }
     .pres-label { font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 5px; font-size: 0.9rem; }
     .pres-box { 
         display: inline-block; padding: 8px 15px; border: 1px solid var(--brand-green); 
-        border-radius: 5px; font-weight: 700; color: var(--brand-green); background: white;
+        border-radius: 8px; color: var(--brand-green); font-weight: 700; background: white;
     }
     .price-tag { font-weight: 900; font-size: 2rem; color: var(--brand-green); margin: 0; }
 
-    .action-row { display: flex; align-items: center; gap: 20px; margin-top: 30px; }
+    .action-row { display: flex; align-items: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
     .qty-control { display: flex; align-items: center; border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden; height: 55px; }
     .qty-control button { width: 45px; border: none; background: white; cursor: pointer; font-size: 1.2rem; color: #64748b; transition: 0.3s; }
     .qty-control button:hover { background: #f1f5f9; color: var(--brand-green); }
-    .qty-control input { width: 50px; border: none; text-align: center; font-weight: 700; color: var(--text-dark); outline: none; font-size: 1.1rem; }
+    .qty-control input { width: 50px; border: none; text-align: center; font-weight: 700; color: #1e293b; outline: none; font-size: 1.1rem; }
     
     .btn-add { 
         flex: 1; height: 55px; background: var(--brand-green); color: white; border: none; border-radius: 8px; 

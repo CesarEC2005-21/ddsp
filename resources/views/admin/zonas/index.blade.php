@@ -89,13 +89,13 @@
                             </label>
                         </div>
                     </div>
-
-                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
-                        <button type="button" class="btn" style="background: #f1f5f9; color: #475569; padding: 12px 30px; border-radius: 12px; font-weight: 700;" onclick="closeModal('newZonaModal')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 12px 35px; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
-                            <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Finalizar y Guardar
-                        </button>
-                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 25px 40px; background: white; border-top: 1px solid #f1f5f9;">
+                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('newZonaModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 40px; font-weight: 700; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
+                        <i class="fas fa-check-circle"></i> Finalizar y Guardar
+                    </button>
+                </div>
                 </form>
             </div>
         </div>
@@ -141,13 +141,13 @@
                             </label>
                         </div>
                     </div>
-
-                    <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
-                        <button type="button" class="btn" style="background: #f1f5f9; color: #475569; padding: 12px 30px; border-radius: 12px; font-weight: 700;" onclick="closeModal('editZonaModal')">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" style="background: #10b981; padding: 12px 35px; border-radius: 12px; font-weight: 800; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
-                            <i class="fas fa-save" style="margin-right: 8px;"></i> Guardar Cambios
-                        </button>
-                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 25px 40px; background: white; border-top: 1px solid #f1f5f9;">
+                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('editZonaModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="padding: 12px 40px; font-weight: 700; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
                 </form>
             </div>
         </div>

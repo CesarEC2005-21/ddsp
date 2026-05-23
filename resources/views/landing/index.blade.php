@@ -120,7 +120,7 @@
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1400px; margin: 0 auto;">
             @forelse($featuredProducts as $product)
-                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s; border: 1px solid #f1f5f9; display: flex; flex-direction: column;">
+                <div class="product-card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s; border: 1px solid #f1f5f9; display: flex; flex-direction: column; min-width: 0;">
                     <div style="height: 250px; padding: 30px; display: flex; align-items: center; justify-content: center; background: white; position: relative;">
                         <span style="position: absolute; top: 15px; left: 15px; background: #FEF3C7; color: #92400E; padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; z-index: 2;"><i class="fas fa-star"></i> DESTACADO</span>
                         @if($product->imagen)
@@ -131,8 +131,8 @@
                     </div>
                     <div style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column;">
                         <p style="color: #94a3b8; font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">{{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}</p>
-                        <h4 style="font-size: 1.15rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; min-height: 3rem;">{{ $product->nombre }}</h4>
-                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 1.15rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; min-height: 3rem; word-break: break-word;">{{ $product->nombre }}</h4>
+                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <span style="font-size: 1.5rem; font-weight: 800; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
                             <a href="{{ route('product.detail', $product->id) }}" class="btn" style="padding: 10px 20px; font-size: 0.85rem; background: var(--primary-green); color: white; border-radius: 12px;">Detalles</a>
                         </div>

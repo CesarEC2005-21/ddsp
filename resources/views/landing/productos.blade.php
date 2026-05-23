@@ -8,13 +8,18 @@
 @endpush
 
 @section('content')
-    <div style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
+    <div class="hero-catalog" style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
         <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800; margin-bottom: 15px;">Catálogo de Productos</h1>
         <p style="font-size: 1.1rem; opacity: 0.9; color: white; max-width: 600px; margin: 0 auto;">Explora nuestro catálogo completo de medicamentos y productos farmacéuticos de la más alta calidad.</p>
     </div>
 
     <section class="products-container" style="display: flex; gap: 40px; padding: 60px 5%; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
         
+        <!-- Mobile Filter Toggle -->
+        <button id="filterToggle" class="filter-toggle-btn" style="display: none;">
+            <i class="fas fa-filter"></i> Filtros <i class="fas fa-chevron-down"></i>
+        </button>
+
         <!-- Sidebar Filtros -->
         <aside class="filters-sidebar" style="flex: 0 0 280px; background: white; padding: 25px; border-radius: 15px; box-shadow: var(--shadow-md); border: 1px solid #eee; position: sticky; top: 100px;">
             <h3 style="margin-bottom: 20px; color: var(--dark-green); font-size: 1.2rem; border-bottom: 2px solid #eee; padding-bottom: 10px;"><i class="fas fa-filter"></i> Filtros</h3>
@@ -55,7 +60,7 @@
         <div class="products-main" style="flex: 1;">
             <div class="product-grid">
                 @forelse($products as $product)
-                <div class="product-card reveal" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: 0.4s; border: 1px solid #f1f5f9; position: relative;">
+                <div class="product-card reveal" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: 0.4s; border: 1px solid #f1f5f9; position: relative; min-width: 0;">
                     <!-- Tag Premium -->
                     <div style="position: absolute; top: 15px; left: 15px; z-index: 2;">
                         <span style="font-size: 0.7rem; font-weight: 800; color: white; background: var(--primary-green); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);">
@@ -85,7 +90,7 @@
                         </div>
                         
                         <a href="{{ route('product.detail', $product->id) }}" style="text-decoration: none;">
-                            <h3 style="font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; line-height: 1.4; min-height: 3rem;">{{ $product->nombre }}</h3>
+                            <h3 style="font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; line-height: 1.4; min-height: 3rem; word-break: break-word;">{{ $product->nombre }}</h3>
                         </a>
                         
                         <div style="margin-top: auto;">
@@ -93,7 +98,7 @@
                                 <span style="font-size: 1.8rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
                             </div>
                             
-                            <div style="display: flex; gap: 10px; align-items: center;">
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                 <button onclick="addToCart({{ $product->id }}, '{{ $product->nombre }}')" class="btn-add-cart">
                                     AGREGAR
                                 </button>
@@ -198,11 +203,32 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    // Mobile filter toggle
+    const filterToggle = document.getElementById('filterToggle');
+    const filterSidebar = document.querySelector('.filters-sidebar');
+    if (filterToggle && filterSidebar) {
+        filterToggle.addEventListener('click', function() {
+            filterSidebar.classList.toggle('open');
+            this.classList.toggle('active');
+            const icon = this.querySelector('.fa-chevron-down');
+            if (icon) icon.style.transform = filterSidebar.classList.contains('open') ? 'rotate(180deg)' : '';
+        });
+    }
+
     function showMiniCartNotification(name, qty) {
         // Obsoleto - Usando SweetAlert2
     }
 </script>
 <style>
+    .filter-toggle-btn {
+        display: none; align-items: center; gap: 8px; background: var(--primary-green); color: white; border: none;
+        padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        width: 100%; justify-content: center; font-family: inherit; font-size: 0.95rem;
+        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2);
+    }
+    .filter-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(46, 125, 50, 0.3); }
+    .filter-toggle-btn.active i.fa-chevron-down { transform: rotate(180deg); }
+
     @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
 
     .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
@@ -212,7 +238,18 @@
     @media (max-width: 768px) {
         .product-grid { grid-template-columns: 1fr; }
         .products-container { flex-direction: column !important; }
-        .filters-sidebar { width: 100% !important; flex: auto !important; position: static !important; }
+        .filters-sidebar { width: 100% !important; flex: auto !important; position: static !important; display: none; }
+        .filters-sidebar.open { display: block; }
+        .filter-toggle-btn { display: flex !important; }
+        .hero-catalog { padding: 50px 5% !important; }
+        .hero-catalog h1 { font-size: 2rem !important; }
+    }
+    @media (max-width: 480px) {
+        .hero-catalog { padding: 40px 5% !important; border-radius: 0 0 30px 30px !important; }
+        .hero-catalog h1 { font-size: 1.6rem !important; }
+        .hero-catalog p { font-size: 0.95rem !important; }
+        #floating-cart { width: 55px !important; height: 55px !important; bottom: 20px !important; right: 20px !important; }
+        #floating-cart i { font-size: 1.2rem !important; }
     }
 
     .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }
@@ -235,7 +272,7 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* Custom Pagination Styles */
-    .pagination { display: flex; padding-left: 0; list-style: none; justify-content: center; gap: 8px; margin-top: 20px; }
+    .pagination { display: flex; padding-left: 0; list-style: none; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
     .page-item .page-link { 
         position: relative; display: block; padding: 10px 18px; color: #475569; background-color: #fff; 
         border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s;

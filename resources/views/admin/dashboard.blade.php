@@ -6,6 +6,16 @@
     .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
     .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
     .chart-container { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+    .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    @media (max-width: 968px) {
+        .charts-grid { grid-template-columns: 1fr; }
+        .chart-container { padding: 20px; }
+        .charts-grid .chart-container:first-child { order: 1; }
+        .charts-grid .chart-container:last-child { order: 2; }
+    }
+    @media (max-width: 480px) {
+        .chart-container { padding: 15px; border-radius: 15px; }
+    }
 </style>
 @endpush
 
@@ -60,7 +70,7 @@
     </div>
 
     <!-- Charts Section -->
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+    <div class="charts-grid">
         <div class="chart-container">
             <h3 style="margin-bottom: 25px; color: #1e293b;">Tendencia de Solicitudes</h3>
             <canvas id="quotationsChart" height="120"></canvas>
