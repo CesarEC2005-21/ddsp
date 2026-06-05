@@ -65,6 +65,11 @@
                 <i class="fas fa-newspaper"></i> Noticias / Promociones
             </a>
             @endif
+            @if($can('settings')) <!-- Banners are accessible by those who can edit settings or just generally sysadmin/admin -->
+            <a href="{{ route('admin.banners.index') }}" class="nav-item {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
+                <i class="fas fa-images"></i> Banners
+            </a>
+            @endif
 
             <div class="nav-section-title">Ventas & Distribución</div>
             @if($can('representatives'))

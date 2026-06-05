@@ -17,19 +17,34 @@ class LandingController extends Controller
 {
     public function index()
     {
+        try {
+            $banner = \App\Models\Banner::where('section', 'inicio')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
         $topLaboratories = Laboratory::where('is_top', true)->get();
         $featuredProducts = Product::where('estado', true)->where('is_featured', true)->limit(4)->get();
-        return view('landing.index', compact('topLaboratories', 'featuredProducts'));
+        return view('landing.index', compact('topLaboratories', 'featuredProducts', 'banner'));
     }
 
     public function about()
     {
+        try {
+            $banner = \App\Models\Banner::where('section', 'ejecutivos')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
         $representatives = Representative::where('estado', true)->with('locations.zona')->get();
-        return view('landing.ejecutivos', compact('representatives'));
+        return view('landing.ejecutivos', compact('representatives', 'banner'));
     }
 
     public function nosotros()
     {
+        try {
+            $banner = \App\Models\Banner::where('section', 'nosotros')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
         $settings = [
             'mision' => Setting::get('mision', 'Proveer soluciones que satisfagan las necesidades de clientes y proveedores a través de la comercialización de productos farmacéuticos y populares, garantizando calidad, eficiencia y competitividad. Además, se busca asegurar el crecimiento de la empresa, el bienestar de la comunidad y el desarrollo de los colaboradores.'),
             'vision' => Setting::get('vision', 'Droguería Sánchez Pharma será reconocida como una empresa líder en la industria farmacéutica a nivel regional, con potencial de expansión nacional e internacional, basada en principios éticos. Se enfoca en satisfacer las necesidades terapéuticas de la población, respetando a colaboradores, proveedores y clientes, y contribuyendo al país y al medio ambiente.'),
@@ -37,11 +52,16 @@ class LandingController extends Controller
             'principios' => Setting::get('principios', '• Atención al cliente con excelencia\n• Distribución oportuna de medicamentos\n• Precios justos y accesibles\n• Compromiso con la salud pública\n• Ética profesional en todas nuestras acciones'),
             'historia' => Setting::get('historia', 'Droguería y Distribuidora Sánchez Pharma es una empresa chiclayana fundada en 2022, dedicada a la comercialización y distribución de productos farmacéuticos, médicos y de cuidado personal en la región Lambayeque. Fue creada con el objetivo de brindar un servicio confiable, accesible y comprometido con la salud de las familias peruanas'),
         ];
-        return view('landing.nosotros', compact('settings'));
+        return view('landing.nosotros', compact('settings', 'banner'));
     }
 
     public function noticias()
     {
+        try {
+            $banner = \App\Models\Banner::where('section', 'noticias')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
         // Show active notices
         $noticias = Noticia::with(['laboratory', 'product'])
             ->where('estado', true)
@@ -49,11 +69,16 @@ class LandingController extends Controller
             ->whereDate('fecha_final', '>=', now())
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('landing.noticias', compact('noticias'));
+        return view('landing.noticias', compact('noticias', 'banner'));
     }
 
     public function products(Request $request)
     {
+        try {
+            $banner = \App\Models\Banner::where('section', 'productos')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
         $laboratories = Laboratory::where('estado', true)->orderBy('descripcion', 'asc')->get();
         $query = Product::with('laboratory')->where('estado', true);
         
@@ -71,7 +96,7 @@ class LandingController extends Controller
 
         $products = $query->paginate(12);
 
-        return view('landing.productos', compact('products', 'laboratories'));
+        return view('landing.productos', compact('products', 'laboratories', 'banner'));
     }
 
     public function productDetail(Product $product)
@@ -102,7 +127,12 @@ class LandingController extends Controller
 
     public function contact()
     {
-        return view('landing.contacto');
+        try {
+            $banner = \App\Models\Banner::where('section', 'contacto')->first();
+        } catch (\Exception $e) {
+            $banner = null;
+        }
+        return view('landing.contacto', compact('banner'));
     }
 
     public function processContact(Request $request)

@@ -10,7 +10,7 @@
 
     .about-hero {
         background: linear-gradient(rgba(var(--dark-green-rgb), 0.85), rgba(var(--dark-green-rgb), 0.95)), 
-                    url('https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+                    url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" }}') center/cover;
         color: white; 
         text-align: center; 
         padding: 100px 5% 140px; 

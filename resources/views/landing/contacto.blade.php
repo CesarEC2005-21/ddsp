@@ -17,7 +17,7 @@
     
     .contact-hero {
         background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(27, 94, 32, 0.95)), 
-            url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1920&q=80') center/cover;
+            url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1920&q=80" }}') center/cover;
         color: white; padding: 100px 5% 80px; text-align: center; position: relative; overflow: hidden;
         border-radius: 0 0 50px 50px; margin-bottom: 60px;
     }

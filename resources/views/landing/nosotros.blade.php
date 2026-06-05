@@ -6,7 +6,7 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
     
     .about-hero {
-        background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?auto=format&fit=crop&w=1920&q=80') center/cover;
+        background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('{{ ($banner && $banner->image_path) ? asset('storage/' . $banner->image_path) : "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?auto=format&fit=crop&w=1920&q=80" }}') center/cover;
         color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 60px;
         animation: fadeInDown 1s ease-out;
     }
@@ -149,7 +149,7 @@
     <section class="section-padding">
         <div class="about-grid">
             <div class="about-image reveal">
-                <img src="{{ asset('img/hero.png') }}" alt="Nuestra Historia">
+                <img src="{{ ($banner && $banner->historia_image) ? asset('storage/' . $banner->historia_image) : asset('img/hero.png') }}" alt="Nuestra Historia">
             </div>
             <div class="about-content reveal">
                 <span style="color: var(--primary-green); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem;">Nuestra Historia</span>
@@ -173,13 +173,13 @@
                 <p>{{ $settings['mision'] }}</p>
             </div>
             <div class="about-image">
-                <img src="{{ asset('img/mision.png') }}" alt="Misión">
+                <img src="{{ ($banner && $banner->mision_image) ? asset('storage/' . $banner->mision_image) : asset('img/mision.png') }}" alt="Misión">
             </div>
         </div>
 
         <div class="about-grid reverse reveal" style="margin-top: 80px;">
             <div class="about-image">
-                <img src="{{ asset('img/vision.png') }}" alt="Visión">
+                <img src="{{ ($banner && $banner->vision_image) ? asset('storage/' . $banner->vision_image) : asset('img/vision.png') }}" alt="Visión">
             </div>
             <div class="about-content">
                 <h2>Nuestra <span>Visión</span></h2>

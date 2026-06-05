@@ -12,7 +12,7 @@
     <section class="hero-carousel">
         <div class="carousel-container">
             <div class="carousel-slide active">
-                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ asset('img/hero.png') }}');"></div>
+                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ ($banner && $banner->image_path) ? asset('storage/' . $banner->image_path) : asset('img/hero.png') }}');"></div>
                 <div class="hero-content">
                     <h1 class="animate-title">Líderes en Distribución de Confianza</h1>
                     <p class="animate-text">Abastecemos al Perú con los más altos estándares de calidad farmacéutica.</p>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ asset('img/hero2.png') }}');"></div>
+                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ ($banner && $banner->hero_image_2) ? asset('storage/' . $banner->hero_image_2) : asset('img/hero2.png') }}');"></div>
                 <div class="hero-content">
                     <h1 class="animate-title">Logística Especializada</h1>
                     <p class="animate-text">Garantizamos la cadena de frío y trazabilidad en cada entrega nacional.</p>
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="carousel-slide">
-                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ asset('img/hero3.png') }}');"></div>
+                <div class="slide-bg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('{{ ($banner && $banner->hero_image_3) ? asset('storage/' . $banner->hero_image_3) : asset('img/hero3.png') }}');"></div>
                 <div class="hero-content">
                     <h1 class="animate-title">Alianzas que Saludan</h1>
                     <p class="animate-text">Trabajamos con los laboratorios más prestigiosos para cuidar tu salud.</p>
@@ -186,12 +186,12 @@
         <h2 style="font-size: 3rem; color: #1e293b; margin-bottom: 20px; font-weight: 800;">Infraestructura de Excelencia</h2>
         <p style="color: #64748b; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1rem;">Operamos bajo estrictos protocolos de Buenas Prácticas de Almacenamiento (BPA).</p>
         <div class="gallery-grid">
-                <div class="gallery-item" style="background-image: url('{{ asset('img/logistica.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
+                <div class="gallery-item" style="background-image: url('{{ ($banner && $banner->gallery_image_1) ? asset('storage/' . $banner->gallery_image_1) : asset('img/logistica.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
             </div>
-                <div class="gallery-item" style="background-image: url('{{ asset('img/calidad.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
+                <div class="gallery-item" style="background-image: url('{{ ($banner && $banner->gallery_image_2) ? asset('storage/' . $banner->gallery_image_2) : asset('img/calidad.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
                 <div class="gallery-overlay"><span>Calidad Garantizada</span></div>
             </div>
-                <div class="gallery-item" style="background-image: url('{{ asset('img/transporte.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
+                <div class="gallery-item" style="background-image: url('{{ ($banner && $banner->gallery_image_3) ? asset('storage/' . $banner->gallery_image_3) : asset('img/transporte.png') }}');">                <div class="gallery-overlay"><span>Logística Avanzada</span></div>
                 <div class="gallery-overlay"><span>Cobertura Nacional</span></div>
             </div>
         </div>

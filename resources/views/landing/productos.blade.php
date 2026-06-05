@@ -8,7 +8,7 @@
 @endpush
 
 @section('content')
-    <div class="hero-catalog" style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
+    <div class="hero-catalog" style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80" }}') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
         <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800; margin-bottom: 15px;">Catálogo de Productos</h1>
         <p style="font-size: 1.1rem; opacity: 0.9; color: white; max-width: 600px; margin: 0 auto;">Explora nuestro catálogo completo de medicamentos y productos farmacéuticos de la más alta calidad.</p>
     </div>

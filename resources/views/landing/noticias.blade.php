@@ -13,7 +13,7 @@
 
     .noticias-hero {
         background: linear-gradient(rgba(var(--dark-green-rgb), 0.85), rgba(var(--dark-green-rgb), 0.95)), 
-                    url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+                    url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" }}') center/cover;
         color: #ffffff; 
         text-align: center; 
         padding: 80px 5% 120px; 
