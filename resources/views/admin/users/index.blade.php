@@ -164,6 +164,7 @@
                                         'zonas' => 'Zonas',
                                         'unidad_medidas' => 'Unidades de Medida',
                                         'noticias' => 'Noticias / Promociones',
+                                        'banners' => 'Banners',
                                         'representatives' => 'Ejecutivos',
                                         'quotations' => 'Cotizaciones',
                                         'users' => 'Gestión Usuarios',

@@ -189,7 +189,7 @@ class ReportController extends Controller
             $query->whereDate('product_price_histories.created_at', '<=', $dateTo);
         }
 
-        $history = $query->paginate(20);
+        $history = $query->paginate(10);
 
         // Assign old_price and new_price for the view
         $history->getCollection()->transform(function($h) {
