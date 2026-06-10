@@ -2,41 +2,100 @@
 
 @push('styles')
 <style>
-    :root {
-        --gradient-start: #10b981;
-        --gradient-end: #059669;
-    }
-    
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .contact-hero {
-        background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(27, 94, 32, 0.95)), 
-            url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1920&q=80" }}') center/cover;
-        color: white; padding: 100px 5% 80px; text-align: center; position: relative; overflow: hidden;
-        border-radius: 0 0 50px 50px; margin-bottom: 60px;
-    }
-    .contact-hero::before {
-        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%);
-    }
-    .contact-hero > * { position: relative; z-index: 2; }
+/* ═══════════════════════════════════════════════════════
+   CONTACTO — Premium Redesign
+   ═══════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
 
-    .contact-hero h1 {
-        font-size: clamp(2.5rem, 5vw, 3.5rem); font-family: 'Poppins', sans-serif; 
-        font-weight: 800; margin-bottom: 15px;
-    }
-    .contact-hero p {
-        font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; line-height: 1.7;
-    }
+/* ── Scroll reveal ── */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
 
-    .contact-section { padding: 60px 5%; background: #f8fafc; }
+/* ══════════════════════════════════════════════════════
+   1. HERO
+   ══════════════════════════════════════════════════════ */
+.ct-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: #0f172a;
+}
+.ct-hero-bg {
+    position: absolute; inset: 0;
+    background:
+        url('{{ ($banner && $banner->image_path) ? asset("storage/".$banner->image_path) : "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1920&q=80" }}')
+        center/cover no-repeat;
+    filter: brightness(.28) saturate(1.3);
+    transform: scale(1.08);
+    transition: transform 12s ease-out;
+}
+.ct-hero-bg.loaded { transform: scale(1); }
+.ct-hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(34,197,94,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: ctGridFloat 20s linear infinite;
+}
+@keyframes ctGridFloat { to { background-position: 60px 60px; } }
+.ct-hero-glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: .45;
+    animation: ctGlowPulse 6s ease-in-out infinite alternate;
+}
+.ct-hero-glow.g1 { width: 500px; height: 500px; background: radial-gradient(circle, #22c55e, transparent); top: -150px; right: -100px; }
+.ct-hero-glow.g2 { width: 400px; height: 400px; background: radial-gradient(circle, #059669, transparent); bottom: -100px; left: -80px; animation-delay: -3s; }
+@keyframes ctGlowPulse { from { opacity:.3; transform:scale(.9); } to { opacity:.6; transform:scale(1.1); } }
+#ctParticleCanvas { position: absolute; inset: 0; pointer-events: none; }
+
+.ct-hero-inner {
+    position: relative; z-index: 10;
+    text-align: center; padding: 0 20px; max-width: 900px;
+}
+.ct-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.4);
+    color: #4ade80; padding: 8px 20px; border-radius: 50px;
+    font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 28px; backdrop-filter: blur(10px);
+    animation: ctBadgePop .6s .3s both cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes ctBadgePop { from { opacity:0; transform:scale(.8) translateY(10px); } to { opacity:1; transform:none; } }
+
+.ct-hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900; color: white; line-height: 1; margin-bottom: 12px;
+    animation: ctHeroTitle .9s .5s both;
+}
+@keyframes ctHeroTitle { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:none; } }
+.ct-hero-title .hl {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #a3e635 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+}
+.ct-hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(255,255,255,.7);
+    max-width: 600px; margin: 24px auto 0; line-height: 1.7;
+    animation: ctHeroTitle 1s .7s both;
+}
+.ct-hero-scroll {
+    position: absolute; bottom: 40px; left: 0; width: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    color: rgba(255,255,255,.5); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase;
+    animation: ctHeroTitle 1s 1s both;
+}
+.ct-scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(34,197,94,.8), transparent);
+    animation: ctScrollLine 2s ease-in-out infinite;
+}
+@keyframes ctScrollLine { 0%,100%{ opacity:.3; transform:scaleY(.3) translateY(-10px); } 50%{ opacity:1; transform:scaleY(1) translateY(0); } }
+
+
+    .contact-section { padding: 80px 5%; background: #f8fafc; }
     
     .contact-grid {
         display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; max-width: 1200px; margin: 0 auto;
@@ -55,7 +114,7 @@
         width: 60px; height: 60px; min-width: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px;
         display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;
     }
-    .info-content h4 { font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 8px; }
+    .info-content h4 { font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: #1e293b; font-weight: 800; margin-bottom: 8px; }
     .info-content p { color: #64748b; line-height: 1.6; font-size: 0.95rem; margin: 0; }
     .info-content a { color: #10b981; text-decoration: none; font-weight: 600; }
     .info-content a:hover { text-decoration: underline; }
@@ -77,8 +136,8 @@
     }
     
     .contact-form-container h3 {
-        font-size: 1.8rem; color: #1e293b; font-family: 'Poppins', sans-serif; 
-        font-weight: 800; margin-bottom: 30px;
+        font-size: 1.8rem; color: #1e293b; font-family: 'Outfit', sans-serif; 
+        font-weight: 900; margin-bottom: 30px;
     }
     
     .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px; }
@@ -100,9 +159,9 @@
     
     .form-submit {
         width: 100%; padding: 18px 40px; background: linear-gradient(135deg, #10b981, #059669);
-        color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700;
+        color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 800; font-family: 'Outfit', sans-serif;
         cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
-        gap: 10px; font-family: inherit; margin-top: 10px;
+        gap: 10px; margin-top: 10px;
     }
     .form-submit:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3); }
 
@@ -116,10 +175,33 @@
 @endpush
 
 @section('content')
-    <div class="contact-hero">
-        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; font-weight: 800; color: white !important;">Contáctanos</h1>
-        <p>Nuestro equipo de ejecutivos está disponible para brindarte asesoría personalizada y responder a todas tus consultas sobre productos farmacéuticos.</p>
+
+<section class="ct-hero">
+    <div class="ct-hero-bg" id="ctHeroBg"></div>
+    <div class="ct-hero-grid"></div>
+    <div class="ct-hero-glow g1"></div>
+    <div class="ct-hero-glow g2"></div>
+    <canvas id="ctParticleCanvas"></canvas>
+
+    <div class="ct-hero-inner">
+        <div class="ct-hero-badge">
+            <i class="fas fa-headset"></i>
+            Atención al Cliente
+        </div>
+        <h1 class="ct-hero-title">
+            <span class="hl">Contáctanos</span>
+        </h1>
+        <p class="ct-hero-sub">
+            Nuestro equipo de ejecutivos está disponible para brindarte asesoría personalizada y responder a todas tus consultas sobre productos farmacéuticos.
+        </p>
     </div>
+
+    <div class="ct-hero-scroll">
+        <div class="ct-scroll-line"></div>
+        Envíanos un mensaje
+    </div>
+</section>
+
 
     <section class="contact-section">
         <div class="contact-grid reveal">
@@ -284,6 +366,37 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ─── Hero BG ─── */
+    setTimeout(() => document.getElementById('ctHeroBg')?.classList.add('loaded'), 80);
+
+    /* ─── Particles ─── */
+    (function() {
+        const canvas = document.getElementById('ctParticleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+        for (let i = 0; i < 60; i++) pts.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + .3, dx: (Math.random()-.5)*.35,
+            dy: -Math.random()*.55-.15, o: Math.random()*.45+.1
+        });
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            pts.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+                ctx.fillStyle = `rgba(74,222,128,${p.o})`; ctx.fill();
+                p.x+=p.dx; p.y+=p.dy;
+                if(p.y<-5){ p.y=canvas.height+5; p.x=Math.random()*canvas.width; }
+                if(p.x<-5) p.x=canvas.width+5;
+                if(p.x>canvas.width+5) p.x=-5;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
 
     @if(session('success'))
         Swal.fire({

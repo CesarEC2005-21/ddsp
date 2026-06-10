@@ -3,15 +3,124 @@
 @push('styles')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+/* ═══════════════════════════════════════════════════════
+   LABORATORIOS / PRODUCTOS — Premium Redesign
+   ═══════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
+
+.pd-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: #0f172a;
+    margin-bottom: 40px;
+}
+.pd-hero-bg {
+    position: absolute; inset: 0;
+    background:
+        url('{{ ($banner && $banner->image_path) ? asset("storage/".$banner->image_path) : "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80" }}')
+        center/cover no-repeat;
+    filter: brightness(.28) saturate(1.3);
+    transform: scale(1.08);
+    transition: transform 12s ease-out;
+}
+.pd-hero-bg.loaded { transform: scale(1); }
+.pd-hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(34,197,94,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,197,94,.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: pdGridFloat 20s linear infinite;
+}
+@keyframes pdGridFloat { to { background-position: 60px 60px; } }
+.pd-hero-glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: .45;
+    animation: pdGlowPulse 6s ease-in-out infinite alternate;
+}
+.pd-hero-glow.g1 { width: 500px; height: 500px; background: radial-gradient(circle, #22c55e, transparent); top: -150px; right: -100px; }
+.pd-hero-glow.g2 { width: 400px; height: 400px; background: radial-gradient(circle, #059669, transparent); bottom: -100px; left: -80px; animation-delay: -3s; }
+@keyframes pdGlowPulse { from { opacity:.3; transform:scale(.9); } to { opacity:.6; transform:scale(1.1); } }
+#pdParticleCanvas { position: absolute; inset: 0; pointer-events: none; }
+
+.pd-hero-inner {
+    position: relative; z-index: 10;
+    text-align: center; padding: 0 20px; max-width: 900px;
+}
+.pd-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.4);
+    color: #4ade80; padding: 8px 20px; border-radius: 50px;
+    font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 28px; backdrop-filter: blur(10px);
+    animation: pdBadgePop .6s .3s both cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes pdBadgePop { from { opacity:0; transform:scale(.8) translateY(10px); } to { opacity:1; transform:none; } }
+
+.pd-hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900; color: white; line-height: 1; margin-bottom: 12px;
+    animation: pdHeroTitle .9s .5s both;
+}
+@keyframes pdHeroTitle { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:none; } }
+.pd-hero-title .hl {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #a3e635 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+}
+.pd-hero-sub {
+    font-size: clamp(1rem, 2vw, 1.25rem); color: rgba(255,255,255,.7);
+    max-width: 600px; margin: 24px auto 0; line-height: 1.7;
+    animation: pdHeroTitle 1s .7s both;
+}
+.pd-hero-scroll {
+    position: absolute; bottom: 40px; left: 0; width: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    color: rgba(255,255,255,.5); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase;
+    animation: pdHeroTitle 1s 1s both;
+}
+.pd-scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(34,197,94,.8), transparent);
+    animation: pdScrollLine 2s ease-in-out infinite;
+}
+@keyframes pdScrollLine { 0%,100%{ opacity:.3; transform:scaleY(.3) translateY(-10px); } 50%{ opacity:1; transform:scaleY(1) translateY(0); } }
+
+
     .swal2-styled.swal2-confirm { background-color: var(--primary-green) !important; }
 </style>
 @endpush
 
 @section('content')
-    <div class="hero-catalog" style="background: linear-gradient(rgba(27, 94, 32, 0.85), rgba(27, 94, 32, 0.95)), url('{{ ($banner && $banner->image_path) ? asset("storage/" . $banner->image_path) : "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80" }}') center/cover; color: white; text-align: center; padding: 80px 5%; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
-        <h1 style="font-size: 3rem; font-family: 'Poppins', sans-serif; color: white !important; font-weight: 800; margin-bottom: 15px;">Catálogo de Productos</h1>
-        <p style="font-size: 1.1rem; opacity: 0.9; color: white; max-width: 600px; margin: 0 auto;">Explora nuestro catálogo completo de medicamentos y productos farmacéuticos de la más alta calidad.</p>
+<section class="pd-hero">
+    <div class="pd-hero-bg" id="pdHeroBg"></div>
+    <div class="pd-hero-grid"></div>
+    <div class="pd-hero-glow g1"></div>
+    <div class="pd-hero-glow g2"></div>
+    <canvas id="pdParticleCanvas"></canvas>
+
+    <div class="pd-hero-inner">
+        <div class="pd-hero-badge">
+            <i class="fas fa-flask"></i>
+            Laboratorios Aliados
+        </div>
+        <h1 class="pd-hero-title">
+            Catálogo de
+            <span class="hl">Productos</span>
+        </h1>
+        <p class="pd-hero-sub">
+            Explora nuestro catálogo completo de medicamentos y productos farmacéuticos de la más alta calidad y laboratorios certificados.
+        </p>
     </div>
+
+    <div class="pd-hero-scroll">
+        <div class="pd-scroll-line"></div>
+        Explorar catálogo
+    </div>
+</section>
 
     <section class="products-container" style="display: flex; gap: 40px; padding: 60px 5%; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
         
@@ -191,6 +300,37 @@
             }
         });
     }
+
+    /* ─── Hero BG ─── */
+    setTimeout(() => document.getElementById('pdHeroBg')?.classList.add('loaded'), 80);
+
+    /* ─── Particles ─── */
+    (function() {
+        const canvas = document.getElementById('pdParticleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+        for (let i = 0; i < 60; i++) pts.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 1.5 + .3, dx: (Math.random()-.5)*.35,
+            dy: -Math.random()*.55-.15, o: Math.random()*.45+.1
+        });
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            pts.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+                ctx.fillStyle = `rgba(74,222,128,${p.o})`; ctx.fill();
+                p.x+=p.dx; p.y+=p.dy;
+                if(p.y<-5){ p.y=canvas.height+5; p.x=Math.random()*canvas.width; }
+                if(p.x<-5) p.x=canvas.width+5;
+                if(p.x>canvas.width+5) p.x=-5;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
 
     // Intersection Observer for Reveal
     const observer = new IntersectionObserver((entries) => {
