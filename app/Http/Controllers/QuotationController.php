@@ -39,6 +39,9 @@ class QuotationController extends Controller
             'tipo_documento' => 'required|in:DNI,RUC',
             'numero_documento' => 'required|string',
             'ciudad' => 'required|string|max:255',
+            'direccion_exacta' => 'nullable|string|max:255',
+            'latitud' => 'nullable|string|max:50',
+            'longitud' => 'nullable|string|max:50',
             'email' => 'required|email|max:255',
             'observaciones' => 'nullable|string',
             'total' => 'required|numeric'

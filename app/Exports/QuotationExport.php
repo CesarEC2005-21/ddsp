@@ -33,6 +33,8 @@ class QuotationExport implements FromCollection, WithHeadings, WithMapping, With
             ['COTIZACIÓN #' . str_pad($this->quotation->id, 6, '0', STR_PAD_LEFT)],
             ['Cliente:', $this->quotation->nombre . ' ' . $this->quotation->apellidos],
             ['Documento:', $this->quotation->tipo_documento . ' ' . $this->quotation->numero_documento],
+            ['Ciudad:', $this->quotation->ciudad],
+            ['Dirección Exacta:', $this->quotation->direccion_exacta ?: 'N/A'],
             ['Fecha:', $this->quotation->created_at->format('d/m/Y H:i')],
             [''],
             ['CÓDIGO', 'PRODUCTO', 'CANTIDAD', 'PRECIO UNIT.', 'SUBTOTAL']

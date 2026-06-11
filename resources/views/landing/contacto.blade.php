@@ -212,7 +212,7 @@
                     </div>
                     <div class="info-content">
                         <h4>Nuestra Sede</h4>
-                        <p>Av. Principal 123, Distrito de Negocios<br>Lima, Perú</p>
+                        <p>Av. Puerto de Palos 309, La Victoria<br>Chiclayo, Perú</p>
                     </div>
                 </div>
                 
@@ -224,7 +224,6 @@
                         <h4>Central Telefónica</h4>
                         <p>
                             <a href="tel:+51987654321">+51 987 654 321</a><br>
-                            <a href="tel:+5112345678">01 123-4567</a>
                         </p>
                     </div>
                 </div>

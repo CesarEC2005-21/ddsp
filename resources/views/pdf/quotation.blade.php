@@ -50,6 +50,9 @@
             <div><span class="info-label">Teléfono:</span> <span class="info-value">{{ $quotation->telefono }}</span></div>
             <div><span class="info-label">Email:</span> <span class="info-value">{{ $quotation->email }}</span></div>
             <div><span class="info-label">Ciudad:</span> <span class="info-value">{{ $quotation->ciudad }}</span></div>
+            @if($quotation->direccion_exacta)
+            <div><span class="info-label">Dirección:</span> <span class="info-value">{{ $quotation->direccion_exacta }}</span></div>
+            @endif
         </div>
         <div class="grid-col">
             <div class="section-title">DETALLES DE SOLICITUD</div>

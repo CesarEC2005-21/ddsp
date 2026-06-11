@@ -8,7 +8,7 @@ class Quotation extends Model
 {
     protected $fillable = [
         'nombre', 'apellidos', 'telefono', 'tipo_documento', 
-        'numero_documento', 'ciudad', 'email', 'observaciones', 
+        'numero_documento', 'ciudad', 'direccion_exacta', 'latitud', 'longitud', 'email', 'observaciones', 
         'total', 'estado'
     ];
 

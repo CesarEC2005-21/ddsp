@@ -57,6 +57,7 @@
         .checkout-card { position: static; }
     }
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 @endpush
 
 @section('content')
@@ -151,7 +152,15 @@
 
                 <div class="form-group">
                     <label class="form-label">Ciudad / Localidad</label>
-                    <input type="text" name="ciudad" class="form-input" required placeholder="Ej. Lima, Trujillo...">
+                    <input type="text" name="ciudad" id="ciudad" class="form-input" required placeholder="Ej. Lima, Trujillo..." onchange="geocodeCity(this.value)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección Exacta (Seleccione en el mapa)</label>
+                    <div id="map" style="height: 250px; width: 100%; border-radius: 15px; border: 2px solid #f1f5f9; margin-bottom: 10px; z-index: 1;"></div>
+                    <input type="text" name="direccion_exacta" id="direccion_exacta" class="form-input" required placeholder="Arrastre el pin del mapa o escriba su dirección exacta">
+                    <input type="hidden" name="latitud" id="latitud">
+                    <input type="hidden" name="longitud" id="longitud">
                 </div>
 
                 <div class="form-group">
@@ -201,7 +210,70 @@
 @endsection
 
 @push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
+    // Leaflet Map Init
+    let map;
+    let marker;
+
+    function initMap() {
+        // Default a Lima, Peru
+        map = L.map('map').setView([-12.046374, -77.042793], 12);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        marker = L.marker([-12.046374, -77.042793], {draggable: true}).addTo(map);
+
+        marker.on('dragend', function(e) {
+            let lat = marker.getLatLng().lat;
+            let lng = marker.getLatLng().lng;
+            updateAddressFromCoords(lat, lng);
+        });
+
+        map.on('click', function(e) {
+            let lat = e.latlng.lat;
+            let lng = e.latlng.lng;
+            marker.setLatLng([lat, lng]);
+            updateAddressFromCoords(lat, lng);
+        });
+    }
+
+    function updateAddressFromCoords(lat, lng) {
+        document.getElementById('latitud').value = lat;
+        document.getElementById('longitud').value = lng;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    document.getElementById('direccion_exacta').value = data.display_name;
+                }
+            })
+            .catch(err => console.error("Geocoding error", err));
+    }
+
+    function geocodeCity(city) {
+        if(!city) return;
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${city}, Peru`)
+            .then(response => response.json())
+            .then(data => {
+                if(data && data.length > 0) {
+                    let lat = data[0].lat;
+                    let lng = data[0].lon;
+                    map.setView([lat, lng], 13);
+                    marker.setLatLng([lat, lng]);
+                }
+            })
+            .catch(err => console.error("Geocoding city error", err));
+    }
+
+    // Asegurarse de inicializar cuando el DOM cargue
+    document.addEventListener("DOMContentLoaded", function() {
+        initMap();
+    });
+
     function toggleDocLength() {
         const type = document.getElementById('tipo_doc').value;
         const input = document.getElementById('nro_doc');

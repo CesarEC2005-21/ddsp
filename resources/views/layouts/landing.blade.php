@@ -56,7 +56,7 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="nav-container">
+        <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="{{ route('home') }}" class="logo-container">
                 <img src="{{ asset('img/logo.png') }}" alt="Sanchez Pharma Logo" class="logo-img">
                 <div class="logo-text">
@@ -64,34 +64,34 @@
                 </div>
             </a>
             
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <ul class="nav-links" id="navLinks" style="display: flex; align-items: center;">
-                    <li style="position: relative; width: 100%;" class="nav-search-container">
-                        <form action="{{ route('products') }}" method="GET" style="display: flex; align-items: center; background: #f8fafc; border-radius: 50px; padding: 4px 6px 4px 20px; border: 1px solid #e2e8f0; transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.1)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-                            <input type="text" id="nav-search-input" name="search" autocomplete="off" value="{{ request('search') }}" placeholder="Buscar en catálogo..." style="border: none; background: transparent; outline: none; flex: 1; min-width: 150px; font-size: 0.9rem; color: #1e293b;" onfocus="this.parentElement.style.background='white'; this.parentElement.style.borderColor='var(--primary-green)';" onblur="this.parentElement.style.background='#f8fafc';">
-                            <button type="submit" style="border: none; background: var(--primary-green); color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: 0.3s;" onmouseover="this.style.background='var(--dark-green)'" onmouseout="this.style.background='var(--primary-green)'"><i class="fas fa-search"></i></button>
-                        </form>
-                        <div id="search-autocomplete-results" style="display: none; position: absolute; top: 110%; left: 0; width: 300px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 9999; overflow: hidden; flex-direction: column;">
-                        </div>
-                    </li>
-                    <li><a href="{{ route('home') }}">Inicio</a></li>
-                    <li><a href="{{ route('nosotros') }}">Nosotros</a></li>
-                    <li><a href="{{ route('noticias') }}">Noticias</a></li>
-                    <li><a href="{{ route('about') }}">Ejecutivos</a></li>
-                    <li class="nav-dropdown">
-                        <a href="{{ route('products') }}" class="nav-dropdown-toggle">Laboratorios <i class="fas fa-chevron-down"></i></a>
-                        <div class="nav-dropdown-menu">
-                            <a href="{{ route('products') }}">Ver Catálogo Completo</a>
-                            <div class="nav-dropdown-divider"></div>
-                            <span class="nav-dropdown-label">Filtrar por Laboratorio</span>
-                            @foreach($laboratories as $lab)
-                            <a href="{{ route('products') }}?lab={{ $lab->id }}">{{ $lab->descripcion }}</a>
-                            @endforeach
-                        </div>
-                    </li>
-                    <li><a href="{{ route('contact') }}" class="nav-cta">Contacto</a></li>
-                </ul>
+            <ul class="nav-links" id="navLinks" style="display: flex; align-items: center;">
+                <li style="position: relative; width: 100%;" class="nav-search-container">
+                    <form action="{{ route('products') }}" method="GET" style="display: flex; align-items: center; background: #f8fafc; border-radius: 50px; padding: 4px 6px 4px 20px; border: 1px solid #e2e8f0; transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.1)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                        <input type="text" id="nav-search-input" name="search" autocomplete="off" value="{{ request('search') }}" placeholder="Buscar en catálogo..." style="border: none; background: transparent; outline: none; flex: 1; min-width: 150px; font-size: 0.9rem; color: #1e293b;" onfocus="this.parentElement.style.background='white'; this.parentElement.style.borderColor='var(--primary-green)';" onblur="this.parentElement.style.background='#f8fafc';">
+                        <button type="submit" style="border: none; background: var(--primary-green); color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: 0.3s;" onmouseover="this.style.background='var(--dark-green)'" onmouseout="this.style.background='var(--primary-green)'"><i class="fas fa-search"></i></button>
+                    </form>
+                    <div id="search-autocomplete-results" style="display: none; position: absolute; top: 110%; left: 0; width: 300px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 9999; overflow: hidden; flex-direction: column;">
+                    </div>
+                </li>
+                <li><a href="{{ route('home') }}">Inicio</a></li>
+                <li><a href="{{ route('nosotros') }}">Nosotros</a></li>
+                <li><a href="{{ route('noticias') }}">Noticias</a></li>
+                <li><a href="{{ route('about') }}">Ejecutivos</a></li>
+                <li class="nav-dropdown">
+                    <a href="{{ route('products') }}" class="nav-dropdown-toggle">Laboratorios <i class="fas fa-chevron-down"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ route('products') }}">Ver Catálogo Completo</a>
+                        <div class="nav-dropdown-divider"></div>
+                        <span class="nav-dropdown-label">Filtrar por Laboratorio</span>
+                        @foreach($laboratories as $lab)
+                        <a href="{{ route('products') }}?lab={{ $lab->id }}">{{ $lab->descripcion }}</a>
+                        @endforeach
+                    </div>
+                </li>
+                <li><a href="{{ route('contact') }}" class="nav-cta">Contacto</a></li>
+            </ul>
 
+            <div style="display: flex; align-items: center; gap: 20px;">
                 <a href="{{ route('cart.index') }}" class="cart-icon" style="color: var(--primary-green); font-size: 1.4rem; position: relative;">
                     <i class="fas fa-shopping-basket"></i>
                     @if(count(session('cart', [])) > 0)
