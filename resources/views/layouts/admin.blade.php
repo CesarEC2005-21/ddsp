@@ -65,6 +65,11 @@
                 <i class="fas fa-newspaper"></i> Noticias / Promociones
             </a>
             @endif
+            @if($can('certificados'))
+            <a href="{{ route('admin.certificados.index') }}" class="nav-item {{ request()->routeIs('admin.certificados.*') ? 'active' : '' }}">
+                <i class="fas fa-certificate"></i> Certificaciones
+            </a>
+            @endif
             @if($can('banners'))
             <a href="{{ route('admin.banners.index') }}" class="nav-item {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
                 <i class="fas fa-images"></i> Banners

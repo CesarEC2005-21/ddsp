@@ -494,22 +494,53 @@
 
 
 {{-- ══════════════════════════════════════════
-     STATS
+     CERTIFICACIONES
      ══════════════════════════════════════════ --}}
-<div class="stats reveal" style="margin-bottom: 0;">
-    <div class="stat-item">
-        <h3 data-target="3" data-suffix="+">0</h3>
-        <p>Años de Experiencia</p>
+@if($certificados->count() > 0)
+<section class="certificaciones-section reveal" style="padding: 60px 5% 40px; background: white; text-align: center;">
+    <div class="labs-section-header" style="margin-bottom: 40px;">
+        <div class="section-badge" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(46,125,50,0.1), rgba(0,137,123,0.08)); color: #2e7d32; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 12px rgba(46,125,50,0.08);">
+            <i class="fas fa-award"></i> Calidad Garantizada
+        </div>
+        <h2>Nuestras <span>Certificaciones</span></h2>
     </div>
-    <div class="stat-item">
-        <h3 data-target="500" data-suffix="+">0</h3>
-        <p>Productos Activos</p>
+
+    <div class="cert-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 100px; max-width: 1200px; margin: 0 auto;">
+        @foreach($certificados as $cert)
+            <div class="cert-item" style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 190px;">
+                <div class="cert-img-wrap" style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 12px 15px rgba(0,0,0,0.15));">
+                    @if($cert->imagen)
+                        <img src="{{ asset('storage/' . $cert->imagen) }}" alt="{{ $cert->nombre }}" style="width: 100%; height: 100%; object-fit: contain;">
+                    @else
+                        <i class="fas fa-certificate" style="font-size: 4rem; color: #cbd5e1;"></i>
+                    @endif
+                </div>
+                <h4 style="font-family: 'Outfit', sans-serif; text-align: center; margin: 0; line-height: 1.3;">
+                    @php
+                        $name = $cert->nombre;
+                        $parts = preg_split('/(?<= de | DE )/i', $name, 2);
+                    @endphp
+                    @if(count($parts) > 1)
+                        <span style="font-size: 0.95rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">{{ $parts[0] }}</span>
+                        <span style="font-size: 1.2rem; font-weight: 800; color: #334155; display: block;">{{ $parts[1] }}</span>
+                    @else
+                        <span style="font-size: 1.15rem; font-weight: 800; color: #334155; display: block;">{{ $name }}</span>
+                    @endif
+                </h4>
+            </div>
+        @endforeach
     </div>
-    <div class="stat-item">
-        <h3 data-target="50" data-suffix="+">0</h3>
-        <p>Clientes Confían</p>
-    </div>
-</div>
+    <style>
+        .cert-item:hover .cert-img-wrap { 
+            transform: translateY(-12px) scale(1.05); 
+            filter: drop-shadow(0 25px 25px rgba(0,0,0,0.25)); 
+        }
+        .cert-item {
+            cursor: default;
+        }
+    </style>
+</section>
+@endif
 
 {{-- ══════════════════════════════════════════
      LABORATORIOS TOP

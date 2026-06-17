@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ZonaController;
 use App\Http\Controllers\Admin\UnidadMedidaController;
 use App\Http\Controllers\Admin\SecurityController;
+use App\Http\Controllers\Admin\CertificadoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
@@ -58,6 +59,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // Route::resource('pharmacies', PharmacyController::class);
         Route::resource('representatives', RepresentativeController::class);
         Route::resource('noticias', \App\Http\Controllers\Admin\NoticiaController::class);
+        Route::resource('certificados', CertificadoController::class);
         
         Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('users/{user}/block-history', [UserController::class, 'blockHistory'])->name('users.block-history');

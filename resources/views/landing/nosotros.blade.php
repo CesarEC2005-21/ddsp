@@ -905,73 +905,68 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════
-     4. VALORES
+     5.5. CERTIFICACIONES
      ═══════════════════════════════════════════════════ --}}
-<section class="ns-section ns-valores-section">
-    <div class="ns-valores-header sr up">
-        <div class="ns-label" style="justify-content:center;"><span>Nuestros Pilares</span></div>
-        <h2 class="ns-title">Valores <span class="accent">Corporativos</span></h2>
+@if(isset($certificados) && $certificados->count() > 0)
+<section class="ns-section" style="background: white; border-top: 1px solid var(--slate-200);">
+    <div class="sr up" style="text-align: center; margin-bottom: 60px;">
+        <div class="ns-label" style="justify-content: center;"><span>Aval de Calidad</span></div>
+        <h2 class="ns-title">Nuestras <span class="accent">Certificaciones</span></h2>
         <div class="ns-divider center"></div>
-        <p style="color:var(--slate-500); max-width:520px; margin:0 auto; font-size:1rem; line-height:1.7;">
-            Cada decisión y cada entrega está guiada por estos principios que nos definen.
+        <p style="color:var(--slate-600); font-size:1.05rem; line-height:1.75; max-width: 600px; margin: 0 auto;">
+            Respaldamos nuestros procesos y productos con certificaciones oficiales de DIGEMID, garantizando la máxima calidad en cada entrega.
         </p>
     </div>
 
-    <div class="ns-valores-grid">
-        @php
-        $valDescriptions = [
-            'compromiso'  => 'Cumplimos lo que prometemos. Tu confianza es nuestra prioridad en cada entrega.',
-            'honestidad'  => 'Actuamos con transparencia y rectitud en todas nuestras relaciones comerciales.',
-            'innovaci'    => 'Buscamos constantemente mejorar nuestros procesos y soluciones para el mercado.',
-            'servicio'    => 'El cliente es el centro de todo lo que hacemos. Atención personalizada y oportuna.',
-            'calidad'     => 'Solo distribuimos productos que cumplen los más altos estándares farmacéuticos.',
-        ];
-        $valIcons = [
-            'compromiso' => 'hand-holding-heart',
-            'honestidad' => 'shield-halved',
-            'innovaci'   => 'lightbulb',
-            'servicio'   => 'headset',
-            'calidad'    => 'award',
-            'ética'      => 'scale-balanced',
-            'integridad' => 'user-shield',
-        ];
-        @endphp
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto;">
+        @foreach($certificados as $index => $cert)
+        <div class="sr up" style="transition-delay: {{ $index * 0.1 }}s; background: white; border: 1px solid var(--slate-100); border-radius: 28px; padding: 50px 40px; text-align: center; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 40px rgba(0,0,0,0.03); display: flex; flex-direction: column; height: 100%;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 25px 60px rgba(34,197,94,0.1)'; this.style.borderColor='rgba(34,197,94,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 40px rgba(0,0,0,0.03)'; this.style.borderColor='var(--slate-100)';" >
+            
+            {{-- Decoración sutil de fondo --}}
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(34,197,94,0.04) 0%, rgba(255,255,255,0) 100%); pointer-events: none;"></div>
 
-        @foreach(explode(',', $settings['valores']) as $index => $valor)
-        @php
-            $valClean = trim($valor);
-            $valLower = strtolower($valClean);
-            $icon = 'star';
-            $desc = 'Guiando cada acción con ' . strtolower($valClean) . ' y excelencia.';
-            foreach ($valIcons as $key => $ico) {
-                if (str_contains($valLower, $key)) { $icon = $ico; break; }
-            }
-            foreach ($valDescriptions as $key => $d) {
-                if (str_contains($valLower, $key)) { $desc = $d; break; }
-            }
-        @endphp
-        <div class="ns-flip-card sr scale" style="transition-delay: {{ $index * 0.08 }}s">
-            <div class="ns-flip-inner">
-                {{-- Front --}}
-                <div class="ns-flip-front">
-                    <div class="ns-flip-icon">
-                        <i class="fas fa-{{ $icon }}"></i>
+            <div style="width: 130px; height: 130px; margin: 0 auto 30px; position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                @if($cert->imagen)
+                    <img src="{{ asset('storage/' . $cert->imagen) }}" alt="{{ $cert->nombre }}" style="max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.15)); transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='none'">
+                @else
+                    <div style="width: 100px; height: 100px; background: var(--slate-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);">
+                        <i class="fas fa-certificate" style="font-size: 3rem; color: var(--slate-300);"></i>
                     </div>
-                    <div class="ns-flip-label">{{ $valClean }}</div>
+                @endif
+            </div>
+
+            <div style="position: relative; z-index: 2; flex-grow: 1; display: flex; flex-direction: column;">
+                <div style="height: 80px; display: flex; flex-direction: column; justify-content: flex-start;">
+                    <h4 style="font-family: 'Outfit', sans-serif; margin: 0 0 15px; line-height: 1.3;">
+                        @php
+                            $name = $cert->nombre;
+                            $parts = explode(' DE ', $name, 2);
+                        @endphp
+                        @if(count($parts) == 2)
+                            <span style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--slate-500); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;">{{ $parts[0] }} DE</span>
+                            <span style="display: block; font-size: 1.35rem; font-weight: 900; color: var(--slate-800); letter-spacing: -0.5px; text-transform: uppercase;">{{ $parts[1] }}</span>
+                        @else
+                            <span style="display: block; font-size: 1.25rem; font-weight: 900; color: var(--slate-800); text-transform: uppercase;">{{ $name }}</span>
+                        @endif
+                    </h4>
                 </div>
-                {{-- Back --}}
-                <div class="ns-flip-back">
-                    <div class="ns-flip-back-icon">
-                        <i class="fas fa-{{ $icon }}"></i>
-                    </div>
-                    <div class="ns-flip-back-title">{{ $valClean }}</div>
-                    <div class="ns-flip-back-text">{{ $desc }}</div>
+                
+                @if($cert->descripcion)
+                <div style="margin-top: 15px;">
+                    <span style="display: block; width: 30px; height: 2px; background: var(--green-500); margin: 0 auto 15px; border-radius: 2px;"></span>
+                    <p style="color: var(--slate-600); font-size: 0.95rem; line-height: 1.7; margin: 0; position: relative;">
+                        {{ $cert->descripcion }}
+                    </p>
                 </div>
+                @endif
+
+                <div style="flex: 1;"></div>
             </div>
         </div>
         @endforeach
     </div>
 </section>
+@endif
 
 {{-- ═══════════════════════════════════════════════════
      5. PRINCIPIOS
@@ -1050,6 +1045,75 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+{{-- ═══════════════════════════════════════════════════
+     4. VALORES
+     ═══════════════════════════════════════════════════ --}}
+<section class="ns-section ns-valores-section">
+    <div class="ns-valores-header sr up">
+        <div class="ns-label" style="justify-content:center;"><span>Nuestros Pilares</span></div>
+        <h2 class="ns-title">Valores <span class="accent">Corporativos</span></h2>
+        <div class="ns-divider center"></div>
+        <p style="color:var(--slate-500); max-width:520px; margin:0 auto; font-size:1rem; line-height:1.7;">
+            Cada decisión y cada entrega está guiada por estos principios que nos definen.
+        </p>
+    </div>
+
+    <div class="ns-valores-grid">
+        @php
+        $valDescriptions = [
+            'compromiso'  => 'Cumplimos lo que prometemos. Tu confianza es nuestra prioridad en cada entrega.',
+            'honestidad'  => 'Actuamos con transparencia y rectitud en todas nuestras relaciones comerciales.',
+            'innovaci'    => 'Buscamos constantemente mejorar nuestros procesos y soluciones para el mercado.',
+            'servicio'    => 'El cliente es el centro de todo lo que hacemos. Atención personalizada y oportuna.',
+            'calidad'     => 'Solo distribuimos productos que cumplen los más altos estándares farmacéuticos.',
+        ];
+        $valIcons = [
+            'compromiso' => 'hand-holding-heart',
+            'honestidad' => 'shield-halved',
+            'innovaci'   => 'lightbulb',
+            'servicio'   => 'headset',
+            'calidad'    => 'award',
+            'ética'      => 'scale-balanced',
+            'integridad' => 'user-shield',
+        ];
+        @endphp
+
+        @foreach(explode(',', $settings['valores']) as $index => $valor)
+        @php
+            $valClean = trim($valor);
+            $valLower = strtolower($valClean);
+            $icon = 'star';
+            $desc = 'Guiando cada acción con ' . strtolower($valClean) . ' y excelencia.';
+            foreach ($valIcons as $key => $ico) {
+                if (str_contains($valLower, $key)) { $icon = $ico; break; }
+            }
+            foreach ($valDescriptions as $key => $d) {
+                if (str_contains($valLower, $key)) { $desc = $d; break; }
+            }
+        @endphp
+        <div class="ns-flip-card sr scale" style="transition-delay: {{ $index * 0.08 }}s">
+            <div class="ns-flip-inner">
+                {{-- Front --}}
+                <div class="ns-flip-front">
+                    <div class="ns-flip-icon">
+                        <i class="fas fa-{{ $icon }}"></i>
+                    </div>
+                    <div class="ns-flip-label">{{ $valClean }}</div>
+                </div>
+                {{-- Back --}}
+                <div class="ns-flip-back">
+                    <div class="ns-flip-back-icon">
+                        <i class="fas fa-{{ $icon }}"></i>
+                    </div>
+                    <div class="ns-flip-back-title">{{ $valClean }}</div>
+                    <div class="ns-flip-back-text">{{ $desc }}</div>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
 </section>
 

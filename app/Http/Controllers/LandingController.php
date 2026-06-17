@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Laboratory;
+use App\Models\Certificado;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,8 @@ class LandingController extends Controller
         }
         $topLaboratories = Laboratory::where('is_top', true)->get();
         $featuredProducts = Product::where('estado', true)->where('is_featured', true)->limit(4)->get();
-        return view('landing.index', compact('topLaboratories', 'featuredProducts', 'banner'));
+        $certificados = Certificado::where('activo', true)->get();
+        return view('landing.index', compact('topLaboratories', 'featuredProducts', 'banner', 'certificados'));
     }
 
     public function about()
@@ -52,7 +54,8 @@ class LandingController extends Controller
             'principios' => Setting::get('principios', '• Atención al cliente con excelencia\n• Distribución oportuna de medicamentos\n• Precios justos y accesibles\n• Compromiso con la salud pública\n• Ética profesional en todas nuestras acciones'),
             'historia' => Setting::get('historia', 'Droguería y Distribuidora Sánchez Pharma es una empresa chiclayana fundada en 2022, dedicada a la comercialización y distribución de productos farmacéuticos, médicos y de cuidado personal en la región Lambayeque. Fue creada con el objetivo de brindar un servicio confiable, accesible y comprometido con la salud de las familias peruanas'),
         ];
-        return view('landing.nosotros', compact('settings', 'banner'));
+        $certificados = Certificado::where('activo', true)->get();
+        return view('landing.nosotros', compact('settings', 'banner', 'certificados'));
     }
 
     public function noticias()
