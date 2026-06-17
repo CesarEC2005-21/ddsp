@@ -525,9 +525,57 @@
 
     <div class="labs-grid">
         @forelse($topLaboratories as $lab)
+            @php
+                $labNameLower = strtolower($lab->descripcion);
+                $customClass = '';
+                $dynamicStyle = '';
+
+                if (str_contains($labNameLower, 'genfar')) {
+                    $customClass = 'lab-genfar';
+                } elseif (str_contains($labNameLower, 'bayer')) {
+                    $customClass = 'lab-bayer';
+                } elseif (str_contains($labNameLower, 'portugal')) {
+                    $customClass = 'lab-portugal';
+                } elseif (str_contains($labNameLower, 'intipharma')) {
+                    $customClass = 'lab-intipharma';
+                } else {
+                    $customClass = 'lab-dinamico lab-dynamic-' . $lab->id;
+                    
+                    // Extraer colores dinámicamente del logo
+                    $colors = ['#009EE3', '#65B32E']; // Fallback
+                    if ($lab->logo) {
+                        $colors = \App\Helpers\ColorExtractor::extractColors($lab->logo);
+                    }
+                    $color1 = $colors[0];
+                    $color2 = $colors[1];
+                    
+                    // Asegurar codificación %23 para el SVG
+                    $c1 = str_replace('#', '%23', $color1);
+                    $c2 = str_replace('#', '%23', $color2);
+                    
+                    $dynamicStyle = "
+                        .lab-card.lab-dynamic-{$lab->id},
+                        .lab-card.lab-dynamic-{$lab->id}:hover {
+                            background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cpattern id='dots-dyn-{$lab->id}' x='0' y='0' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='{$c1}' opacity='0.15'/%3E%3C/pattern%3E%3ClinearGradient id='grad-1-dyn-{$lab->id}' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='{$c1}'/%3E%3Cstop offset='100%25' stop-color='{$c1}' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient id='grad-2-dyn-{$lab->id}' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='{$c2}'/%3E%3Cstop offset='100%25' stop-color='{$c2}' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='300' fill='url(%23dots-dyn-{$lab->id})'/%3E%3Cpath d='M0,220 C100,280 200,240 300,260 L300,300 L0,300 Z' fill='url(%23grad-1-dyn-{$lab->id})' opacity='0.8'/%3E%3Cpath d='M0,250 C80,220 150,290 300,230 L300,300 L0,300 Z' fill='{$c1}' opacity='0.5'/%3E%3Cpath d='M300,200 C200,270 100,230 0,270 L0,300 L300,300 Z' fill='url(%23grad-2-dyn-{$lab->id})' opacity='0.8'/%3E%3Cpath d='M300,230 C220,210 150,280 0,240 L0,300 L300,300 Z' fill='{$c2}' opacity='0.5'/%3E%3C/svg%3E\") !important;
+                            background-repeat: no-repeat !important;
+                            background-position: center bottom !important;
+                            background-size: cover !important;
+                            background-color: #ffffff !important;
+                        }
+                        .lab-dynamic-{$lab->id} .lab-action {
+                            background: linear-gradient(135deg, {$color1}, {$color2}) !important;
+                            box-shadow: 0 8px 20px {$color1}40 !important;
+                        }
+                    ";
+                }
+            @endphp
+            @if($dynamicStyle)
+                <style>{!! $dynamicStyle !!}</style>
+            @endif
             <a href="{{ route('products', ['lab' => $lab->id]) }}" class="lab-card-link reveal-lab">
-                <div class="lab-card">
+                <div class="lab-card {{ $customClass }}">
                     <div class="lab-logo-container">
+                        <div class="wave-bg"></div>
                         @if($lab->logo)
                             <img src="{{ asset('storage/'.$lab->logo) }}" alt="{{ $lab->descripcion }}">
                         @else

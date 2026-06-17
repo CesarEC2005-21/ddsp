@@ -1,5 +1,6 @@
-/* ── Laboratorios Destacados – Premium V2 ── */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
+/* ── Laboratorios Destacados – Premium V2 ── */
 .top-laboratories {
   position: relative;
   overflow: hidden;
@@ -93,7 +94,7 @@
 .lab-card {
   background: white;
   border-radius: 28px;
-  padding: 40px 30px 32px;
+  padding: 0;
   border: 1px solid rgba(226,232,240,0.7);
   display: flex;
   flex-direction: column;
@@ -103,119 +104,49 @@
   position: relative;
   overflow: hidden;
   height: 100%;
-}
-
-.lab-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 28px;
-  padding: 2px;
-  background: linear-gradient(135deg, transparent, transparent);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  transition: 0.6s;
-  pointer-events: none;
-}
-
-.lab-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, var(--primary-green), var(--secondary-teal), #10b981);
-  opacity: 0;
-  transform: scaleX(0);
-  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  transform-origin: left;
-  z-index: 2;
-}
-
-.lab-card:hover::after {
-  opacity: 1;
-  transform: scaleX(1);
+  min-height: 260px;
 }
 
 .lab-card:hover {
   transform: translateY(-14px);
-  box-shadow:
-    0 30px 60px -15px rgba(46,125,50,0.3),
-    0 0 0 1px rgba(46,125,50,0.12);
-  border-color: rgba(46,125,50,0.1);
-}
-
-.lab-card:hover::before {
-  background: linear-gradient(135deg, var(--primary-green), var(--secondary-teal));
+  /* Eliminados bordes verdes y se delegan sombras a clases específicas */
 }
 
 /* ── Big Logo Container ── */
 .lab-logo-container {
   width: 100%;
-  height: 170px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  border-radius: 22px;
-  padding: 28px;
-  margin-bottom: 24px;
+  background: transparent;
+  padding: 20px;
+  margin-bottom: 0;
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
-  overflow: hidden;
-}
-
-.lab-logo-container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(46,125,50,0.04), rgba(0,137,123,0.04));
-  opacity: 0;
-  transition: 0.5s;
-}
-
-.lab-logo-container::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at center, rgba(46,125,50,0.06) 0%, transparent 60%);
-  opacity: 0;
-  transition: 0.6s;
-  transform: scale(0.5);
+  z-index: 2;
 }
 
 .lab-card:hover .lab-logo-container {
-  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
   transform: scale(0.96);
 }
 
-.lab-card:hover .lab-logo-container::before {
-  opacity: 1;
-}
-
-.lab-card:hover .lab-logo-container::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
 .lab-logo-container img {
-  max-width: 90%;
-  max-height: 90%;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.03));
   position: relative;
   z-index: 1;
 }
 
 .lab-card:hover .lab-logo-container img {
   transform: scale(1.12);
-  filter: drop-shadow(0 8px 20px rgba(46,125,50,0.15));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 /* ── Placeholder ── */
@@ -233,17 +164,33 @@
 }
 
 /* ── Lab Info ── */
+.lab-info {
+  padding: 10px 20px 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  width: 100%;
+  z-index: 2;
+  position: relative;
+}
+
 .lab-info h4 {
-  margin: 0 0 20px;
+  margin: 0;
   color: #0f172a;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-family: 'Montserrat', 'Inter', 'Roboto', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
   line-height: 1.35;
-  transition: 0.3s;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .lab-card:hover .lab-info h4 {
-  color: var(--primary-green);
+  opacity: 0;
+  transform: translateY(15px) scale(0.95);
 }
 
 /* ── Lab Action ── */
@@ -257,17 +204,21 @@
   text-transform: uppercase;
   letter-spacing: 1.5px;
   opacity: 0;
-  transform: translateY(15px) scale(0.9);
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-15px) scale(0.9);
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  padding: 12px 28px;
+  padding: 10px 24px;
   border-radius: 50px;
   background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
   box-shadow: 0 8px 20px rgba(46,125,50,0.25);
+  white-space: nowrap;
 }
 
 .lab-card:hover .lab-action {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .lab-action i {
@@ -321,4 +272,92 @@
   .lab-info h4 { font-size: 0.9rem; }
   .lab-placeholder { font-size: 3rem; }
   .labs-grid { gap: 16px; grid-template-columns: 1fr; }
+}
+
+/* ── Custom Lab Backgrounds (Advanced) ── */
+.lab-card .wave-bg { display: none; } /* Ocultamos la capa vacía previa porque integraremos el fondo en el contenedor principal */
+
+/* GENFAR */
+.lab-card.lab-genfar,
+.lab-card.lab-genfar:hover {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cpattern id='dots-red' x='0' y='0' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='rgba(0,0,0,0.06)'/%3E%3C/pattern%3E%3ClinearGradient id='grad-red' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23da291c'/%3E%3Cstop offset='100%25' stop-color='%23900d0d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='300' fill='url(%23dots-red)'/%3E%3Cpath d='M0,300 C80,220 150,290 300,190 L300,300 Z' fill='rgba(218, 41, 28, 0.3)'/%3E%3Cpath d='M0,300 C100,250 180,190 300,230 L300,300 Z' fill='rgba(218, 41, 28, 0.6)'/%3E%3Cpath d='M0,300 C60,240 200,270 300,210 L300,300 Z' fill='url(%23grad-red)'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom !important;
+    background-size: cover !important;
+    background-color: #ffffff !important;
+}
+.lab-card.lab-genfar:hover {
+    background-color: #fff5f5 !important;
+    box-shadow: inset 0 0 40px rgba(218, 41, 28, 0.12), 0 30px 60px -15px rgba(218, 41, 28, 0.3) !important;
+}
+.lab-genfar .lab-action {
+    background: linear-gradient(135deg, #e53935, #c62828);
+    box-shadow: 0 8px 20px rgba(229, 57, 53, 0.25);
+}
+
+/* BAYER */
+.lab-card.lab-bayer,
+.lab-card.lab-bayer:hover {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cpattern id='dots-bayer' x='0' y='0' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='rgba(0,158,227,0.15)'/%3E%3C/pattern%3E%3ClinearGradient id='grad-blue' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23009EE3'/%3E%3Cstop offset='100%25' stop-color='rgba(0,158,227,0)'/%3E%3C/linearGradient%3E%3ClinearGradient id='grad-green' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2365B32E'/%3E%3Cstop offset='100%25' stop-color='rgba(101,179,46,0)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='300' fill='url(%23dots-bayer)'/%3E%3Cpath d='M0,220 C100,280 200,240 300,250 L300,300 L0,300 Z' fill='url(%23grad-blue)' opacity='0.8'/%3E%3Cpath d='M0,250 C80,220 150,280 300,200 L300,300 L0,300 Z' fill='%23009EE3' opacity='0.5'/%3E%3Cpath d='M300,180 C200,260 100,220 0,260 L0,300 L300,300 Z' fill='url(%23grad-green)' opacity='0.8'/%3E%3Cpath d='M300,220 C220,190 150,280 0,230 L0,300 L300,300 Z' fill='%2365B32E' opacity='0.5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom !important;
+    background-size: cover !important;
+    background-color: #ffffff !important;
+}
+.lab-card.lab-bayer:hover {
+    background-color: #f0fbff !important;
+    box-shadow: inset 0 0 40px rgba(0, 158, 227, 0.12), 0 30px 60px -15px rgba(0, 158, 227, 0.3) !important;
+}
+.lab-bayer .lab-action {
+    background: linear-gradient(135deg, #009EE3, #65B32E);
+    box-shadow: 0 8px 20px rgba(0, 158, 227, 0.25);
+}
+
+/* PORTUGAL */
+.lab-card.lab-portugal,
+.lab-card.lab-portugal:hover {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cpattern id='crosses' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Cpath d='M10,5 L10,15 M5,10 L15,10' stroke='rgba(0,51,160,0.15)' stroke-width='1.5'/%3E%3C/pattern%3E%3ClinearGradient id='grad-port' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%230055ff'/%3E%3Cstop offset='100%25' stop-color='%230033A0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='10' y='10' width='280' height='280' fill='url(%23crosses)'/%3E%3Cpath d='M0,220 C100,260 200,210 300,240 L300,300 L0,300 Z' fill='rgba(0,85,255,0.4)'/%3E%3Cpath d='M0,250 C80,220 180,270 300,210 L300,300 L0,300 Z' fill='rgba(0,51,160,0.6)'/%3E%3Cpath d='M0,270 C120,240 200,280 300,230 L300,300 Z' fill='url(%23grad-port)'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom !important;
+    background-size: cover !important;
+    background-color: #ffffff !important;
+}
+.lab-card.lab-portugal:hover {
+    background-color: #f0f4ff !important;
+    box-shadow: inset 0 0 40px rgba(0, 51, 160, 0.12), 0 30px 60px -15px rgba(0, 51, 160, 0.3) !important;
+}
+.lab-portugal .lab-action {
+    background: linear-gradient(135deg, #0055ff, #0033A0);
+    box-shadow: 0 8px 20px rgba(0, 51, 160, 0.25);
+}
+
+/* INTIPHARMA */
+.lab-card.lab-intipharma,
+.lab-card.lab-intipharma:hover {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cpattern id='dots-inti' x='0' y='0' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='rgba(255,140,0,0.15)'/%3E%3C/pattern%3E%3ClinearGradient id='grad-orange' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23FF8C00'/%3E%3Cstop offset='100%25' stop-color='%23FFA500'/%3E%3C/linearGradient%3E%3ClinearGradient id='grad-yellow' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23FFD700'/%3E%3Cstop offset='100%25' stop-color='rgba(255,215,0,0)'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='300' fill='url(%23dots-inti)'/%3E%3Cpath d='M0,230 C100,270 200,240 300,250 L300,300 L0,300 Z' fill='url(%23grad-orange)' opacity='0.8'/%3E%3Cpath d='M0,250 C80,230 150,280 300,220 L300,300 L0,300 Z' fill='%23FF8C00' opacity='0.5'/%3E%3Cpath d='M300,200 C200,260 100,230 0,260 L0,300 L300,300 Z' fill='url(%23grad-yellow)' opacity='0.8'/%3E%3Cpath d='M300,230 C220,210 150,280 0,240 L0,300 L300,300 Z' fill='%23FFD700' opacity='0.5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center bottom !important;
+    background-size: cover !important;
+    background-color: #ffffff !important;
+}
+.lab-card.lab-intipharma:hover {
+    background-color: #fffbf0 !important;
+    box-shadow: inset 0 0 40px rgba(255, 140, 0, 0.12), 0 30px 60px -15px rgba(255, 140, 0, 0.3) !important;
+}
+.lab-intipharma .lab-action {
+    background: linear-gradient(135deg, #FF8C00, #FFD700);
+    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.25);
+    color: #111111;
+}
+
+/* DINAMICO (Fallback/Automático) */
+.lab-card.lab-dinamico {
+    background-color: #ffffff !important;
+}
+.lab-card.lab-dinamico:hover {
+    background-color: #fdfdfd !important;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.05), 0 30px 60px -15px rgba(0,0,0,0.1) !important;
+}
+.lab-dinamico .lab-action {
+    color: #ffffff;
 }
