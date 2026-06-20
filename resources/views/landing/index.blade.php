@@ -505,12 +505,12 @@
         <h2>Nuestras <span>Certificaciones</span></h2>
     </div>
 
-    <div class="cert-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 100px; max-width: 1200px; margin: 0 auto;">
+    <div class="cert-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; max-width: 1200px; margin: 0 auto;">
         @foreach($certificados as $cert)
-            <div class="cert-item" style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 190px;">
-                <div class="cert-img-wrap" style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 12px 15px rgba(0,0,0,0.15));">
+            <div class="cert-item" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; width: 300px; padding: 50px 30px; background: #ffffff; border: 1px solid #bbf7d0; border-radius: 24px; box-shadow: 0 10px 30px rgba(34,197,94,0.03); transition: all 0.3s ease;">
+                <div class="cert-img-wrap" style="width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 15px 20px rgba(0,0,0,0.12));">
                     @if($cert->imagen)
-                        <img src="{{ asset('storage/' . $cert->imagen) }}" alt="{{ $cert->nombre }}" style="width: 100%; height: 100%; object-fit: contain;">
+                        <img src="{{ asset('storage/' . $cert->imagen) }}" alt="{{ $cert->nombre }}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
                     @else
                         <i class="fas fa-certificate" style="font-size: 4rem; color: #cbd5e1;"></i>
                     @endif
@@ -521,19 +521,24 @@
                         $parts = preg_split('/(?<= de | DE )/i', $name, 2);
                     @endphp
                     @if(count($parts) > 1)
-                        <span style="font-size: 0.95rem; font-weight: 600; color: #64748b; display: block; margin-bottom: 4px;">{{ $parts[0] }}</span>
-                        <span style="font-size: 1.2rem; font-weight: 800; color: #334155; display: block;">{{ $parts[1] }}</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #16a34a; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">{{ trim($parts[0]) }}</span>
+                        <span style="font-size: 1.3rem; font-weight: 800; color: #0f172a; display: block; text-transform: uppercase;">{{ trim($parts[1]) }}</span>
                     @else
-                        <span style="font-size: 1.15rem; font-weight: 800; color: #334155; display: block;">{{ $name }}</span>
+                        <span style="font-size: 1.15rem; font-weight: 800; color: #0f172a; display: block; text-transform: uppercase;">{{ $name }}</span>
                     @endif
                 </h4>
             </div>
         @endforeach
     </div>
     <style>
+        .cert-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(34,197,94,0.08);
+            border-color: #86efac;
+        }
         .cert-item:hover .cert-img-wrap { 
-            transform: translateY(-12px) scale(1.05); 
-            filter: drop-shadow(0 25px 25px rgba(0,0,0,0.25)); 
+            transform: translateY(-8px) scale(1.05); 
+            filter: drop-shadow(0 25px 30px rgba(0,0,0,0.20)); 
         }
         .cert-item {
             cursor: default;
