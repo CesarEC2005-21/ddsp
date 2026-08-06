@@ -158,7 +158,7 @@
                 <div class="form-group">
                     <label class="form-label">Dirección Exacta (Seleccione en el mapa)</label>
                     <div id="map" style="height: 250px; width: 100%; border-radius: 15px; border: 2px solid #f1f5f9; margin-bottom: 10px; z-index: 1;"></div>
-                    <input type="text" name="direccion_exacta" id="direccion_exacta" class="form-input" required placeholder="Arrastre el pin del mapa o escriba su dirección exacta">
+                    <input type="text" name="direccion_exacta" id="direccion_exacta" class="form-input" required placeholder="Arrastre el pin del mapa o escriba su dirección exacta" onchange="geocodeAddress(this.value)">
                     <input type="hidden" name="latitud" id="latitud">
                     <input type="hidden" name="longitud" id="longitud">
                 </div>
@@ -267,6 +267,26 @@
                 }
             })
             .catch(err => console.error("Geocoding city error", err));
+    }
+
+    function geocodeAddress(address) {
+        if(!address) return;
+        let city = document.getElementById('ciudad').value || 'Peru';
+        // Agregamos la ciudad y/o 'Peru' para mejorar la precisión de la búsqueda
+        let query = `${address}, ${city}`;
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if(data && data.length > 0) {
+                    let lat = data[0].lat;
+                    let lng = data[0].lon;
+                    map.setView([lat, lng], 16);
+                    marker.setLatLng([lat, lng]);
+                    document.getElementById('latitud').value = lat;
+                    document.getElementById('longitud').value = lng;
+                }
+            })
+            .catch(err => console.error("Geocoding address error", err));
     }
 
     // Asegurarse de inicializar cuando el DOM cargue

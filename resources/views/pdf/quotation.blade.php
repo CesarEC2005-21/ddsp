@@ -34,8 +34,8 @@
             </div>
         </div>
         <div class="header-right">
-            @if(file_exists(public_path('img/logo.PNG')))
-                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.PNG'))) }}" style="max-height: 120px; object-fit: contain;">
+            @if(file_exists(public_path('img/logo.png')))
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.png'))) }}" style="max-height: 120px; object-fit: contain;">
             @endif
         </div>
     </div>
