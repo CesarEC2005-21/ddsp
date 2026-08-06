@@ -8,9 +8,15 @@ use Illuminate\Http\Request;
 
 class UnidadMedidaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $unidadMedidas = UnidadMedida::orderBy('created_at', 'desc')->paginate(10);
+        $query = UnidadMedida::query();
+
+        if ($request->filled('um')) {
+            $query->where('um', 'like', '%' . $request->um . '%');
+        }
+
+        $unidadMedidas = $query->orderBy('id', 'asc')->paginate(10);
         return view('admin.unidad_medidas.index', compact('unidadMedidas'));
     }
 

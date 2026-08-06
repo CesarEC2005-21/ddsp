@@ -22,9 +22,17 @@
                         <option value="cancelado" {{ request('estado') === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
                     </select>
                 </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Fecha Desde</label>
+                    <input type="date" name="fecha_desde" class="form-control" value="{{ request('fecha_desde') }}">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Fecha Hasta</label>
+                    <input type="date" name="fecha_hasta" class="form-control" value="{{ request('fecha_hasta') }}">
+                </div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
-                    @if(request()->anyFilled(['search', 'estado']))
+                    @if(request()->anyFilled(['search', 'estado', 'fecha_desde', 'fecha_hasta']))
                         <a href="{{ route('admin.quotations.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
                     @endif
                 </div>

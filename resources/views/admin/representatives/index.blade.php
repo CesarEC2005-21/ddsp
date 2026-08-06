@@ -19,6 +19,40 @@
         </button>
     </div>
 
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.representatives.index') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ request('nombre') }}" placeholder="Buscar...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Zona</label>
+                    <select name="zona_id" class="form-control">
+                        <option value="">Todas</option>
+                        @foreach($zonas as $zona)
+                            <option value="{{ $zona->id }}" {{ request('zona_id') == $zona->id ? 'selected' : '' }}>{{ $zona->nombre_zona }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('estado') === '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ request('estado') === '0' ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['nombre', 'zona_id', 'estado']))
+                        <a href="{{ route('admin.representatives.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="card">
         <div class="table-container">
             <table class="admin-table">
@@ -59,7 +93,8 @@
                             </label>
                         </td>
                         <td>
-                            <button onclick='openEditModal(@json($rep->load("locations")))' class="btn" style="background: #f3f4f6; color: #333; padding: 6px 10px;" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button onclick='openDetailModal(@json($rep))' class="btn" style="background: #e0e7ff; color: #4338ca; padding: 6px 10px;" title="Ver Detalle"><i class="fas fa-eye"></i></button>
+                            <button onclick='openEditModal(@json($rep))' class="btn" style="background: #f3f4f6; color: #333; padding: 6px 10px;" title="Editar"><i class="fas fa-edit"></i></button>
                             <button onclick="confirmDelete({{ $rep->id }}, 'REP-{{ $rep->id }}', '{{ $rep->nombre }}', '{{ route('admin.representatives.destroy', $rep->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; padding: 6px 10px;" title="Eliminar"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
@@ -70,6 +105,25 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div id="detailRepModal" class="modal">
+        <div class="modal-content" style="max-width: 800px; padding: 0; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; border: none; border-radius: 20px;">
+            <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="background: rgba(59, 130, 246, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-id-card-alt" style="color: #3b82f6; font-size: 1.2rem;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Detalle de Ejecutivo</h3>
+                </div>
+                <span class="close-modal" onclick="closeModal('detailRepModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
+            </div>
+            <div class="modal-body" id="detailRepBody" style="padding: 40px; overflow-y: auto; flex: 1;">
+            </div>
+            <div class="modal-footer" style="padding: 20px 40px; background: white; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn btn-primary" onclick="closeModal('detailRepModal')">Cerrar</button>
+            </div>
         </div>
     </div>
 
@@ -396,6 +450,40 @@
         locationsNew = []; markersNew = [];
         openModal('newRepModal');
         initMap('new');
+    }
+
+    function openDetailModal(rep) {
+        const body = document.getElementById('detailRepBody');
+        const img = rep.imagen ? `/storage/${rep.imagen}` : null;
+        let locationsHtml = rep.locations.length > 0 ? rep.locations.map(l => {
+            const z = zones.find(zn => zn.id == l.zona_id);
+            return `<div style="background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 5px; font-size: 0.9rem;">
+                <b>${z ? z.nombre_zona : 'N/A'}</b><br>
+                <small>Lat: ${l.latitud}, Lng: ${l.longitud}</small>
+            </div>`;
+        }).join('') : '<p style="color: #94a3b8; font-size: 0.9rem;">Sin zonas asignadas</p>';
+
+        body.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+                <div style="text-align: center;">
+                    ${img ? `<img src="${img}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #f1f5f9; box-shadow: var(--shadow-sm);">` : `<div style="width: 150px; height: 150px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #cbd5e1; margin: 0 auto; box-shadow: var(--shadow-sm);"><i class="fas fa-user"></i></div>`}
+                    <h4 style="margin-top: 15px; color: #1e293b; font-weight: 700;">${rep.nombre}</h4>
+                    <span class="badge ${rep.estado ? 'badge-success' : 'badge-danger'}" style="margin-top: 5px;">${rep.estado ? 'Activo' : 'Inactivo'}</span>
+                </div>
+                <div>
+                    <h5 style="color: #475569; font-weight: 700; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Información de Contacto</h5>
+                    <p style="margin-bottom: 8px;"><b><i class="fas fa-phone" style="width: 20px; color: #94a3b8;"></i> Teléfono:</b> ${rep.telefono || 'N/A'}</p>
+                    <p style="margin-bottom: 8px;"><b><i class="fas fa-envelope" style="width: 20px; color: #94a3b8;"></i> Email:</b> ${rep.email || 'N/A'}</p>
+                    <p style="margin-bottom: 8px;"><b><i class="fas fa-map-marker-alt" style="width: 20px; color: #94a3b8;"></i> Sede Principal:</b> ${rep.ubicacion || 'N/A'}</p>
+
+                    <h5 style="color: #475569; font-weight: 700; margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Zonas de Cobertura</h5>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        ${locationsHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+        openModal('detailRepModal');
     }
 
     function openEditModal(rep) {

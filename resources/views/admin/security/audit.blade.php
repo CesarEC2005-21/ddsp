@@ -6,6 +6,48 @@
         <p class="text-muted">Registro detallado de acciones importantes realizadas por los usuarios en la plataforma.</p>
     </div>
 
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.security.audit') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Usuario</label>
+                    <input type="text" name="usuario" class="form-control" value="{{ request('usuario') }}" placeholder="Nombre de usuario...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Acción</label>
+                    <select name="accion" class="form-control">
+                        <option value="">Todas</option>
+                        <option value="created_product" {{ request('accion') === 'created_product' ? 'selected' : '' }}>Nuevo Producto</option>
+                        <option value="deleted_product" {{ request('accion') === 'deleted_product' ? 'selected' : '' }}>Producto Eliminado</option>
+                        <option value="created_laboratory" {{ request('accion') === 'created_laboratory' ? 'selected' : '' }}>Nuevo Laboratorio</option>
+                        <option value="deleted_laboratory" {{ request('accion') === 'deleted_laboratory' ? 'selected' : '' }}>Laboratorio Eliminado</option>
+                        <option value="created_representative" {{ request('accion') === 'created_representative' ? 'selected' : '' }}>Nuevo Ejecutivo</option>
+                        <option value="deleted_representative" {{ request('accion') === 'deleted_representative' ? 'selected' : '' }}>Ejecutivo Eliminado</option>
+                        <option value="created_promotion" {{ request('accion') === 'created_promotion' ? 'selected' : '' }}>Nueva Promoción</option>
+                        <option value="deleted_promotion" {{ request('accion') === 'deleted_promotion' ? 'selected' : '' }}>Promoción Eliminada</option>
+                        <option value="downloaded_backup" {{ request('accion') === 'downloaded_backup' ? 'selected' : '' }}>Descarga Backup</option>
+                        <option value="cancelled_quotation" {{ request('accion') === 'cancelled_quotation' ? 'selected' : '' }}>Cotización Cancelada</option>
+                        <option value="updated_settings" {{ request('accion') === 'updated_settings' ? 'selected' : '' }}>Ajuste Sistema</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Fecha Desde</label>
+                    <input type="date" name="fecha_desde" class="form-control" value="{{ request('fecha_desde') }}">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Fecha Hasta</label>
+                    <input type="date" name="fecha_hasta" class="form-control" value="{{ request('fecha_hasta') }}">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['usuario', 'accion', 'fecha_desde', 'fecha_hasta']))
+                        <a href="{{ route('admin.security.audit') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="card">
         <div class="table-container">
             <table class="admin-table">

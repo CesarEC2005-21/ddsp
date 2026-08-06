@@ -8,6 +8,31 @@
     <p style="color: #64748b;">Monitoreo en tiempo real de sesiones y actividad de usuarios (Excluye Auditoría de Ingeniería).</p>
 </div>
 
+<div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+    <form action="{{ route('admin.security.access') }}" method="GET">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 0.85rem; color: #475569; font-weight: 600;">Usuario</label>
+                <input type="text" name="usuario" class="form-control" value="{{ request('usuario') }}" placeholder="Nombre de usuario...">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 0.85rem; color: #475569; font-weight: 600;">Fecha Desde</label>
+                <input type="date" name="fecha_desde" class="form-control" value="{{ request('fecha_desde') }}">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" style="font-size: 0.85rem; color: #475569; font-weight: 600;">Fecha Hasta</label>
+                <input type="date" name="fecha_hasta" class="form-control" value="{{ request('fecha_hasta') }}">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                @if(request()->anyFilled(['usuario', 'fecha_desde', 'fecha_hasta']))
+                    <a href="{{ route('admin.security.access') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                @endif
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="card" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.04); overflow: hidden;">
     <div class="table-container">
         <table class="admin-table" style="border-collapse: separate; border-spacing: 0;">

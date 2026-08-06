@@ -21,11 +21,11 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label" style="font-size: 0.85rem;">Fecha Inicial</label>
-                    <input type="date" name="fecha_inicial" class="form-control" value="{{ request('fecha_inicial') }}">
+                    <input type="date" name="fecha_inicial" class="form-control" value="{{ request('fecha_inicial') }}" max="9999-12-31">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label" style="font-size: 0.85rem;">Fecha Final</label>
-                    <input type="date" name="fecha_final" class="form-control" value="{{ request('fecha_final') }}">
+                    <input type="date" name="fecha_final" class="form-control" value="{{ request('fecha_final') }}" max="9999-12-31">
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
@@ -189,11 +189,11 @@
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                     <div>
                                         <label class="form-label" style="color: #475569; font-weight: 600;">Fecha Inicio</label>
-                                        <input type="date" name="fecha_inicial" class="form-control" style="border-radius: 12px;" required>
+                                        <input type="date" name="fecha_inicial" class="form-control" style="border-radius: 12px;" max="9999-12-31" required>
                                     </div>
                                     <div>
                                         <label class="form-label" style="color: #475569; font-weight: 600;">Fecha Fin</label>
-                                        <input type="date" name="fecha_final" class="form-control" style="border-radius: 12px;" required>
+                                        <input type="date" name="fecha_final" class="form-control" style="border-radius: 12px;" max="9999-12-31" required>
                                     </div>
                                 </div>
                             </div>
@@ -302,11 +302,11 @@
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                     <div>
                                         <label class="form-label" style="color: #475569; font-weight: 600;">Fecha Inicio</label>
-                                        <input type="date" name="fecha_inicial" id="edit-fecha-inicial" class="form-control" style="border-radius: 12px;" required>
+                                        <input type="date" name="fecha_inicial" id="edit-fecha-inicial" class="form-control" style="border-radius: 12px;" max="9999-12-31" required>
                                     </div>
                                     <div>
                                         <label class="form-label" style="color: #475569; font-weight: 600;">Fecha Fin</label>
-                                        <input type="date" name="fecha_final" id="edit-fecha-final" class="form-control" style="border-radius: 12px;" required>
+                                        <input type="date" name="fecha_final" id="edit-fecha-final" class="form-control" style="border-radius: 12px;" max="9999-12-31" required>
                                     </div>
                                 </div>
                             </div>

@@ -9,9 +9,21 @@ use App\Models\AuditLog;
 
 class RepresentativeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $representatives = Representative::with(['zona', 'locations'])->get();
+        $query = Representative::with(['zona', 'locations']);
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre', 'like', '%' . $request->nombre . '%');
+        }
+        if ($request->filled('zona_id')) {
+            $query->where('zona_id', $request->zona_id);
+        }
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $representatives = $query->get();
         $zonas = \App\Models\Zona::where('estado', true)->get();
         return view('admin.representatives.index', compact('representatives', 'zonas'));
     }

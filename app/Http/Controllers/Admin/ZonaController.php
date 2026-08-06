@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class ZonaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $zonas = Zona::paginate(10);
+        $query = Zona::query();
+
+        if ($request->filled('nombre')) {
+            $query->where('nombre_zona', 'like', '%' . $request->nombre . '%');
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $zonas = $query->paginate(10);
         return view('admin.zonas.index', compact('zonas'));
     }
 

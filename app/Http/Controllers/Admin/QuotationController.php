@@ -30,6 +30,14 @@ class QuotationController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        if ($request->filled('fecha_desde')) {
+            $query->whereDate('created_at', '>=', $request->fecha_desde);
+        }
+
+        if ($request->filled('fecha_hasta')) {
+            $query->whereDate('created_at', '<=', $request->fecha_hasta);
+        }
+
         $quotations = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.quotations.index', compact('quotations'));
     }

@@ -8,6 +8,31 @@
     </div>
 
 
+    <div class="card" style="max-width: 800px; margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
+        <form action="{{ route('admin.zonas.index') }}" method="GET">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Nombre de la Zona</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ request('nombre') }}" placeholder="Buscar...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('estado') === '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ request('estado') === '0' ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
+                    @if(request()->anyFilled(['nombre', 'estado']))
+                        <a href="{{ route('admin.zonas.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="card" style="max-width: 800px; margin-bottom: 20px;">
         <div class="table-container">
             <table class="admin-table">
@@ -45,8 +70,8 @@
         </div>
     </div>
 
-    <div style="max-width: 800px;">
-        {{ $zonas->links() }}
+    <div style="max-width: 800px; display: flex; justify-content: center;">
+        {{ $zonas->appends(request()->query())->links('partials.pagination') }}
     </div>
 
     <!-- Modal Nueva Zona -->

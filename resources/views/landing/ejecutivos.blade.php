@@ -617,7 +617,7 @@ function showRepSidebar(r) {
     const zona = r.locations?.[0]?.zona?.nombre_zona || 'Múltiples zonas';
     document.getElementById('ej-preview-zone').textContent = zona;
     document.getElementById('ej-preview-phone').textContent = r.telefono || 'Consultar';
-    const phone = r.telefono ? r.telefono.replace(/\D/g,'') : '';
+    const phone = r.telefono ? String(r.telefono).replace(/\D/g,'') : '';
     const wa = document.getElementById('ej-preview-wa');
     const msg = encodeURIComponent('Hola, quisiera atención para cotizar un pedido por favor.');
     wa.href = phone ? `https://wa.me/51${phone}?text=${msg}` : '#';
