@@ -573,6 +573,7 @@
         const infoTitle = document.getElementById('import-info-title');
         const infoDesc = document.getElementById('import-info-desc');
         const labSelect = document.getElementById('import_lab_id');
+        const form = document.getElementById('importForm');
 
         if (type === 'lab') {
             tabLab.style.background = 'white';
@@ -585,6 +586,7 @@
             labSelect.required = true;
             infoTitle.innerText = 'Modo Por Laboratorio:';
             infoDesc.innerHTML = 'El Excel debe tener las columnas <b>CODIGO, NOMBRE, UM, PRECIO</b>. El laboratorio se asignará automáticamente al seleccionado.';
+            form.action = "{{ route('admin.products.import') }}";
         } else {
             tabGeneral.style.background = 'white';
             tabGeneral.style.borderBottom = '3px solid #10b981';
@@ -595,7 +597,8 @@
             labSelector.style.display = 'none';
             labSelect.required = false;
             infoTitle.innerText = 'Modo Importación General:';
-            infoDesc.innerHTML = 'El Excel debe incluir la columna <b>LABORATORIO</b> para identificar a qué laboratorio pertenece cada producto. Si el laboratorio no existe, se creará automáticamente.';
+            infoDesc.innerHTML = 'Este modo soporta el formato original del sistema externo. Extraerá las clases (Laboratorios), descartará los productos especiales (Panetón, Cotización, etc) e importará Unidades de Medida y Precios.';
+            form.action = "{{ route('admin.products.import_general') }}";
         }
     }
 

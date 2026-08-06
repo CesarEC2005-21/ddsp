@@ -190,6 +190,39 @@ class ProductController extends Controller
             return redirect()->back()->withErrors(['file' => 'Error al importar: ' . $e->getMessage()]);
         }
     }
+
+    public function importGeneral(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv|max:50000',
+        ]);
+
+        try {
+            $import = new \App\Imports\GeneralProductsImport();
+            \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
+            
+            $results = $import->results;
+
+            \App\Models\AuditLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'general_import',
+                'description' => "Realizó una importación general de productos desde Excel.",
+                'details' => json_encode($results)
+            ]);
+            
+            $msg = 'Importación general completada. Los productos, laboratorios y unidades de medida han sido actualizados/creados.';
+            if (count($results['new_products']) > 0 || count($results['updated_products']) > 0 || count($results['new_laboratories']) > 0) {
+                return redirect()->route('admin.products.index')->with([
+                    'success' => $msg,
+                    'import_results' => $results
+                ]);
+            }
+
+            return redirect()->route('admin.products.index')->with('success', $msg . ' (Sin cambios nuevos detectados).');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['file' => 'Error al importar reporte general: ' . $e->getMessage()]);
+        }
+    }
     public function priceHistory(Product $product)
     {
         $history = $product->priceHistory()->with('user')->get();

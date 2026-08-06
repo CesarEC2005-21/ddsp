@@ -132,6 +132,8 @@ class ReportController extends Controller
     public function products(Request $request)
     {
         $search   = $request->get('search');
+        $codigo   = $request->get('codigo');
+        $laboratory_id = $request->get('laboratory_id');
         $tipo     = $request->get('tipo');
         $dateFrom = $request->get('date_from');
         $dateTo   = $request->get('date_to');
@@ -154,6 +156,18 @@ class ReportController extends Controller
         if ($search) {
             $query->whereHas('product', function($q) use ($search) {
                 $q->where('nombre', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($codigo) {
+            $query->whereHas('product', function($q) use ($codigo) {
+                $q->where('codigo', 'like', "%{$codigo}%");
+            });
+        }
+        
+        if ($laboratory_id) {
+            $query->whereHas('product', function($q) use ($laboratory_id) {
+                $q->where('laboratory_id', $laboratory_id);
             });
         }
 
@@ -202,6 +216,8 @@ class ReportController extends Controller
             return $h;
         });
 
-        return view('admin.reports.products', compact('history'));
+        $laboratories = \App\Models\Laboratory::all();
+
+        return view('admin.reports.products', compact('history', 'laboratories'));
     }
 }

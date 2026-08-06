@@ -49,6 +49,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Protegido por rol (ejemplo: admin y supervisor pueden ver/crear productos)
     Route::middleware(['role:ing_sistemas,admin,supervisor'])->group(function () {
         Route::post('products/import', [ProductController::class, 'import'])->name('products.import');
+        Route::post('products/import-general', [ProductController::class, 'importGeneral'])->name('products.import_general');
         Route::get('products/{product}/history', [ProductController::class, 'priceHistory'])->name('products.history');
         Route::delete('products/delete-by-lab/{laboratory}', [ProductController::class, 'deleteByLab'])->name('products.deleteByLab');
         Route::resource('products', ProductController::class);

@@ -110,6 +110,21 @@
             <label>Buscar producto</label>
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Nombre del producto...">
         </div>
+        <div class="filter-group" style="min-width: 140px;">
+            <label>Código</label>
+            <input type="text" name="codigo" value="{{ request('codigo') }}" placeholder="Código...">
+        </div>
+        <div class="filter-group" style="min-width: 160px;">
+            <label>Laboratorio</label>
+            <select name="laboratory_id">
+                <option value="">Todos los labs</option>
+                @foreach($laboratories as $lab)
+                    <option value="{{ $lab->id }}" {{ request('laboratory_id') == $lab->id ? 'selected' : '' }}>
+                        {{ $lab->descripcion }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
         <div class="filter-group" style="min-width: 160px;">
             <label>Tipo de variación</label>
             <select name="tipo">
@@ -128,7 +143,7 @@
         </div>
         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="submit" class="filter-btn filter-btn-primary"><i class="fas fa-filter"></i> Filtrar</button>
-            @if(request()->anyFilled(['search','tipo','date_from','date_to']))
+            @if(request()->anyFilled(['search','codigo','laboratory_id','tipo','date_from','date_to']))
                 <a href="{{ route('admin.reports.products') }}" class="filter-btn-clear"><i class="fas fa-times"></i> Limpiar</a>
             @endif
         </div>
@@ -182,7 +197,7 @@
                         <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 2px; font-weight: 500;"><i class="far fa-clock" style="margin-right: 2px;"></i> {{ $h->created_at->format('H:i') }} hrs</div>
                     </td>
                     <td>
-                        <div style="font-weight: 700; color: #1e293b; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.95rem;" title="{{ $h->product->nombre ?? '' }}">
+                        <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">
                             {{ $h->product->nombre ?? 'Producto eliminado' }}
                         </div>
                         @if($h->product->codigo ?? false)

@@ -28,6 +28,7 @@
                         <option value="downloaded_backup" {{ request('accion') === 'downloaded_backup' ? 'selected' : '' }}>Descarga Backup</option>
                         <option value="cancelled_quotation" {{ request('accion') === 'cancelled_quotation' ? 'selected' : '' }}>Cotización Cancelada</option>
                         <option value="updated_settings" {{ request('accion') === 'updated_settings' ? 'selected' : '' }}>Ajuste Sistema</option>
+                        <option value="general_import" {{ request('accion') === 'general_import' ? 'selected' : '' }}>Importación General</option>
                     </select>
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
@@ -87,7 +88,8 @@
                                         'deleted_promotion' => ['color' => 'badge-danger', 'icon' => 'fa-bullhorn'],
                                         'downloaded_backup' => ['color' => 'badge-info', 'icon' => 'fa-download'],
                                         'cancelled_quotation' => ['color' => 'badge-danger', 'icon' => 'fa-ban'],
-                                        'updated_settings' => ['color' => 'badge-warning', 'icon' => 'fa-cog']
+                                        'updated_settings' => ['color' => 'badge-warning', 'icon' => 'fa-cog'],
+                                        'general_import' => ['color' => 'badge-primary', 'icon' => 'fa-file-excel']
                                     ];
                                     $badge = $actionBadges[$log->action] ?? ['color' => 'badge-gray', 'icon' => 'fa-info-circle'];
                                     
@@ -104,7 +106,8 @@
                                         'deleted_promotion' => 'Promoción Eliminada',
                                         'downloaded_backup' => 'Descarga Backup',
                                         'cancelled_quotation' => 'Cotización Cancelada',
-                                        'updated_settings' => 'Ajuste Sistema'
+                                        'updated_settings' => 'Ajuste Sistema',
+                                        'general_import' => 'Importación General'
                                     ];
                                     $actionName = $actionNames[$log->action] ?? $log->action;
                                 @endphp
@@ -112,7 +115,17 @@
                                     <i class="fas {{ $badge['icon'] }}"></i> {{ $actionName }}
                                 </span>
                             </td>
-                            <td class="text-muted">{{ $log->description }}</td>
+                            <td>
+                                <span class="text-muted d-block">{{ $log->description }}</span>
+                                @if($log->action === 'general_import' && !empty($log->details))
+                                    <button class="btn btn-sm" style="background: #e2e8f0; color: #475569; font-size: 0.75rem; margin-top: 5px; padding: 3px 8px;" onclick="showImportDetails({{ $log->id }})">
+                                        <i class="fas fa-eye"></i> Ver Detalle
+                                    </button>
+                                    <div id="import-details-data-{{ $log->id }}" style="display: none;">
+                                        {!! $log->details !!}
+                                    </div>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -129,4 +142,66 @@
             {{ $logs->links('partials.pagination') }}
         </div>
     </div>
+
+    <!-- Modal for Import Details -->
+    <div id="importDetailsModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div style="padding: 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1.25rem;"><i class="fas fa-file-excel text-primary"></i> Detalle de Importación</h3>
+                <button onclick="document.getElementById('importDetailsModal').style.display='none'" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">&times;</button>
+            </div>
+            <div id="importDetailsContent" style="padding: 20px; overflow-y: auto; flex: 1;">
+                <!-- Content will be injected here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showImportDetails(logId) {
+            const rawData = document.getElementById('import-details-data-' + logId).innerHTML;
+            let data = null;
+            try {
+                data = JSON.parse(rawData);
+            } catch(e) {
+                console.error("Error parsing details JSON", e);
+                return;
+            }
+
+            let html = '';
+            
+            if (data.new_laboratories && data.new_laboratories.length > 0) {
+                html += '<h5 style="margin-top:0; color:#10b981;"><i class="fas fa-flask"></i> Nuevos Laboratorios (' + data.new_laboratories.length + ')</h5>';
+                html += '<ul style="font-size:0.9rem; color:#475569; padding-left: 20px;">';
+                data.new_laboratories.forEach(lab => {
+                    html += '<li>' + lab + '</li>';
+                });
+                html += '</ul>';
+            }
+
+            if (data.new_products && data.new_products.length > 0) {
+                html += '<h5 style="margin-top:20px; color:#3b82f6;"><i class="fas fa-box"></i> Nuevos Productos (' + data.new_products.length + ')</h5>';
+                html += '<ul style="font-size:0.9rem; color:#475569; padding-left: 20px;">';
+                data.new_products.forEach(prod => {
+                    html += '<li>' + (typeof prod === 'string' ? prod : (prod.codigo + ' - ' + prod.nombre)) + '</li>';
+                });
+                html += '</ul>';
+            }
+
+            if (data.updated_products && data.updated_products.length > 0) {
+                html += '<h5 style="margin-top:20px; color:#f59e0b;"><i class="fas fa-sync"></i> Productos Actualizados (' + data.updated_products.length + ')</h5>';
+                html += '<ul style="font-size:0.9rem; color:#475569; padding-left: 20px;">';
+                data.updated_products.forEach(prod => {
+                    html += '<li>' + (typeof prod === 'string' ? prod : (prod.codigo + ' - ' + prod.nombre)) + '</li>';
+                });
+                html += '</ul>';
+            }
+            
+            if (!data.new_laboratories?.length && !data.new_products?.length && !data.updated_products?.length) {
+                html = '<div class="alert alert-warning">No hubo cambios relevantes en esta importación.</div>';
+            }
+
+            document.getElementById('importDetailsContent').innerHTML = html;
+            document.getElementById('importDetailsModal').style.display = 'flex';
+        }
+    </script>
 @endsection
