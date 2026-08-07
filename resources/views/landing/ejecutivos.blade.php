@@ -439,7 +439,7 @@
                     <span>Lun - Vie: 8:00 AM - 6:00 PM</span>
                 </div>
             </div>
-            <a id="ej-preview-wa" href="#" target="_blank" class="ej-wa-btn">
+            <a id="ej-preview-wa" href="#" class="ej-wa-btn">
                 <i class="fab fa-whatsapp" style="font-size:1.3rem;"></i> Iniciar Chat
             </a>
         </div>
@@ -472,7 +472,7 @@
         @php
             $phone   = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
             $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
-            $waLink  = "https://wa.me/51{$phone}?text={$message}";
+            $waLink  = "https://api.whatsapp.com/send?phone=51{$phone}&text={$message}";
             $zona    = $rep->locations->first()->zona->nombre_zona ?? 'Nacional';
         @endphp
         <div class="ej-card ej-sr" style="transition-delay: {{ ($i % 3) * 0.1 }}s">
@@ -619,9 +619,20 @@ function showRepSidebar(r) {
     document.getElementById('ej-preview-phone').textContent = r.telefono || 'Consultar';
     const phone = r.telefono ? String(r.telefono).replace(/\D/g,'') : '';
     const wa = document.getElementById('ej-preview-wa');
-    const msg = encodeURIComponent('Hola, quisiera atención para cotizar un pedido por favor.');
-    wa.href = phone ? `https://wa.me/51${phone}?text=${msg}` : '#';
-    wa.style.display = phone ? 'flex' : 'none';
+    if (phone) {
+        const msg = encodeURIComponent('Hola, quisiera atención para cotizar un pedido por favor.');
+        const waUrl = 'https://wa.me/51' + phone + '?text=' + msg;
+        wa.href = waUrl;
+        wa.onclick = function(e) {
+            e.preventDefault();
+            window.open(waUrl, '_blank');
+        };
+        wa.style.display = 'flex';
+    } else {
+        wa.href = '#';
+        wa.onclick = function(e) { e.preventDefault(); };
+        wa.style.display = 'none';
+    }
 }
 function hideRepSidebar() {
     document.getElementById('ej-rep-preview').style.display = 'none';
