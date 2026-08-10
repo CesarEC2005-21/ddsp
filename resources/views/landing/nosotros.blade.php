@@ -213,7 +213,8 @@
 .ns-divider.center { margin: 20px auto 32px; }
 
 /* ══════════════════════════════════════════════════════
-   3. HISTORIA — Timeline
+/* ══════════════════════════════════════════════════════
+   3. HISTORIA — Timeline + Slideshow
    ══════════════════════════════════════════════════════ */
 .ns-historia-wrap {
     display: grid;
@@ -223,48 +224,159 @@
     max-width: 1300px;
     margin: 0 auto;
 }
-.ns-historia-img {
+
+/* ── Slideshow container ── */
+.ns-historia-slideshow {
     position: relative;
-}
-.ns-historia-img-main {
-    width: 100%;
-    height: 520px;
-    object-fit: cover;
     border-radius: 32px;
-    display: block;
-    box-shadow: 0 40px 80px rgba(0,0,0,.18);
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.22);
+    background: var(--slate-900);
+    aspect-ratio: 4/5;
+    user-select: none;
 }
-.ns-historia-deco {
+.ns-hs-slide {
     position: absolute;
-    inset: -16px -16px -16px -16px;
-    border: 3px solid transparent;
-    border-image: linear-gradient(135deg, var(--green-500), transparent 60%) 1;
-    border-radius: 40px;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
     pointer-events: none;
 }
-.ns-historia-badge-float {
-    position: absolute;
-    bottom: 32px; right: -28px;
-    background: white;
-    border-radius: 20px;
-    padding: 20px 28px;
-    box-shadow: 0 20px 50px rgba(0,0,0,.15);
-    text-align: center;
-    border-left: 4px solid var(--green-500);
+.ns-hs-slide.active {
+    opacity: 1;
+    pointer-events: auto;
 }
-.ns-historia-badge-float strong {
+.ns-hs-slide img.ns-hs-img-main {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    object-position: center;
     display: block;
+    position: relative;
+    z-index: 2;
+    transition: transform 8s ease-out;
+}
+.ns-hs-slide.active img.ns-hs-img-main {
+    transform: scale(1);
+}
+.ns-hs-slide .ns-hs-img-blur {
+    position: absolute;
+    inset: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    object-fit: cover;
+    object-position: center;
+    filter: blur(18px) brightness(0.65) saturate(1.2);
+    z-index: 1;
+    transform: scale(1.05);
+}
+.ns-hs-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,20,10,.80) 0%, rgba(10,20,10,.25) 50%, rgba(10,20,10,.10) 100%);
+    z-index: 3;
+}
+/* Year label */
+.ns-hs-year-tag {
+    position: absolute;
+    top: 28px; left: 28px;
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50px;
+    padding: 8px 22px;
     font-family: 'Outfit', sans-serif;
-    font-size: 2.2rem;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #4ade80;
+    z-index: 4;
+}
+/* Bottom info */
+.ns-hs-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 36px 32px 32px;
+    transform: translateY(8px);
+    transition: transform 1.2s cubic-bezier(.4,0,.2,1), opacity 1.2s;
+    opacity: 0;
+    z-index: 4;
+}
+.ns-hs-slide.active .ns-hs-info {
+    transform: translateY(0);
+    opacity: 1;
+}
+.ns-hs-year-big {
+    font-family: 'Outfit', sans-serif;
+    font-size: 4.5rem;
     font-weight: 900;
-    color: var(--green-600);
+    color: #4ade80;
     line-height: 1;
+    margin-bottom: 6px;
 }
-.ns-historia-badge-float span {
-    font-size: .8rem;
-    color: var(--slate-600);
-    font-weight: 600;
+.ns-hs-caption {
+    font-size: 1rem;
+    color: rgba(255,255,255,.88);
+    font-weight: 500;
+    line-height: 1.5;
+    max-width: 320px;
 }
+/* Dot nav */
+.ns-hs-dots {
+    position: absolute;
+    bottom: 28px; right: 28px;
+    display: flex; gap: 8px;
+    z-index: 10;
+}
+.ns-hs-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.35);
+    cursor: pointer;
+    transition: all .35s;
+    border: none;
+    padding: 0;
+}
+.ns-hs-dot.active {
+    background: #4ade80;
+    width: 28px;
+    border-radius: 4px;
+}
+/* Progress bar */
+.ns-hs-progress {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,.15);
+    z-index: 5;
+}
+.ns-hs-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    border-radius: 2px;
+    width: 0%;
+    transition: width linear;
+}
+/* Prev/Next arrows */
+.ns-hs-arrow {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    z-index: 10;
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: .95rem;
+    cursor: pointer;
+    transition: all .3s;
+    border: none;
+    opacity: .75;
+}
+.ns-hs-arrow:hover { background: rgba(74,222,128,.3); opacity: 1; }
+.ns-hs-arrow.prev { left: 16px; }
+.ns-hs-arrow.next { right: 16px; }
 
 .ns-historia-content .ns-body {
     color: var(--slate-600);
@@ -272,6 +384,7 @@
     line-height: 1.85;
     margin-bottom: 16px;
 }
+
 
 .ns-timeline {
     margin-top: 40px;
@@ -764,10 +877,10 @@
     .ns-valores-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 900px) {
-    .ns-historia-wrap,
+    .ns-historia-wrap { grid-template-columns: 1fr; gap: 48px; }
+    .ns-historia-slideshow { aspect-ratio: 16/9; }
     .ns-mv-grid,
     .ns-principios-wrap { grid-template-columns: 1fr; gap: 48px; }
-    .ns-historia-badge-float { right: 16px; }
     .ns-hstat::after { display: none; }
     .ns-principios-visual { position: static; }
     .ns-valores-grid { grid-template-columns: repeat(2, 1fr); }
@@ -776,6 +889,8 @@
     .ns-valores-grid { grid-template-columns: 1fr; }
     .ns-hero-stats { gap: 24px; }
     .ns-flip-card { height: 200px; }
+    .ns-hs-year-big { font-size: 3rem; }
+    .ns-hs-caption { font-size: .9rem; }
 }
 </style>
 @endpush
@@ -795,7 +910,7 @@
     <div class="ns-hero-inner">
         <div class="ns-hero-badge">
             <i class="fas fa-capsules"></i>
-            Droguería &amp; Distribuidora
+            Droguía &amp; Distribuidora
         </div>
 
         <h1 class="ns-hero-title">
@@ -821,16 +936,78 @@
 <section class="ns-section">
     <div class="ns-historia-wrap">
         <div class="sr left">
-            <div class="ns-historia-img">
-                <img
-                    src="{{ ($banner && $banner->historia_image) ? asset('storage/'.$banner->historia_image) : asset('img/hero.png') }}"
-                    alt="Nuestra Historia — Droguería Sánchez Pharma"
-                    class="ns-historia-img-main"
-                    loading="lazy"
-                >
-                <div class="ns-historia-badge-float">
-                    <strong>2022</strong>
-                    <span>Año de<br>Fundación</span>
+            @php
+                $historiaSlides = [
+                    [
+                        'year'    => '2022',
+                        'tag'     => 'Año de Fundación',
+                        'caption' => 'Nacemos en Chiclayo, con la misión de llevar salud a todo el Perú.',
+                        'field'   => 'historia_image',
+                    ],
+                    [
+                        'year'    => '2023',
+                        'tag'     => 'Expansión',
+                        'caption' => 'Ampliamos nuestro catálogo a más de 500 productos farmacéuticos.',
+                        'field'   => 'historia_2023_image',
+                    ],
+                    [
+                        'year'    => '2024',
+                        'tag'     => 'Consolidación',
+                        'caption' => 'Red de ejecutivos de venta consolidada a nivel regional.',
+                        'field'   => 'historia_2024_image',
+                    ],
+                    [
+                        'year'    => '2025',
+                        'tag'     => 'Liderazgo',
+                        'caption' => 'Líderes en distribución farmacéutica con alcance regional.',
+                        'field'   => 'historia_2025_image',
+                    ],
+                    [
+                        'year'    => '2026',
+                        'tag'     => 'Crecimiento',
+                        'caption' => 'Expansión con nuevas alianzas y cobertura nacional.',
+                        'field'   => 'historia_2022_image',
+                    ],
+                ];
+            @endphp
+
+            <div class="ns-historia-slideshow" id="historiaSlideshow">
+                @foreach($historiaSlides as $si => $slide)
+                    @php
+                        $imgSrc = ($banner && $banner->{$slide['field']})
+                            ? asset('storage/'.$banner->{$slide['field']})
+                            : asset('img/hero.png');
+                    @endphp
+                    <div class="ns-hs-slide {{ $si === 0 ? 'active' : '' }}" data-index="{{ $si }}">
+                        <img src="{{ $imgSrc }}" alt="" class="ns-hs-img-blur" aria-hidden="true">
+                        <img src="{{ $imgSrc }}" alt="Historia {{ $slide['year'] }}" class="ns-hs-img-main" loading="{{ $si === 0 ? 'eager' : 'lazy' }}">
+                        <div class="ns-hs-overlay"></div>
+                        <div class="ns-hs-year-tag">{{ $slide['tag'] }}</div>
+                        <div class="ns-hs-info">
+                            <div class="ns-hs-year-big">{{ $slide['year'] }}</div>
+                            <p class="ns-hs-caption">{{ $slide['caption'] }}</p>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- Arrows --}}
+                <button class="ns-hs-arrow prev" id="hsPrev" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="ns-hs-arrow next" id="hsNext" aria-label="Siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                {{-- Dots --}}
+                <div class="ns-hs-dots" id="hsDots">
+                    @foreach($historiaSlides as $si => $slide)
+                        <button class="ns-hs-dot {{ $si === 0 ? 'active' : '' }}" data-slide="{{ $si }}" aria-label="Ir al año {{ $slide['year'] }}"></button>
+                    @endforeach
+                </div>
+
+                {{-- Progress bar --}}
+                <div class="ns-hs-progress">
+                    <div class="ns-hs-progress-bar" id="hsProgressBar"></div>
                 </div>
             </div>
         </div>
@@ -861,13 +1038,19 @@
                     <div class="ns-tl-text">Consolidación de red de ejecutivos de venta a nivel regional.</div>
                 </div>
                 <div class="ns-tl-item">
-                    <div class="ns-tl-year">2025 – Hoy</div>
-                    <div class="ns-tl-text">Líderes en distribución farmacéutica con alcance regional y potencial de expansión nacional.</div>
+                    <div class="ns-tl-year">2025</div>
+                    <div class="ns-tl-text">Líderes en distribución farmacéutica con alcance regional.</div>
+                </div>
+                <div class="ns-tl-item">
+                    <div class="ns-tl-year">2026 &ndash; Hoy</div>
+                    <div class="ns-tl-text">Crecimiento con nuevas alianzas estratégicas y expansión nacional.</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
 
 {{-- ═══════════════════════════════════════════════════
      3. MISIÓN & VISIÓN
@@ -1160,6 +1343,67 @@ const srObserver = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('.sr').forEach(el => srObserver.observe(el));
+
+/* ─── Historia Slideshow ─── */
+(function() {
+    const slides   = document.querySelectorAll('#historiaSlideshow .ns-hs-slide');
+    const dots     = document.querySelectorAll('#hsDots .ns-hs-dot');
+    const bar      = document.getElementById('hsProgressBar');
+    const prevBtn  = document.getElementById('hsPrev');
+    const nextBtn  = document.getElementById('hsNext');
+    if (!slides.length) return;
+
+    const INTERVAL = 5000; // ms per slide
+    let current = 0;
+    let timer, startTime, rafId;
+
+    function goTo(idx) {
+        slides[current].classList.remove('active');
+        dots[current]?.classList.remove('active');
+        current = (idx + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current]?.classList.add('active');
+        resetProgress();
+    }
+
+    function resetProgress() {
+        cancelAnimationFrame(rafId);
+        if (bar) bar.style.transition = 'none';
+        if (bar) bar.style.width = '0%';
+        clearTimeout(timer);
+        startTime = null;
+        requestAnimationFrame(() => {
+            if (bar) {
+                bar.style.transition = `width ${INTERVAL}ms linear`;
+                bar.style.width = '100%';
+            }
+            rafId = null;
+        });
+        timer = setTimeout(() => goTo(current + 1), INTERVAL);
+    }
+
+    // Dot clicks
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+    // Arrow clicks
+    prevBtn?.addEventListener('click', () => { clearTimeout(timer); goTo(current - 1); });
+    nextBtn?.addEventListener('click', () => { clearTimeout(timer); goTo(current + 1); });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  { clearTimeout(timer); goTo(current - 1); }
+        if (e.key === 'ArrowRight') { clearTimeout(timer); goTo(current + 1); }
+    });
+
+    // Pause on hover
+    const ss = document.getElementById('historiaSlideshow');
+    ss?.addEventListener('mouseenter', () => { clearTimeout(timer); if (bar) bar.style.animationPlayState = 'paused'; });
+    ss?.addEventListener('mouseleave', () => resetProgress());
+
+    // Start
+    resetProgress();
+})();
+
 
 /* ─── Counter Animation ─── */
 function animateCounter(el) {

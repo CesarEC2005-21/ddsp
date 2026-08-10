@@ -214,9 +214,13 @@
             'gallery_image_1' => ['label' => 'Galería - Infraestructura 1', 'icon' => 'fa-images', 'desc' => 'Imagen de logística y almacenamiento'],
             'gallery_image_2' => ['label' => 'Galería - Infraestructura 2', 'icon' => 'fa-images', 'desc' => 'Imagen de control de calidad'],
             'gallery_image_3' => ['label' => 'Galería - Infraestructura 3', 'icon' => 'fa-images', 'desc' => 'Imagen de cobertura de transporte'],
-            'historia_image' => ['label' => 'Nuestra Historia', 'icon' => 'fa-book-open', 'desc' => 'Imagen lateral en la sección de historia'],
-            'mision_image' => ['label' => 'Misión', 'icon' => 'fa-bullseye', 'desc' => 'Imagen lateral en la sección de misión'],
-            'vision_image' => ['label' => 'Visión', 'icon' => 'fa-eye', 'desc' => 'Imagen lateral en la sección de visión'],
+            'historia_image'  => ['label' => 'Historia — 2022', 'icon' => 'fa-calendar-alt', 'desc' => 'Imagen correspondiente al año de fundación 2022'],
+            'historia_2022_image' => ['label' => 'Historia — 2026', 'icon' => 'fa-calendar-alt', 'desc' => 'Imagen del año actual 2026'],
+            'historia_2023_image' => ['label' => 'Historia — 2023', 'icon' => 'fa-calendar-alt', 'desc' => 'Imagen del año de expansión 2023'],
+            'historia_2024_image' => ['label' => 'Historia — 2024', 'icon' => 'fa-calendar-alt', 'desc' => 'Imagen del año de consolidación 2024'],
+            'historia_2025_image' => ['label' => 'Historia — 2025', 'icon' => 'fa-calendar-alt', 'desc' => 'Imagen del año de liderazgo 2025'],
+            'mision_image'   => ['label' => 'Misión', 'icon' => 'fa-bullseye', 'desc' => 'Imagen lateral en la sección de misión'],
+            'vision_image'   => ['label' => 'Visión', 'icon' => 'fa-eye', 'desc' => 'Imagen lateral en la sección de visión'],
         ];
     @endphp
 

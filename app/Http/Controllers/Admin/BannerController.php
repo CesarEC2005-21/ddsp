@@ -11,7 +11,7 @@ class BannerController extends Controller
 {
     private $sectionFields = [
         'inicio'    => ['image_path', 'hero_image_2', 'hero_image_3', 'gallery_image_1', 'gallery_image_2', 'gallery_image_3'],
-        'nosotros'  => ['image_path', 'historia_image', 'mision_image', 'vision_image'],
+        'nosotros'  => ['image_path', 'historia_image', 'historia_2023_image', 'historia_2024_image', 'historia_2025_image', 'historia_2022_image', 'mision_image', 'vision_image'],
         'novedades'  => ['image_path'],
         'ejecutivos'=> ['image_path'],
         'productos' => ['image_path'],
