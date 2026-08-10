@@ -75,7 +75,7 @@
                 </li>
                 <li><a href="{{ route('home') }}">Inicio</a></li>
                 <li><a href="{{ route('nosotros') }}">Nosotros</a></li>
-                <li><a href="{{ route('noticias') }}">Noticias</a></li>
+                <li><a href="{{ route('novedades') }}">Novedades</a></li>
                 <li><a href="{{ route('about') }}">Ejecutivos</a></li>
                 <li class="nav-dropdown">
                     <a href="{{ route('products') }}" class="nav-dropdown-toggle">Laboratorios <i class="fas fa-chevron-down"></i></a>
@@ -91,7 +91,7 @@
                 <li><a href="{{ route('contact') }}" class="nav-cta">Contacto</a></li>
             </ul>
 
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 20px; margin-left: 25px;">
                 <a href="{{ route('cart.index') }}" class="cart-icon" style="color: var(--primary-green); font-size: 1.4rem; position: relative;">
                     <i class="fas fa-shopping-basket"></i>
                     @if(count(session('cart', [])) > 0)

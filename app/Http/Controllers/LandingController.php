@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 // use App\Models\Pharmacy;
 use App\Models\Representative;
-use App\Models\Noticia;
+use App\Models\Novedad;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactAdminMail;
 
@@ -58,21 +58,21 @@ class LandingController extends Controller
         return view('landing.nosotros', compact('settings', 'banner', 'certificados'));
     }
 
-    public function noticias()
+    public function novedades()
     {
         try {
-            $banner = \App\Models\Banner::where('section', 'noticias')->first();
+            $banner = \App\Models\Banner::where('section', 'novedades')->first();
         } catch (\Exception $e) {
             $banner = null;
         }
         // Show active notices
-        $noticias = Noticia::with(['laboratory', 'product'])
+        $novedades = Novedad::with(['laboratory', 'product'])
             ->where('estado', true)
             ->whereDate('fecha_inicial', '<=', now())
             ->whereDate('fecha_final', '>=', now())
             ->orderBy('created_at', 'desc')
             ->get();
-        return view('landing.noticias', compact('noticias', 'banner'));
+        return view('landing.novedades', compact('novedades', 'banner'));
     }
 
     public function products(Request $request)

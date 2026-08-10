@@ -163,7 +163,7 @@
                                         'laboratorios' => 'Laboratorios',
                                         'zonas' => 'Zonas',
                                         'unidad_medidas' => 'Unidades de Medida',
-                                        'noticias' => 'Noticias / Promociones',
+                                        'noticias' => 'Novedades',
                                         'banners' => 'Banners',
                                         'representatives' => 'Ejecutivos',
                                         'quotations' => 'Cotizaciones',

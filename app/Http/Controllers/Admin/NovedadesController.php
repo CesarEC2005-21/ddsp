@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Noticia;
+use App\Models\Novedad;
 use App\Models\Laboratory;
 
 use App\Models\Product;
 use App\Models\AuditLog;
 
-class NoticiaController extends Controller
+class NovedadesController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Noticia::with(['laboratory', 'product']);
+        $query = Novedad::with(['laboratory', 'product']);
 
         if ($request->filled('descripcion')) {
             $query->where('descripcion', 'like', '%' . $request->descripcion . '%');
@@ -29,17 +29,17 @@ class NoticiaController extends Controller
             $query->where('fecha_final', '<=', $request->fecha_final);
         }
 
-        $noticias = $query->orderBy('created_at', 'desc')->paginate(10);
+        $novedades = $query->orderBy('created_at', 'desc')->paginate(10);
         $laboratories = Laboratory::all();
         $products = Product::where('estado', true)->get();
         
-        return view('admin.noticias.index', compact('noticias', 'laboratories', 'products'));
+        return view('admin.novedades.index', compact('novedades', 'laboratories', 'products'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'codigo' => 'nullable|string|unique:noticias',
+            'codigo' => 'nullable|string|unique:novedades',
             'descripcion' => 'required|string',
             'detalle' => 'nullable|string',
             'fecha_inicial' => 'required|date',
@@ -56,36 +56,36 @@ class NoticiaController extends Controller
 
         // Auto-generate code if not provided
         if (empty($data['codigo'])) {
-            $lastNoticia = Noticia::orderBy('id', 'desc')->first();
-            $nextId = $lastNoticia ? $lastNoticia->id + 1 : 1;
+            $lastNovedad = Novedad::orderBy('id', 'desc')->first();
+            $nextId = $lastNovedad ? $lastNovedad->id + 1 : 1;
             $data['codigo'] = 'NOT-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
             
             // Double check uniqueness
-            while (Noticia::where('codigo', $data['codigo'])->exists()) {
+            while (Novedad::where('codigo', $data['codigo'])->exists()) {
                 $nextId++;
                 $data['codigo'] = 'NOT-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
             }
         }
 
         if ($request->hasFile('imagen')) {
-            $data['imagen'] = $request->file('imagen')->store('noticias', 'public');
+            $data['imagen'] = $request->file('imagen')->store('novedades', 'public');
         }
 
-        $noticia = Noticia::create($data);
+        $novedad = Novedad::create($data);
 
         AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'created_promotion',
-            'description' => "Creó la promoción/noticia: {$noticia->descripcion} ({$noticia->codigo})"
+            'description' => "Creó la promoción/noticia: {$novedad->descripcion} ({$novedad->codigo})"
         ]);
 
-        return redirect()->route('admin.noticias.index')->with('success', 'Noticia creada exitosamente.');
+        return redirect()->route('admin.novedades.index')->with('success', 'Novedad creada exitosamente.');
     }
 
-    public function update(Request $request, Noticia $noticia)
+    public function update(Request $request, Novedad $novedad)
     {
         $request->validate([
-            'codigo' => 'nullable|string|unique:noticias,codigo,' . $noticia->id,
+            'codigo' => 'nullable|string|unique:novedades,codigo,' . $novedad->id,
             'descripcion' => 'required|string',
             'detalle' => 'nullable|string',
             'fecha_inicial' => 'required|date',
@@ -100,27 +100,27 @@ class NoticiaController extends Controller
         $data['estado'] = $request->has('estado');
 
         if ($request->hasFile('imagen')) {
-            if ($noticia->imagen) {
-                \Storage::disk('public')->delete($noticia->imagen);
+            if ($novedad->imagen) {
+                \Storage::disk('public')->delete($novedad->imagen);
             }
-            $data['imagen'] = $request->file('imagen')->store('noticias', 'public');
+            $data['imagen'] = $request->file('imagen')->store('novedades', 'public');
         }
 
-        $noticia->update($data);
+        $novedad->update($data);
 
-        return redirect()->route('admin.noticias.index')->with('success', 'Noticia actualizada exitosamente.');
+        return redirect()->route('admin.novedades.index')->with('success', 'Novedad actualizada exitosamente.');
     }
 
-    public function destroy(Noticia $noticia)
+    public function destroy(Novedad $novedad)
     {
-        if ($noticia->imagen) {
-            \Storage::disk('public')->delete($noticia->imagen);
+        if ($novedad->imagen) {
+            \Storage::disk('public')->delete($novedad->imagen);
         }
         
-        $codigo = $noticia->codigo;
-        $descripcion = $noticia->descripcion;
+        $codigo = $novedad->codigo;
+        $descripcion = $novedad->descripcion;
 
-        $noticia->delete();
+        $novedad->delete();
 
         AuditLog::create([
             'user_id' => auth()->id(),
@@ -128,6 +128,6 @@ class NoticiaController extends Controller
             'description' => "Eliminó la promoción/noticia: {$descripcion} ({$codigo})"
         ]);
 
-        return redirect()->route('admin.noticias.index')->with('success', 'Noticia eliminada exitosamente.');
+        return redirect()->route('admin.novedades.index')->with('success', 'Novedad eliminada exitosamente.');
     }
 }

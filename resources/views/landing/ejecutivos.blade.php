@@ -473,7 +473,7 @@
             $phone   = $rep->telefono ? preg_replace('/[^0-9]/', '', $rep->telefono) : '999999999';
             $message = urlencode("Hola {$rep->nombre}, deseo realizar una consulta sobre sus productos.");
             $waLink  = "https://api.whatsapp.com/send?phone=51{$phone}&text={$message}";
-            $zona    = $rep->locations->first()->zona->nombre_zona ?? 'Nacional';
+            $zona    = $rep->ubicacion ?? 'Nacional';
         @endphp
         <div class="ej-card ej-sr" style="transition-delay: {{ ($i % 3) * 0.1 }}s">
             {{-- Image --}}
@@ -614,7 +614,7 @@ function showRepSidebar(r) {
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.nombre)}&size=400&background=10b981&color=fff`;
     document.getElementById('ej-preview-img').src = imgSrc;
     document.getElementById('ej-preview-name').textContent = r.nombre;
-    const zona = r.locations?.[0]?.zona?.nombre_zona || 'Múltiples zonas';
+    const zona = r.ubicacion || 'Nacional';
     document.getElementById('ej-preview-zone').textContent = zona;
     document.getElementById('ej-preview-phone').textContent = r.telefono || 'Consultar';
     const phone = r.telefono ? String(r.telefono).replace(/\D/g,'') : '';

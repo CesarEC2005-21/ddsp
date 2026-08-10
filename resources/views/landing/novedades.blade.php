@@ -3,7 +3,7 @@
 @push('styles')
 <style>
 /* ═══════════════════════════════════════════════════════
-   NOTICIAS — Premium Redesign
+   NOVEDADES — Premium Redesign
    ═══════════════════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
 
@@ -516,11 +516,11 @@
             Droguería &amp; Distribuidora
         </div>
         <h1 class="nt-hero-title">
-            Noticias &amp;
-            <span class="hl">Novedades</span>
+            Novedades
+            <span class="hl">y más</span>
         </h1>
         <p class="nt-hero-sub">
-            Promociones exclusivas, eventos y las últimas noticias de Droguería Sánchez Pharma para mantenerte siempre informado.
+            Promociones exclusivas, eventos y las últimas novedades de Droguería Sánchez Pharma para mantenerte siempre informado.
         </p>
     </div>
 
@@ -535,9 +535,9 @@
      ══════════════════════════════════════════ --}}
 <div class="nt-filter-wrap" style="margin-top: 40px;">
     @php
-        $total     = $noticias->count();
-        $nPromo    = $noticias->where('tipo','PROMOCION')->count();
-        $nEvento   = $noticias->where('tipo','EVENTO')->count();
+        $total     = $novedades->count();
+        $nPromo    = $novedades->where('tipo','PROMOCION')->count();
+        $nEvento   = $novedades->where('tipo','EVENTO')->count();
     @endphp
     <div class="nt-filter-bar">
         <button class="nt-filter-btn active" onclick="filterCards('TODOS', this)" id="btn-todos">
@@ -560,37 +560,37 @@
      ══════════════════════════════════════════ --}}
 <div class="nt-section">
     <div class="nt-grid" id="nt-grid">
-        @forelse($noticias as $i => $noticia)
+        @forelse($novedades as $i => $novedad)
         @php
             \Carbon\Carbon::setLocale('es');
-            $fi  = \Carbon\Carbon::parse($noticia->fecha_inicial)->translatedFormat('d \d\e F, Y');
-            $ff  = \Carbon\Carbon::parse($noticia->fecha_final)->translatedFormat('d \d\e F, Y');
-            $esPromo = $noticia->tipo === 'PROMOCION';
-            $noticiaData = [
-                'tipo'        => $noticia->tipo,
-                'laboratory'  => $noticia->laboratory->descripcion ?? 'Sanchez Pharma',
-                'descripcion' => $noticia->descripcion,
-                'detalle'     => $noticia->detalle,
-                'imagen'      => asset('storage/'.$noticia->imagen),
+            $fi  = \Carbon\Carbon::parse($novedad->fecha_inicial)->translatedFormat('d \d\e F, Y');
+            $ff  = \Carbon\Carbon::parse($novedad->fecha_final)->translatedFormat('d \d\e F, Y');
+            $esPromo = $novedad->tipo === 'PROMOCION';
+            $novedadData = [
+                'tipo'        => $novedad->tipo,
+                'laboratory'  => $novedad->laboratory->descripcion ?? 'Sanchez Pharma',
+                'descripcion' => $novedad->descripcion,
+                'detalle'     => $novedad->detalle,
+                'imagen'      => asset('storage/'.$novedad->imagen),
                 'inicio'      => $fi,
                 'fin'         => $ff,
-                'product_url' => $noticia->product_id ? route('product.detail', $noticia->product_id) : null,
+                'product_url' => $novedad->product_id ? route('product.detail', $novedad->product_id) : null,
             ];
         @endphp
         <div class="nt-card nr"
-             data-tipo="{{ $noticia->tipo }}"
+             data-tipo="{{ $novedad->tipo }}"
              style="transition-delay: {{ ($i % 4) * 0.07 }}s"
-             onclick='openModal(@json($noticiaData))'>
+             onclick='openModal(@json($novedadData))'>
 
             {{-- Image --}}
             <div class="nt-card-img">
                 <div class="nt-card-img-bg {{ $esPromo ? 'promo-bg' : 'event-bg' }}"></div>
                 <div class="nt-type-pill {{ $esPromo ? 'promo-pill' : 'event-pill' }}">
                     <i class="fas fa-{{ $esPromo ? 'tag' : 'calendar-star' }}"></i>
-                    {{ $noticia->tipo }}
+                    {{ $novedad->tipo }}
                 </div>
-                @if($noticia->imagen)
-                    <img src="{{ asset('storage/'.$noticia->imagen) }}" alt="{{ $noticia->descripcion }}" loading="lazy">
+                @if($novedad->imagen)
+                    <img src="{{ asset('storage/'.$novedad->imagen) }}" alt="{{ $novedad->descripcion }}" loading="lazy">
                 @else
                     <div class="nt-card-img-empty"><i class="fas fa-image"></i></div>
                 @endif
@@ -600,9 +600,9 @@
             <div class="nt-card-body">
                 <div class="nt-card-lab">
                     <i class="fas fa-flask"></i>
-                    {{ $noticia->laboratory->descripcion ?? 'Sanchez Pharma' }}
+                    {{ $novedad->laboratory->descripcion ?? 'Sanchez Pharma' }}
                 </div>
-                <div class="nt-card-title">{{ $noticia->descripcion }}</div>
+                <div class="nt-card-title">{{ $novedad->descripcion }}</div>
 
                 <div class="nt-card-dates">
                     <span class="nt-date-chip">
@@ -628,7 +628,7 @@
         @empty
         <div class="nt-empty">
             <div class="nt-empty-icon"><i class="fas fa-newspaper"></i></div>
-            <p>No hay noticias disponibles en este momento.</p>
+            <p>No hay novedades disponibles en este momento.</p>
         </div>
         @endforelse
     </div>

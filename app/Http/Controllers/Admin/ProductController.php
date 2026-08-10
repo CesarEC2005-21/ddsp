@@ -172,6 +172,7 @@ class ProductController extends Controller
         ]);
 
         try {
+            set_time_limit(0); // Prevents timeout during large imports
             $import = new \App\Imports\ProductsImport($request->laboratory_id);
             \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
             
@@ -198,6 +199,7 @@ class ProductController extends Controller
         ]);
 
         try {
+            set_time_limit(0); // Prevents timeout during large imports
             $import = new \App\Imports\GeneralProductsImport();
             \Maatwebsite\Excel\Facades\Excel::import($import, $request->file('file'));
             

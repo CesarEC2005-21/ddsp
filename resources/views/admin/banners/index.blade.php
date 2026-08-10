@@ -201,7 +201,7 @@
         $sectionMeta = [
             'inicio' => ['icon' => 'fa-home', 'color' => '#10b981', 'desc' => 'Hero slides y galería de la página principal'],
             'nosotros' => ['icon' => 'fa-building', 'color' => '#3b82f6', 'desc' => 'Banner principal e historia, misión y visión'],
-            'noticias' => ['icon' => 'fa-newspaper', 'color' => '#f59e0b', 'desc' => 'Imagen de fondo del encabezado de noticias'],
+            'novedades' => ['icon' => 'fa-newspaper', 'color' => '#f59e0b', 'desc' => 'Imagen de fondo del encabezado de Novedades'],
             'ejecutivos' => ['icon' => 'fa-briefcase', 'color' => '#8b5cf6', 'desc' => 'Imagen de fondo del encabezado de ejecutivos'],
             'productos' => ['icon' => 'fa-pills', 'color' => '#ef4444', 'desc' => 'Imagen de fondo del encabezado del catálogo'],
             'contacto' => ['icon' => 'fa-envelope', 'color' => '#ec4899', 'desc' => 'Imagen de fondo del encabezado de contacto'],

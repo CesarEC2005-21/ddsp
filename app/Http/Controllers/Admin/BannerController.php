@@ -12,7 +12,7 @@ class BannerController extends Controller
     private $sectionFields = [
         'inicio'    => ['image_path', 'hero_image_2', 'hero_image_3', 'gallery_image_1', 'gallery_image_2', 'gallery_image_3'],
         'nosotros'  => ['image_path', 'historia_image', 'mision_image', 'vision_image'],
-        'noticias'  => ['image_path'],
+        'novedades'  => ['image_path'],
         'ejecutivos'=> ['image_path'],
         'productos' => ['image_path'],
         'contacto'  => ['image_path'],

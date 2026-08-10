@@ -2,14 +2,14 @@
 
 @section('content')
     <div class="page-header">
-        <h2 class="page-title">Gestión de Noticias</h2>
-        <button onclick="openModal('newNoticiaModal')" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nueva Noticia
+        <h2 class="page-title">Gestión de Novedades</h2>
+        <button onclick="openModal('newNovedadModal')" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Novedad
         </button>
     </div>
 
     <div class="card" style="margin-bottom: 20px; padding: 20px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm);">
-        <form action="{{ route('admin.noticias.index') }}" method="GET">
+        <form action="{{ route('admin.novedades.index') }}" method="GET">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label" style="font-size: 0.85rem;">Código</label>
@@ -30,7 +30,7 @@
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn btn-primary" style="flex: 1;"><i class="fas fa-search"></i> Filtrar</button>
                     @if(request()->anyFilled(['codigo', 'descripcion', 'fecha_inicial', 'fecha_final']))
-                        <a href="{{ route('admin.noticias.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
+                        <a href="{{ route('admin.novedades.index') }}" class="btn" style="background: #f1f5f9; color: #475569;" title="Limpiar"><i class="fas fa-times"></i></a>
                     @endif
                 </div>
             </div>
@@ -53,65 +53,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($noticias as $noticia)
+                    @forelse($novedades as $novedad)
                     <tr>
                         <td>
-                            @if($noticia->imagen)
-                                <img src="{{ asset('storage/' . $noticia->imagen) }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="viewImageModal('{{ asset('storage/' . $noticia->imagen) }}', '{{ $noticia->descripcion }}')">
+                            @if($novedad->imagen)
+                                <img src="{{ asset('storage/' . $novedad->imagen) }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="viewImageModal('{{ asset('storage/' . $novedad->imagen) }}', '{{ $novedad->descripcion }}')">
                             @else
                                 <div style="width: 50px; height: 50px; background: #f8fafc; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: #cbd5e1;"><i class="fas fa-image"></i></div>
                             @endif
                         </td>
-                        <td><span class="badge badge-success">{{ $noticia->codigo }}</span></td>
+                        <td><span class="badge badge-success">{{ $novedad->codigo }}</span></td>
                         <td>
-                            <span class="badge {{ $noticia->tipo == 'PROMOCION' ? 'badge-primary' : 'badge-warning' }}" style="display: block; margin-bottom: 5px;">{{ $noticia->tipo }}</span>
-                            <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-flask"></i> {{ $noticia->laboratory->descripcion ?? 'General' }}</span>
+                            <span class="badge {{ $novedad->tipo == 'PROMOCION' ? 'badge-primary' : 'badge-warning' }}" style="display: block; margin-bottom: 5px;">{{ $novedad->tipo }}</span>
+                            <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-flask"></i> {{ $novedad->laboratory->descripcion ?? 'General' }}</span>
                         </td>
-                        <td style="font-weight: 500;">{{ \Str::limit($noticia->descripcion, 50) }}</td>
+                        <td style="font-weight: 500;">{{ \Str::limit($novedad->descripcion, 50) }}</td>
                         <td style="font-size: 0.85rem;">
-                            <i class="far fa-calendar-alt text-muted"></i> {{ \Carbon\Carbon::parse($noticia->fecha_inicial)->format('d/m/Y') }} <br>
-                            <i class="far fa-calendar-check text-muted"></i> {{ \Carbon\Carbon::parse($noticia->fecha_final)->format('d/m/Y') }}
+                            <i class="far fa-calendar-alt text-muted"></i> {{ \Carbon\Carbon::parse($novedad->fecha_inicial)->format('d/m/Y') }} <br>
+                            <i class="far fa-calendar-check text-muted"></i> {{ \Carbon\Carbon::parse($novedad->fecha_final)->format('d/m/Y') }}
                         </td>
                         <td>
-                            @if($noticia->estado)
+                            @if($novedad->estado)
                                 <span class="badge badge-success">Activo</span>
                             @else
                                 <span class="badge badge-danger">Inactivo</span>
                             @endif
                         </td>
-                        <td style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-user-edit"></i> {{ $noticia->user->name ?? 'Sistema' }}</td>
+                        <td style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-user-edit"></i> {{ $novedad->user->name ?? 'Sistema' }}</td>
                         <td>
-                            <button onclick='openEditModal(@json($noticia))' class="btn" style="background: #f3f4f6; color: #333; padding: 6px 10px;" title="Editar"><i class="fas fa-edit"></i></button>
-                            <button onclick="confirmDelete({{ $noticia->id }}, '{{ $noticia->codigo }}', 'Noticia', '{{ route('admin.noticias.destroy', $noticia->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; padding: 6px 10px;" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button onclick='openEditModal(@json($novedad))' class="btn" style="background: #f3f4f6; color: #333; padding: 6px 10px;" title="Editar"><i class="fas fa-edit"></i></button>
+                            <button onclick="confirmDelete({{ $novedad->id }}, '{{ $novedad->codigo }}', 'Novedad', '{{ route('admin.novedades.destroy', $novedad->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; padding: 6px 10px;" title="Eliminar"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" style="padding: 30px; text-align: center; color: #888;">No hay noticias registradas.</td>
+                        <td colspan="8" style="padding: 30px; text-align: center; color: #888;">No hay novedades registradas.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         <div style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: center;">
-            {{ $noticias->appends(request()->query())->links('partials.pagination') }}
+            {{ $novedades->appends(request()->query())->links('partials.pagination') }}
         </div>
     </div>
 
-    <!-- Modal Nueva Noticia -->
-    <div id="newNoticiaModal" class="modal">
+    <!-- Modal Nueva Novedad -->
+    <div id="newNovedadModal" class="modal">
         <div class="modal-content" style="max-width: 850px; padding: 0; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; border: none; border-radius: 20px;">
             <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <div style="background: rgba(16, 185, 129, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-newspaper" style="color: #10b981; font-size: 1.2rem;"></i>
                     </div>
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Registrar Nueva Noticia</h3>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Registrar Nueva Novedad</h3>
                 </div>
-                <span class="close-modal" onclick="closeModal('newNoticiaModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
+                <span class="close-modal" onclick="closeModal('newNovedadModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 40px; overflow-y: auto; flex: 1;">
-                <form action="{{ route('admin.noticias.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.novedades.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <!-- Sección Información -->
@@ -120,7 +120,7 @@
                             <div style="background: #10b981; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
                                 <i class="fas fa-info"></i>
                             </div>
-                            Información de la Noticia
+                            Información de la Novedad
                         </h4>
                         <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Complete los datos básicos de la noticia para el portal.</p>
                         
@@ -143,7 +143,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" style="color: #475569; font-weight: 600;">Tipo Noticia</label>
+                                <label class="form-label" style="color: #475569; font-weight: 600;">Tipo Novedad</label>
                                 <select name="tipo" class="form-control" style="padding: 12px; border-radius: 12px; border: 1.5px solid #e2e8f0;">
                                     <option value="PROMOCION">PROMOCIÓN</option>
                                     <option value="EVENTO">EVENTO</option>
@@ -201,7 +201,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="padding: 25px 40px; background: white; border-top: 1px solid #f1f5f9;">
-                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('newNoticiaModal')">Cancelar</button>
+                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('newNovedadModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary" style="padding: 12px 40px; font-weight: 700; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
                         <i class="fas fa-check-circle"></i> Finalizar y Guardar
                     </button>
@@ -211,20 +211,20 @@
         </div>
     </div>
 
-    <!-- Modal Editar Noticia -->
-    <div id="editNoticiaModal" class="modal">
+    <!-- Modal Editar Novedad -->
+    <div id="editNovedadModal" class="modal">
         <div class="modal-content" style="max-width: 850px; padding: 0; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; border: none; border-radius: 20px;">
             <div class="modal-header" style="background: #1e293b; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <div style="background: rgba(245, 158, 11, 0.2); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-edit" style="color: #f59e0b; font-size: 1.2rem;"></i>
                     </div>
-                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Editar Noticia</h3>
+                    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #ffffff;">Editar Novedad</h3>
                 </div>
-                <span class="close-modal" onclick="closeModal('editNoticiaModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
+                <span class="close-modal" onclick="closeModal('editNovedadModal')" style="background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 40px; overflow-y: auto; flex: 1;">
-                <form id="editNoticiaForm" method="POST" enctype="multipart/form-data">
+                <form id="editNovedadForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -234,9 +234,9 @@
                             <div style="background: #f59e0b; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
                                 <i class="fas fa-info"></i>
                             </div>
-                            Información de la Noticia
+                            Información de la Novedad
                         </h4>
-                        <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Actualice los datos comerciales de la noticia.</p>
+                        <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Actualice los datos comerciales de la novedad.</p>
                         
                         <div class="form-group">
                             <label class="form-label" style="color: #475569; font-weight: 600;">Título Atractivo del Producto</label>
@@ -257,7 +257,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" style="color: #475569; font-weight: 600;">Tipo Noticia</label>
+                                <label class="form-label" style="color: #475569; font-weight: 600;">Tipo Novedad</label>
                                 <select name="tipo" id="edit-tipo" class="form-control" style="padding: 12px; border-radius: 12px;">
                                     <option value="PROMOCION">PROMOCIÓN</option>
                                     <option value="EVENTO">EVENTO</option>
@@ -321,7 +321,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="padding: 25px 40px; background: white; border-top: 1px solid #f1f5f9;">
-                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('editNoticiaModal')">Cancelar</button>
+                    <button type="button" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; padding: 12px 25px;" onclick="closeModal('editNovedadModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary" style="padding: 12px 40px; font-weight: 700; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);">
                         <i class="fas fa-save"></i> Guardar Cambios
                     </button>
@@ -425,27 +425,27 @@
     }
 
     function openEditModal(noticia) {
-        const form = document.getElementById('editNoticiaForm');
-        form.action = `/admin/noticias/${noticia.id}`;
+        const form = document.getElementById('editNovedadForm');
+        form.action = `/admin/novedades/${novedad.id}`;
         
-        document.getElementById('edit-tipo').value = noticia.tipo;
-        document.getElementById('edit-laboratory_id').value = noticia.laboratory_id || '';
-        document.getElementById('edit-descripcion').value = noticia.descripcion;
-        document.getElementById('edit-detalle').value = noticia.detalle || '';
-        document.getElementById('edit-fecha-inicial').value = noticia.fecha_inicial;
-        document.getElementById('edit-fecha-final').value = noticia.fecha_final;
-        document.getElementById('edit-estado').checked = !!noticia.estado;
+        document.getElementById('edit-tipo').value = novedad.tipo;
+        document.getElementById('edit-laboratory_id').value = novedad.laboratory_id || '';
+        document.getElementById('edit-descripcion').value = novedad.descripcion;
+        document.getElementById('edit-detalle').value = novedad.detalle || '';
+        document.getElementById('edit-fecha-inicial').value = novedad.fecha_inicial;
+        document.getElementById('edit-fecha-final').value = novedad.fecha_final;
+        document.getElementById('edit-estado').checked = !!novedad.estado;
 
         // Set linked product if exists
-        if (noticia.product_id && noticia.product) {
-            document.getElementById('edit-product_id').value = noticia.product_id;
-            document.getElementById('edit-product-display').value = `${noticia.product.codigo} - ${noticia.product.nombre}`;
+        if (novedad.product_id && novedad.product) {
+            document.getElementById('edit-product_id').value = novedad.product_id;
+            document.getElementById('edit-product-display').value = `${novedad.product.codigo} - ${novedad.product.nombre}`;
         } else {
             document.getElementById('edit-product_id').value = '';
             document.getElementById('edit-product-display').value = '';
         }
         
-        openModal('editNoticiaModal');
+        openModal('editNovedadModal');
     }
 
     function viewImageModal(src, desc) {

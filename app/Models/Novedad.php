@@ -4,8 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Noticia extends Model
+class Novedad extends Model
 {
+    /**
+     * Nombre de la tabla en la base de datos.
+     * Renombrada de 'noticias' a 'novedades'.
+     */
+    protected $table = 'novedades';
+
     protected $fillable = [
         'codigo',
         'descripcion',

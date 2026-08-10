@@ -60,9 +60,9 @@
             @endif
 
             <div class="nav-section-title">Marketing & Contenido</div>
-            @if($can('noticias'))
-            <a href="{{ route('admin.noticias.index') }}" class="nav-item {{ request()->routeIs('admin.noticias.*') ? 'active' : '' }}">
-                <i class="fas fa-newspaper"></i> Noticias / Promociones
+            @if($can('novedades'))
+            <a href="{{ route('admin.novedades.index') }}" class="nav-item {{ request()->routeIs('admin.novedades.*') ? 'active' : '' }}">
+                <i class="fas fa-newspaper"></i> Novedades
             </a>
             @endif
             @if($can('certificados'))

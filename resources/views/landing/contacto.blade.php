@@ -223,7 +223,7 @@
                     <div class="info-content">
                         <h4>Central Telefónica</h4>
                         <p>
-                            <a href="tel:+51987654321">+51 987 654 321</a><br>
+                            <a href="tel:+5192911909">+51 922 911 909</a><br>
                         </p>
                     </div>
                 </div>
