@@ -1,0 +1,10 @@
+# Forzar descarga del APK con el tipo MIME correcto
+<Files "*.apk">
+    ForceType application/vnd.android.package-archive
+    Header set Content-Disposition attachment
+</Files>
+
+# Cache no más de 1 hora para que los clientes siempre obtengan la última versión
+<IfModule mod_headers.c>
+    Header set Cache-Control "max-age=3600"
+</IfModule>

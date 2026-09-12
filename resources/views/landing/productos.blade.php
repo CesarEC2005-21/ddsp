@@ -170,17 +170,10 @@
             <div class="product-grid">
                 @forelse($products as $product)
                 <div class="product-card reveal" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; transition: 0.4s; border: 1px solid #f1f5f9; position: relative; min-width: 0;">
-                    <!-- Tag Premium -->
-                    <div style="position: absolute; top: 15px; left: 15px; z-index: 2;">
-                        <span style="font-size: 0.7rem; font-weight: 800; color: white; background: var(--primary-green); padding: 5px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);">
-                            {{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}
-                        </span>
-                    </div>
-
                     <!-- Imagen con Efecto -->
-                    <a href="{{ route('product.detail', $product->id) }}" class="product-img-wrapper" style="text-decoration: none; display: block; height: 260px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 30px;">
+                    <a href="{{ route('product.detail', $product->id) }}" class="product-img-wrapper" style="text-decoration: none; display: block; height: 200px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px;">
                         @if($product->imagen)
-                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}" style="max-height: 100%; max-width: 100%; object-fit: contain; transition: 0.5s;">
+                            <img src="{{ asset('storage/' . $product->imagen) }}" alt="{{ $product->nombre }}" loading="lazy" style="max-height: 100%; max-width: 100%; object-fit: contain; transition: 0.5s;">
                         @else
                             <div style="display: flex; flex-direction: column; align-items: center; color: #e2e8f0;">
                                 <i class="fas fa-pills" style="font-size: 4rem; margin-bottom: 10px;"></i>
@@ -190,7 +183,7 @@
                     </a>
 
                     <!-- Info Premium -->
-                    <div style="padding: 25px; flex-grow: 1; display: flex; flex-direction: column; background: white;">
+                    <div style="padding: 10px 20px 25px; flex-grow: 1; display: flex; flex-direction: column; background: white;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                             <p style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; font-family: monospace; letter-spacing: 1px;">#{{ $product->codigo }}</p>
                             @if($product->stock > 0)
@@ -199,8 +192,21 @@
                         </div>
                         
                         <a href="{{ route('product.detail', $product->id) }}" style="text-decoration: none;">
-                            <h3 style="font-size: 1.1rem; color: #1e293b; font-weight: 700; margin-bottom: 15px; line-height: 1.4; min-height: 3rem; word-break: break-word;">{{ $product->nombre }}</h3>
+                            <h3 style="font-size: 1.05rem; color: #1e293b; font-weight: 700; margin-bottom: 10px; line-height: 1.45; max-height: 4.57rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; word-break: break-word;">{{ $product->nombre }}</h3>
                         </a>
+
+                        <div style="display: flex; justify-content: flex-start; align-items: center; padding: 8px 0 12px;">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; color: #475569; padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700;">
+                                @if($product->laboratory && $product->laboratory->logo)
+                                    <img src="{{ asset('storage/' . $product->laboratory->logo) }}" alt="" style="width: 14px; height: 14px; object-fit: contain;">
+                                @elseif($product->laboratory && $product->laboratory->imagen)
+                                    <img src="{{ asset('storage/' . $product->laboratory->imagen) }}" alt="" style="width: 14px; height: 14px; object-fit: contain;">
+                                @else
+                                    <i class="fas fa-building" style="color: #64748b;"></i>
+                                @endif
+                                {{ $product->laboratory->descripcion ?? 'Sanchez Pharma' }}
+                            </span>
+                        </div>
                         
                         <div style="margin-top: auto;">
                             <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">
@@ -284,8 +290,7 @@
                 
                 // SweetAlert2 Confirmation
                 Swal.fire({
-                    title: '¡Agregado!',
-                    text: `${qty}x ${productName} se añadió a tu solicitud.`,
+                    title: '¡Producto agregado correctamente!',
                     icon: 'success',
                     toast: true,
                     position: 'top-end',
@@ -390,6 +395,11 @@
         .hero-catalog p { font-size: 0.95rem !important; }
         #floating-cart { width: 55px !important; height: 55px !important; bottom: 20px !important; right: 20px !important; }
         #floating-cart i { font-size: 1.2rem !important; }
+        .product-img-wrapper { height: 160px !important; padding: 15px !important; }
+        .product-card h3 { font-size: 1rem !important; min-height: 2.5rem !important; margin-bottom: 10px !important; }
+        .product-card .btn-add-cart { padding: 10px 15px !important; font-size: 0.9rem !important; }
+        .qty-selector input { font-size: 0.9rem !important; width: 30px !important; }
+        .qty-selector button { padding: 8px !important; }
     }
 
     .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }

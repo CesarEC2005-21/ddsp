@@ -494,6 +494,8 @@
 @media (max-width: 480px) {
     .nt-card-img { height: 180px; }
     .nt-modal-title { font-size: 1.4rem; }
+    .nt-filter-bar { flex-wrap: wrap; justify-content: center; border-radius: 20px; padding: 10px; }
+    .nt-filter-btn { padding: 8px 16px; font-size: 0.8rem; }
 }
 </style>
 @endpush

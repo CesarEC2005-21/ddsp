@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Sanchez Pharma | Droguería y Distribuidora</title>
     
     <!-- Favicon -->
@@ -16,6 +16,18 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ time() }}">
     
     <style>
+        /* Mobile Navbar Styles */
+        body { padding-top: env(safe-area-inset-top); }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
     .nav-dropdown { position: relative; }
     .nav-dropdown-toggle { display: flex; align-items: center; gap: 5px; }
     .nav-dropdown-toggle i { font-size: 0.7rem; transition: 0.3s; }
@@ -42,6 +54,8 @@
         color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;
     }
     @media (max-width: 968px) {
+        nav { padding-top: max(30px, env(safe-area-inset-top)) !important; }
+        .mobile-menu-btn { display: block; }
         .nav-dropdown-menu {
             position: static; transform: none; box-shadow: none; opacity: 1; visibility: visible;
             padding: 0; margin: 10px 0 0 20px; border: none; background: transparent; display: none;
@@ -131,6 +145,7 @@
                     <li><a href="{{ route('about') }}">Ejecutivos</a></li>
                     <li><a href="{{ route('products') }}">Laboratorios</a></li>
                     <li><a href="{{ route('contact') }}">Contacto</a></li>
+                    <li><a href="#" onclick="descargarApp(); return false;" style="font-weight:700; color:var(--primary-green);"><i class="fas fa-mobile-screen-button"></i> Descarga nuestra app</a></li>
                     <li><a href="{{ route('login') }}">Intranet</a></li>
                 </ul>
             </div>
@@ -233,6 +248,62 @@
         }
     </script>
     <script src="{{ asset('js/main.js') }}"></script>
+
+    <script>
+        // ══════════════════════════════════════════
+        //   DESCARGA DE LA APP MÓVIL
+        // ══════════════════════════════════════════
+        const APP_DOWNLOAD_URL  = '{{ asset('download/sanchez-pharma.apk') }}';
+        const APP_IOS_MESSAGE   = 'Nuestra app para iPhone estará disponible próximamente en la App Store. Mientras tanto, puedes usar nuestra página web desde tu navegador.';
+
+        function descargarApp() {
+            const ua = navigator.userAgent;
+
+            if (/Android/i.test(ua)) {
+                window.location.href = APP_DOWNLOAD_URL;
+                return;
+            }
+
+            if (/iPhone|iPad|iPod/i.test(ua)) {
+                if (window.Swal) {
+                    Swal.fire({
+                        title: 'iOS próximamente',
+                        html: APP_IOS_MESSAGE,
+                        icon: 'info',
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: 'var(--primary-green)',
+                    });
+                } else {
+                    alert(APP_IOS_MESSAGE);
+                }
+                return;
+            }
+
+            mostrarCodigoQR();
+        }
+
+        function mostrarCodigoQR() {
+            const url = APP_DOWNLOAD_URL;
+            const qr = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&qzone=2&data=' + encodeURIComponent(url);
+
+            if (window.Swal) {
+                Swal.fire({
+                    title: 'Escanea con tu celular',
+                    html:
+                        '<div style="text-align:center;">' +
+                            '<img src="' + qr + '" alt="QR de descarga" style="width:220px; height:220px; border-radius:16px; border:1px solid #e2e8f0; padding:8px; background:#fff;">' +
+                            '<p style="margin-top:16px; color:#64748b; font-size:.9rem; line-height:1.5;">Apunta la cámara de tu <b>Android</b> a este código para instalar nuestra app directamente.</p>' +
+                        '</div>',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Cerrar',
+                    confirmButtonColor: 'var(--primary-green)',
+                });
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+    </script>
+
     @stack('scripts')
 </body>
 </html>

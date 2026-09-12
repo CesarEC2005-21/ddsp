@@ -52,9 +52,29 @@
     }
     .btn-confirm:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(46, 125, 50, 0.35); background: #1B5E20; }
 
+    .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+    .cart-title { font-size: 1.8rem; font-weight: 900; color: #1e293b; }
+    .cart-title span { color: #94a3b8; font-size: 1.2rem; font-weight: 600; }
+    .btn-clear-cart { color: #ef4444; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+
     @media (max-width: 1100px) {
         .cart-container { grid-template-columns: 1fr; }
         .checkout-card { position: static; }
+    }
+    @media (max-width: 600px) {
+        .cart-item { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 15px 0; }
+        .item-img-box { width: 100%; max-width: 140px; height: 140px; }
+        .item-title { font-size: 1.05rem; }
+        .item-meta { font-size: 0.75rem; margin-bottom: 5px; }
+        .qty-row { flex-direction: column; align-items: center; gap: 5px; width: 100%; }
+        .qty-row > div { text-align: center !important; }
+        .cart-page { padding: 15px 5%; }
+        .cart-items-card { padding: 15px 10px; }
+        .cart-header { flex-direction: column; gap: 8px; text-align: center; margin-bottom: 15px; }
+        .cart-title { font-size: 1.5rem; line-height: 1.3; }
+        .cart-title span { font-size: 1rem; display: block; margin-top: 2px; }
+        .summary-total { flex-direction: column; align-items: center; gap: 0px; text-align: center; margin-top: 10px; padding-top: 10px; }
+        .total-val { font-size: 1.8rem; line-height: 1.2; }
     }
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
@@ -67,9 +87,9 @@
         @if(count($cart) > 0)
         <!-- Sección de Items -->
         <div class="cart-items-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-                <h2 style="font-size: 1.8rem; font-weight: 900; color: #1e293b;">Tu Carrito <span style="color: #94a3b8; font-size: 1.2rem; font-weight: 600;">({{ count($cart) }} items)</span></h2>
-                <a href="{{ route('cart.clear') }}" style="color: #ef4444; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+            <div class="cart-header">
+                <h2 class="cart-title">Tu Carrito <span>({{ count($cart) }} items)</span></h2>
+                <a href="{{ route('cart.clear') }}" class="btn-clear-cart">
                     <i class="fas fa-trash-alt"></i> Vaciar Carrito
                 </a>
             </div>
@@ -140,7 +160,6 @@
                     <div class="form-group">
                         <label class="form-label">Documento</label>
                         <select name="tipo_documento" id="tipo_doc" class="form-input" onchange="toggleDocLength()">
-                            <option value="DNI">DNI</option>
                             <option value="RUC">RUC</option>
                         </select>
                     </div>

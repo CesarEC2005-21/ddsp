@@ -25,12 +25,12 @@
     }
 
     .lab-card-top {
-        height: 200px;
+        height: 160px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 10px;
     }
 
     /* Patrón de puntos superior izquierdo para dar textura */
@@ -50,8 +50,8 @@
     .lab-logo-wrapper {
         position: relative;
         z-index: 1;
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -69,13 +69,13 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 100px;
+        height: 80px;
         background-size: cover;
         background-position: bottom;
     }
 
     .lab-card-bottom {
-        padding: 20px;
+        padding: 12px 20px 18px;
         text-align: center;
         background: #ffffff;
         z-index: 2;

@@ -259,7 +259,16 @@
   .lab-card { padding: 30px 22px 25px; border-radius: 22px; }
   .lab-logo-container { height: 130px; padding: 20px; margin-bottom: 20px; }
   .lab-info h4 { font-size: 1rem; }
-  .lab-action { opacity: 1; transform: translateY(0) scale(1); font-size: 0.75rem; padding: 10px 22px; }
+  .lab-action { 
+    opacity: 1; 
+    position: relative; 
+    top: auto; 
+    left: auto; 
+    transform: none; 
+    margin-top: 12px;
+    font-size: 0.75rem; 
+    padding: 10px 22px; 
+  }
   .labs-grid { gap: 22px; }
 }
 

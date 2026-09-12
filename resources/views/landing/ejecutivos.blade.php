@@ -565,8 +565,8 @@ const reps = @json($representatives->load('locations.zona'));
 document.addEventListener('DOMContentLoaded', () => {
     map = L.map('ej-map', { zoomControl: false }).setView([-9.19, -75.01], 6);
     L.control.zoom({ position: 'topright' }).addTo(map);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; Sanchez Pharma'
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     markersGroup = L.featureGroup().addTo(map);
     showAllMarkers();

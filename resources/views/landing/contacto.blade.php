@@ -169,7 +169,36 @@
         .contact-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-        .form-row { grid-template-columns: 1fr; }
+        .contact-section { padding: 30px 4%; }
+        .contact-grid { gap: 20px; }
+
+        /* Info cards */
+        .info-card { padding: 18px; gap: 14px; border-radius: 16px; }
+        .info-icon { width: 48px; height: 48px; min-width: 48px; border-radius: 12px; font-size: 1.2rem; }
+        .info-content h4 { font-size: 1rem; margin-bottom: 4px; }
+        .info-content p, .info-content a { font-size: 0.85rem; }
+
+        /* Form container */
+        .contact-form-container { padding: 24px 18px; border-radius: 18px; }
+        .contact-form-container h3 { font-size: 1.4rem; margin-bottom: 20px; }
+
+        /* Stack form rows to single column */
+        .form-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+        .form-group { margin-bottom: 14px; }
+        .form-label { font-size: 0.82rem; margin-bottom: 5px; }
+        .form-input, .form-select, .form-textarea { padding: 12px 14px; font-size: 0.9rem; border-radius: 10px; }
+        .form-textarea { min-height: 110px; }
+        .form-submit { padding: 15px; font-size: 1rem; border-radius: 10px; margin-top: 5px; }
+
+        /* Doc type row stays inline but smaller */
+        #tipo_doc { flex: 0 0 100px !important; }
+
+        /* Hero adjustments */
+        .ct-hero { min-height: 45vh; }
+        .ct-hero-title { font-size: 2.5rem !important; }
+        .ct-hero-sub { font-size: 0.9rem; margin-top: 12px; }
+        .ct-hero-badge { font-size: 0.7rem; padding: 6px 14px; margin-bottom: 16px; }
+        .ct-hero-scroll { bottom: 20px; }
     }
 </style>
 @endpush

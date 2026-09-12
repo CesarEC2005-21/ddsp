@@ -613,7 +613,7 @@
                     <div class="lab-logo-container">
                         <div class="wave-bg"></div>
                         @if($lab->logo)
-                            <img src="{{ asset('storage/'.$lab->logo) }}" alt="{{ $lab->descripcion }}">
+                            <img src="{{ asset('storage/'.$lab->logo) }}" alt="{{ $lab->descripcion }}" loading="lazy">
                         @else
                             <div class="lab-placeholder"><i class="fas fa-flask"></i></div>
                         @endif
@@ -650,7 +650,7 @@
                 <a href="{{ route('product.detail', $product->id) }}" class="prod-image-wrap" style="text-decoration:none; display:flex;">
                     <span class="prod-badge"><i class="fas fa-star"></i> DESTACADO</span>
                     @if($product->imagen)
-                        <img src="{{ asset('storage/'.$product->imagen) }}" alt="{{ $product->nombre }}">
+                        <img src="{{ asset('storage/'.$product->imagen) }}" alt="{{ $product->nombre }}" loading="lazy">
                     @else
                         <div class="prod-image-placeholder">
                             <i class="fas fa-pills"></i>
@@ -742,6 +742,45 @@
         </div>
         <div class="gallery-item" style="background-image:url('{{ ($banner && $banner->gallery_image_3) ? asset("storage/".$banner->gallery_image_3) : asset("img/transporte.png") }}'); background-size:cover; background-position:center;">
             <div class="gallery-overlay"><span>Cobertura Nacional</span></div>
+        </div>
+    </div>
+</section>
+
+{{-- ══════════════════════════════════════════
+     DESCARGA NUESTRA APP — CTA MÓVIL
+     ══════════════════════════════════════════ --}}
+<section class="app-download" style="position:relative; padding:110px 5%; overflow:hidden; background:linear-gradient(135deg,#0f172a 0%,#052e16 60%,#0f172a 100%);">
+    <div style="position:absolute; inset:0; background-image:radial-gradient(rgba(34,197,94,.1) 1px, transparent 1px); background-size:26px 26px; pointer-events:none;"></div>
+    <div style="position:absolute; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle,#22c55e,transparent); filter:blur(90px); opacity:.25; top:-160px; right:-120px;"></div>
+
+    <div style="position:relative; z-index:2; max-width:1000px; margin:0 auto; text-align:center;">
+        <div style="display:inline-flex; align-items:center; gap:8px; color:#4ade80; font-size:.75rem; font-weight:800; letter-spacing:3px; text-transform:uppercase; margin-bottom:18px;">
+            <span style="width:24px; height:2px; background:#22c55e; border-radius:2px; display:block;"></span>
+            Sanchez Pharma Móvil
+            <span style="width:24px; height:2px; background:#22c55e; border-radius:2px; display:block;"></span>
+        </div>
+        <h2 style="font-family:'Outfit',sans-serif; font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; color:white; line-height:1.1; margin-bottom:16px;">
+            Tu catálogo completo <span style="background:linear-gradient(135deg,#4ade80,#a3e635); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">en tu bolsillo</span>
+        </h2>
+        <p style="max-width:620px; margin:0 auto 40px; color:rgba(255,255,255,.72); font-size:1.05rem; line-height:1.7;">
+            Descarga nuestra app móvil y consulta precios, disponibilidad y laboratorios con la misma información de nuestra web, desde tu celular.
+        </p>
+
+        <div style="display:flex; gap:18px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" onclick="descargarApp()" style="display:inline-flex; align-items:center; gap:12px; background:var(--primary-green); color:white; border:none; padding:16px 34px; border-radius:50px; font-family:'Outfit',sans-serif; font-weight:800; font-size:1rem; cursor:pointer; box-shadow:0 15px 35px rgba(34,197,94,.35); transition:.3s;">
+                <i class="fas fa-mobile-screen-button" style="font-size:1.3rem;"></i>
+                Descarga nuestra app móvil
+            </button>
+            <button type="button" onclick="mostrarCodigoQR()" style="display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,.08); color:white; border:1px solid rgba(255,255,255,.25); padding:16px 34px; border-radius:50px; font-family:'Outfit',sans-serif; font-weight:700; font-size:1rem; cursor:pointer; backdrop-filter:blur(8px); transition:.3s;">
+                <i class="fas fa-qrcode" style="font-size:1.3rem;"></i>
+                Escanea con tu celular
+            </button>
+        </div>
+
+        <div style="display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:34px; color:rgba(255,255,255,.6); font-size:.85rem; font-weight:600;">
+            <span style="display:inline-flex; align-items:center; gap:7px;"><i class="fas fa-brands fa-android" style="color:#4ade80;"></i> Android (APK)</span>
+            <span style="display:inline-flex; align-items:center; gap:7px;"><i class="fas fa-brands fa-apple" style="color:#4ade80;"></i> iOS (próximamente)</span>
+            <span style="display:inline-flex; align-items:center; gap:7px;"><i class="fas fa-sync" style="color:#4ade80;"></i> Mismos datos, misma web</span>
         </div>
     </div>
 </section>

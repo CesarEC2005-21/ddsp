@@ -265,8 +265,7 @@
                 }
 
                 Swal.fire({
-                    title: '¡Producto Agregado!',
-                    text: `${qty}x ${productName} se añadió a tu solicitud.`,
+                    title: '¡Producto agregado correctamente!',
                     icon: 'success',
                     confirmButtonColor: '#2E7D32'
                 });
