@@ -664,8 +664,15 @@
                         <h4 class="prod-name">{{ $product->nombre }}</h4>
                     </a>
                     <span class="prod-code">#{{ $product->codigo }}</span>
-                    <div class="prod-footer">
-                        <span class="prod-price"><span class="currency">S/</span> {{ number_format($product->precio, 2) }}</span>
+                    <div class="prod-footer" style="align-items: flex-end;">
+                        @if($product->is_promotional && $product->promotional_price)
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-size: 0.9rem; color: #94a3b8; text-decoration: line-through;">S/ {{ number_format($product->precio, 2) }}</span>
+                                <span class="prod-price" style="color: #ef4444;"><span class="currency" style="color: #ef4444;">S/</span> {{ number_format($product->promotional_price, 2) }}</span>
+                            </div>
+                        @else
+                            <span class="prod-price"><span class="currency">S/</span> {{ number_format($product->precio, 2) }}</span>
+                        @endif
                         <a href="{{ route('product.detail', $product->id) }}" class="prod-btn">
                             Detalles <i class="fas fa-arrow-right"></i>
                         </a>

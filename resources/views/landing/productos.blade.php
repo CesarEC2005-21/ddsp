@@ -210,7 +210,12 @@
                         
                         <div style="margin-top: auto;">
                             <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">
-                                <span style="font-size: 1.8rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
+                                @if($product->is_promotional && $product->promotional_price)
+                                    <span style="font-size: 1.2rem; font-weight: 700; color: #94a3b8; text-decoration: line-through;" title="Precio Anterior">S/ {{ number_format($product->precio, 2) }}</span>
+                                    <span style="font-size: 1.8rem; font-weight: 900; color: #ef4444;" title="Precio Promoción">S/ {{ number_format($product->promotional_price, 2) }}</span>
+                                @else
+                                    <span style="font-size: 1.8rem; font-weight: 900; color: var(--primary-green);">S/ {{ number_format($product->precio, 2) }}</span>
+                                @endif
                             </div>
                             
                             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">

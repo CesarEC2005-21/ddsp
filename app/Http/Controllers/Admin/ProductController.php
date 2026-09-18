@@ -51,6 +51,8 @@ class ProductController extends Controller
             'contraindicaciones' => 'nullable|string',
             'registro_sanitario' => 'nullable|string',
             'is_featured' => 'nullable',
+            'is_promotional' => 'nullable',
+            'promotional_price' => 'nullable|numeric',
             'imagen' => 'nullable|image|max:2048'
         ], [
             'nombre.unique' => 'Este producto ya se encuentra registrado.',
@@ -74,6 +76,7 @@ class ProductController extends Controller
 
         $product = Product::create(array_merge($validated, [
             'is_featured' => $request->has('is_featured'),
+            'is_promotional' => $request->has('is_promotional'),
             'imagen' => $path,
             'estado' => true,
             'usuario_origen' => auth()->id(),
@@ -102,6 +105,8 @@ class ProductController extends Controller
             'contraindicaciones' => 'nullable|string',
             'registro_sanitario' => 'nullable|string',
             'is_featured' => 'nullable',
+            'is_promotional' => 'nullable',
+            'promotional_price' => 'nullable|numeric',
             'imagen' => 'nullable|image|max:2048'
         ], [
             'nombre.unique' => 'Este producto ya se encuentra registrado.'
@@ -130,6 +135,7 @@ class ProductController extends Controller
 
         $product->update(array_merge($validated, [
             'is_featured' => $request->has('is_featured'),
+            'is_promotional' => $request->has('is_promotional'),
             'usuario_actualizo' => auth()->id(),
         ]));
 

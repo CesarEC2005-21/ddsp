@@ -310,6 +310,26 @@
                                     <input type="checkbox" name="is_featured" value="1" style="width: 24px; height: 24px; accent-color: #16a34a;">
                                 </label>
                             </div>
+
+                            <div style="background: #eff6ff; padding: 25px; border-radius: 20px; border: 1px solid #bfdbfe; margin-top: 15px;">
+                                <label style="display: flex; align-items: center; gap: 20px; cursor: pointer; margin-bottom: 10px;">
+                                    <div style="width: 55px; height: 55px; background: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.6rem; box-shadow: var(--shadow-sm); border: 1px solid #bfdbfe;">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <span style="display: block; font-weight: 800; color: #1e3a8a; font-size: 1.05rem;">Precio Promoción</span>
+                                        <span style="display: block; font-size: 0.85rem; color: #1e3a8a; opacity: 0.8;">Habilitar un precio de descuento temporal.</span>
+                                    </div>
+                                    <input type="checkbox" name="is_promotional" id="new-is_promotional" value="1" style="width: 24px; height: 24px; accent-color: #3b82f6;" onchange="document.getElementById('new_promo_price_container').style.display = this.checked ? 'block' : 'none'">
+                                </label>
+                                <div id="new_promo_price_container" style="display: none; padding-left: 75px;">
+                                    <label class="form-label" style="font-weight: 700; color: #1e3a8a;">Nuevo Precio Promocional (S/)</label>
+                                    <div style="position: relative; max-width: 200px;">
+                                        <span style="position: absolute; left: 15px; top: 10px; color: #64748b; font-weight: 600;">S/</span>
+                                        <input type="number" step="0.01" name="promotional_price" id="new-promotional_price" class="form-control" style="padding-left: 35px;" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -440,6 +460,26 @@
                                     <input type="checkbox" name="is_featured" id="edit-is_featured" value="1" style="width: 24px; height: 24px; accent-color: #f59e0b;">
                                 </label>
                             </div>
+
+                            <div style="background: #eff6ff; padding: 25px; border-radius: 20px; border: 1px solid #bfdbfe; margin-top: 15px;">
+                                <label style="display: flex; align-items: center; gap: 20px; cursor: pointer; margin-bottom: 10px;">
+                                    <div style="width: 55px; height: 55px; background: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.6rem; box-shadow: var(--shadow-sm); border: 1px solid #bfdbfe;">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <span style="display: block; font-weight: 800; color: #1e3a8a; font-size: 1.05rem;">Precio Promoción</span>
+                                        <span style="display: block; font-size: 0.85rem; color: #1e3a8a; opacity: 0.8;">Habilitar un precio de descuento temporal.</span>
+                                    </div>
+                                    <input type="checkbox" name="is_promotional" id="edit-is_promotional" value="1" style="width: 24px; height: 24px; accent-color: #3b82f6;" onchange="document.getElementById('edit_promo_price_container').style.display = this.checked ? 'block' : 'none'">
+                                </label>
+                                <div id="edit_promo_price_container" style="display: none; padding-left: 75px;">
+                                    <label class="form-label" style="font-weight: 700; color: #1e3a8a;">Nuevo Precio Promocional (S/)</label>
+                                    <div style="position: relative; max-width: 200px;">
+                                        <span style="position: absolute; left: 15px; top: 10px; color: #64748b; font-weight: 600;">S/</span>
+                                        <input type="number" step="0.01" name="promotional_price" id="edit-promotional_price" class="form-control" style="padding-left: 35px;" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -561,7 +601,11 @@
         document.getElementById('edit-composicion').value = product.composicion || '';
         document.getElementById('edit-contraindicaciones').value = product.contraindicaciones || '';
         document.getElementById('edit-registro_sanitario').value = product.registro_sanitario || '';
+        document.getElementById('edit-registro_sanitario').value = product.registro_sanitario || '';
         document.getElementById('edit-is_featured').checked = !!product.is_featured;
+        document.getElementById('edit-is_promotional').checked = !!product.is_promotional;
+        document.getElementById('edit_promo_price_container').style.display = product.is_promotional ? 'block' : 'none';
+        document.getElementById('edit-promotional_price').value = product.promotional_price || '';
         openModal('editProductModal');
     }
 

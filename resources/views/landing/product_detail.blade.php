@@ -161,8 +161,13 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <span class="pres-label">Precio Sugerido:</span>
-                    <p class="price-tag">S/ {{ number_format($product->precio, 2) }}</p>
+                    <span class="pres-label">Precio:</span>
+                    @if($product->is_promotional && $product->promotional_price)
+                        <p class="price-tag" style="text-decoration: line-through; color: #94a3b8; font-size: 1.2rem; margin-bottom: 0;">S/ {{ number_format($product->precio, 2) }}</p>
+                        <p class="price-tag" style="color: #ef4444; font-size: 2.2rem; margin-top: 5px;">S/ {{ number_format($product->promotional_price, 2) }}</p>
+                    @else
+                        <p class="price-tag">S/ {{ number_format($product->precio, 2) }}</p>
+                    @endif
                 </div>
             </div>
 
@@ -194,7 +199,14 @@
                     </div>
                 @endif
                 <h3 class="related-name">{{ Str::limit($rel->nombre, 50) }}</h3>
-                <span class="related-price">S/ {{ number_format($rel->precio, 2) }}</span>
+                @if($rel->is_promotional && $rel->promotional_price)
+                    <div style="display: flex; flex-direction: column;">
+                        <span class="related-price" style="text-decoration: line-through; color: #94a3b8; font-size: 0.9rem;">S/ {{ number_format($rel->precio, 2) }}</span>
+                        <span class="related-price" style="color: #ef4444;">S/ {{ number_format($rel->promotional_price, 2) }}</span>
+                    </div>
+                @else
+                    <span class="related-price">S/ {{ number_format($rel->precio, 2) }}</span>
+                @endif
             </a>
             @endforeach
         </div>

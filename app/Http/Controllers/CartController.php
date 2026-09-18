@@ -39,7 +39,7 @@ class CartController extends Controller
             $cart[$id] = [
                 "name" => $product->nombre,
                 "quantity" => $quantity,
-                "price" => $product->precio,
+                "price" => $product->is_promotional && $product->promotional_price ? $product->promotional_price : $product->precio,
                 "image" => $product->imagen,
                 "code" => $product->codigo,
                 "lab" => $product->laboratory->descripcion ?? 'General'

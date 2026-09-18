@@ -16,6 +16,8 @@ class Product extends Model
         'imagen',
         'descripcion',
         'is_featured',
+        'is_promotional',
+        'promotional_price',
         'usos',
         'composicion',
         'contraindicaciones',
