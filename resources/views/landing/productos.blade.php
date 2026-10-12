@@ -91,6 +91,320 @@
 
 
     .swal2-styled.swal2-confirm { background-color: var(--primary-green) !important; }
+
+    /* ═══════════════════════════════════════════════════════
+       CATÁLOGO Y FILTROS STYLES
+       ═══════════════════════════════════════════════════════ */
+    .products-container {
+        display: flex;
+        gap: 40px;
+        padding: 60px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+        align-items: flex-start;
+    }
+
+    /* Filters Sidebar */
+    .filters-sidebar {
+        flex: 0 0 290px;
+        width: 290px;
+        background: #ffffff;
+        padding: 24px 20px;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        position: sticky;
+        top: 90px;
+        box-sizing: border-box;
+    }
+
+    .filters-sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .filters-sidebar-header h3 {
+        margin: 0;
+        color: var(--dark-green);
+        font-size: 1.15rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .active-filter-badge {
+        background: #f0fdf4;
+        color: var(--primary-green);
+        border: 1px solid #bbf7d0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 20px;
+    }
+
+    .filter-section {
+        margin-bottom: 22px;
+    }
+
+    .filter-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .filter-section-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .btn-toggle-all-labs {
+        background: none;
+        border: none;
+        color: var(--primary-green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+    .btn-toggle-all-labs:hover { color: var(--dark-green); }
+
+    .filter-search-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .filter-search-field {
+        width: 100%;
+        padding: 10px 36px 10px 14px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        outline: none;
+        transition: 0.2s;
+        background: #f8fafc;
+        box-sizing: border-box;
+    }
+
+    .filter-search-field:focus {
+        background: #ffffff;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    .btn-clear-search-field {
+        position: absolute;
+        right: 10px;
+        background: none;
+        border: none;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 0.85rem;
+        padding: 4px;
+    }
+    .btn-clear-search-field:hover { color: #ef4444; }
+
+    .filter-labs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 transparent;
+    }
+    .filter-labs-list::-webkit-scrollbar { width: 5px; }
+    .filter-labs-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .filter-lab-checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1.5px solid #f1f5f9;
+        background: #ffffff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+    .filter-lab-checkbox-item:hover { border-color: #cbd5e1; background: #f8fafc; }
+    .filter-lab-checkbox-item.is-selected { background: #f0fdf4; border-color: var(--primary-green); }
+
+    .lab-check-input { display: none; }
+
+    .custom-check-box {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 2px solid #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    .custom-check-box i { font-size: 0.65rem; color: white; display: none; }
+    .filter-lab-checkbox-item.is-selected .custom-check-box { background: var(--primary-green); border-color: var(--primary-green); }
+    .filter-lab-checkbox-item.is-selected .custom-check-box i { display: block; }
+
+    .lab-label-text {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #334155;
+        flex: 1;
+        line-height: 1.3;
+    }
+    .filter-lab-checkbox-item.is-selected .lab-label-text { color: var(--dark-green); font-weight: 700; }
+
+    .filter-actions-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1.5px solid #f1f5f9;
+    }
+
+    .btn-apply-filters {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.28);
+    }
+    .btn-apply-filters:hover {
+        background: var(--dark-green);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(16, 185, 129, 0.38);
+    }
+
+    .btn-clear-all-filters {
+        width: 100%;
+        background: #fff;
+        color: #ef4444;
+        border: 1.5px dashed #fca5a5;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+    .btn-clear-all-filters:hover {
+        background: #fef2f2;
+        border-color: #ef4444;
+        color: #dc2626;
+    }
+
+    .filter-toggle-btn {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 100%;
+        justify-content: center;
+        font-family: inherit;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2);
+    }
+    .filter-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(46, 125, 50, 0.3); }
+    .filter-toggle-btn.active i.fa-chevron-down { transform: rotate(180deg); }
+
+    /* Product Grid & Cards */
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }
+    .product-card:hover .product-img-wrapper img { transform: scale(1.1); }
+
+    .qty-selector { display: flex; align-items: center; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .qty-selector button { border: none; background: transparent; padding: 12px; cursor: pointer; color: #64748b; transition: 0.3s; }
+    .qty-selector button:hover { background: #e2e8f0; color: var(--primary-green); }
+    .qty-selector input { width: 40px; border: none; background: transparent; text-align: center; font-weight: 800; color: #1e293b; font-size: 1rem; }
+
+    .btn-add-cart { 
+        background: var(--primary-green); color: white; border: none; padding: 15px 25px; 
+        border-radius: 12px; font-weight: 800; flex: 1; display: flex; align-items: center; 
+        justify-content: center; gap: 10px; cursor: pointer; transition: 0.3s; 
+        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2); 
+    }
+    .btn-add-cart:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3); }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Custom Pagination */
+    .pagination { display: flex; padding-left: 0; list-style: none; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+    .page-item .page-link { 
+        position: relative; display: block; padding: 10px 18px; color: #475569; background-color: #fff; 
+        border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    }
+    .page-item.active .page-link { 
+        z-index: 3; color: #fff; background-color: var(--primary-green); border-color: var(--primary-green); 
+        box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.3);
+    }
+    .page-item.disabled .page-link { color: #94a3b8; pointer-events: none; background-color: #f8fafc; border-color: #e2e8f0; }
+    .page-item .page-link:hover { background-color: #f1f5f9; color: var(--primary-green); transform: translateY(-2px); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .product-grid { grid-template-columns: 1fr; }
+        .products-container { flex-direction: column !important; padding: 30px 4% !important; }
+        .filters-sidebar { width: 100% !important; flex: auto !important; position: static !important; display: none; }
+        .filters-sidebar.open { display: block; }
+        .filter-toggle-btn { display: flex !important; }
+    }
+    @media (max-width: 480px) {
+        #floating-cart { width: 55px !important; height: 55px !important; bottom: 20px !important; right: 20px !important; }
+        #floating-cart i { font-size: 1.2rem !important; }
+        .product-img-wrapper { height: 160px !important; padding: 15px !important; }
+        .product-card h3 { font-size: 1rem !important; min-height: 2.5rem !important; margin-bottom: 10px !important; }
+        .product-card .btn-add-cart { padding: 10px 15px !important; font-size: 0.9rem !important; }
+        .qty-selector input { font-size: 0.9rem !important; width: 30px !important; }
+        .qty-selector button { padding: 8px !important; }
+    }
 </style>
 @endpush
 
@@ -116,10 +430,6 @@
         </p>
     </div>
 
-    <div class="pd-hero-scroll">
-        <div class="pd-scroll-line"></div>
-        Explorar catálogo
-    </div>
 </section>
 
     <section class="products-container" style="display: flex; gap: 40px; padding: 60px 5%; max-width: 1400px; margin: 0 auto; align-items: flex-start;">
@@ -129,40 +439,82 @@
             <i class="fas fa-filter"></i> Filtros <i class="fas fa-chevron-down"></i>
         </button>
 
+        @php
+            $selectedLabs = [];
+            if (request()->has('labs') && is_array(request('labs'))) {
+                $selectedLabs = array_map('intval', request('labs'));
+            } elseif (request()->filled('lab')) {
+                $selectedLabs = [(int) request('lab')];
+            }
+            $hasActiveFilters = !empty($selectedLabs) || request()->filled('search');
+        @endphp
+
         <!-- Sidebar Filtros -->
-        <aside class="filters-sidebar" style="flex: 0 0 280px; background: white; padding: 25px; border-radius: 15px; box-shadow: var(--shadow-md); border: 1px solid #eee; position: sticky; top: 100px;">
-            <h3 style="margin-bottom: 20px; color: var(--dark-green); font-size: 1.2rem; border-bottom: 2px solid #eee; padding-bottom: 10px;"><i class="fas fa-filter"></i> Filtros</h3>
+        <aside class="filters-sidebar">
+            <div class="filters-sidebar-header">
+                <h3><i class="fas fa-sliders"></i> Filtros</h3>
+                @if($hasActiveFilters)
+                    <span class="active-filter-badge">{{ count($selectedLabs) + (request()->filled('search') ? 1 : 0) }} activo(s)</span>
+                @endif
+            </div>
             
-            <form action="{{ route('products') }}" method="GET">
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 500; color: #555;">Buscar:</label>
-                    <div style="display: flex;">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Producto o código..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px 0 0 8px; outline: none;">
-                        @if(request('lab'))
-                        <input type="hidden" name="lab" value="{{ request('lab') }}">
+            <form action="{{ route('products') }}" method="GET" id="catalogFiltersForm">
+                <!-- Buscar en productos -->
+                <div class="filter-section">
+                    <label class="filter-section-label">
+                        <i class="fas fa-search"></i> Buscar:
+                    </label>
+                    <div class="filter-search-input-wrap">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Producto o código..." class="filter-search-field">
+                        @if(request('search'))
+                            <button type="button" class="btn-clear-search-field" onclick="document.querySelector('.filter-search-field').value=''; document.getElementById('catalogFiltersForm').submit();" title="Borrar búsqueda">
+                                <i class="fas fa-times"></i>
+                            </button>
                         @endif
-                        <button type="submit" style="background: var(--primary-green); color: white; border: none; padding: 0 15px; border-radius: 0 8px 8px 0; cursor: pointer;"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
-            </form>
-                
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #475569;">Laboratorio:</label>
-                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;">
-                    <a href="{{ route('products', ['search' => request('search')]) }}" style="display: block; padding: 10px 15px; border-radius: 10px; border: 2px solid {{ !request('lab') ? 'var(--primary-green)' : '#e2e8f0' }}; background: {{ !request('lab') ? '#f0fdf4' : 'white' }}; color: {{ !request('lab') ? 'var(--dark-green)' : '#475569' }}; text-decoration: none; font-weight: 600; transition: 0.2s;">
-                        Todos los Laboratorios
-                    </a>
-                    @foreach($laboratories as $lab)
-                    <a href="{{ route('products', ['lab' => $lab->id, 'search' => request('search')]) }}" style="display: block; padding: 10px 15px; border-radius: 10px; border: 2px solid {{ request('lab') == $lab->id ? 'var(--primary-green)' : '#e2e8f0' }}; background: {{ request('lab') == $lab->id ? '#f0fdf4' : 'white' }}; color: {{ request('lab') == $lab->id ? 'var(--dark-green)' : '#475569' }}; text-decoration: none; font-weight: 600; transition: 0.2s;">
-                        {{ $lab->descripcion }}
-                    </a>
-                    @endforeach
-                </div>
-            </div>
 
-            @if(request('search') || request('lab'))
-                <a href="{{ route('products') }}" style="display: block; text-align: center; color: #ef4444; text-decoration: none; font-size: 0.9rem; margin-top: 20px; padding: 10px; border: 1px dashed #ef4444; border-radius: 8px;">Limpiar Filtros</a>
-            @endif
+                <!-- Selección múltiple de laboratorios -->
+                <div class="filter-section">
+                    <div class="filter-section-header">
+                        <label class="filter-section-label">
+                            <i class="fas fa-flask"></i> Laboratorios:
+                        </label>
+                        <button type="button" class="btn-toggle-all-labs" id="toggleAllLabsBtn" onclick="toggleAllLabs()">
+                            {{ count($selectedLabs) > 0 ? 'Deseleccionar' : 'Todos' }}
+                        </button>
+                    </div>
+
+                    <div class="filter-labs-list">
+                        @foreach($laboratories as $lab)
+                        <label class="filter-lab-checkbox-item {{ in_array($lab->id, $selectedLabs) ? 'is-selected' : '' }}" for="lab_{{ $lab->id }}">
+                            <input type="checkbox" name="labs[]" value="{{ $lab->id }}" id="lab_{{ $lab->id }}" class="lab-check-input" {{ in_array($lab->id, $selectedLabs) ? 'checked' : '' }} onchange="this.closest('.filter-lab-checkbox-item').classList.toggle('is-selected', this.checked); updateToggleAllBtn();">
+                            <span class="custom-check-box">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <span class="lab-label-text">{{ $lab->descripcion }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="filter-actions-wrap">
+                    <button type="submit" class="btn-apply-filters">
+                        <i class="fas fa-check-circle"></i> APLICAR FILTROS
+                    </button>
+
+                    @if($hasActiveFilters)
+                        <a href="{{ route('products') }}" class="btn-clear-all-filters">
+                            <i class="fas fa-rotate-left"></i> Limpiar Filtros
+                        </a>
+                    @else
+                        <button type="button" class="btn-clear-all-filters" onclick="clearSelectedLabs()">
+                            <i class="fas fa-eraser"></i> Limpiar Selección
+                        </button>
+                    @endif
+                </div>
+            </form>
         </aside>
 
         <!-- Product Grid -->
@@ -365,79 +717,39 @@
         });
     }
 
+    // Filter functions
+    function toggleAllLabs() {
+        const checkboxes = document.querySelectorAll('.lab-check-input');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        checkboxes.forEach(cb => {
+            cb.checked = !anyChecked;
+            cb.closest('.filter-lab-checkbox-item').classList.toggle('is-selected', !anyChecked);
+        });
+        updateToggleAllBtn();
+    }
+
+    function updateToggleAllBtn() {
+        const checkboxes = document.querySelectorAll('.lab-check-input');
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        const btn = document.getElementById('toggleAllLabsBtn');
+        if (btn) {
+            btn.textContent = anyChecked ? 'Deseleccionar' : 'Todos';
+        }
+    }
+
+    function clearSelectedLabs() {
+        const checkboxes = document.querySelectorAll('.lab-check-input');
+        checkboxes.forEach(cb => {
+            cb.checked = false;
+            cb.closest('.filter-lab-checkbox-item').classList.remove('is-selected');
+        });
+        const searchField = document.querySelector('.filter-search-field');
+        if (searchField) searchField.value = '';
+        updateToggleAllBtn();
+    }
+
     function showMiniCartNotification(name, qty) {
         // Obsoleto - Usando SweetAlert2
     }
 </script>
-<style>
-    .filter-toggle-btn {
-        display: none; align-items: center; gap: 8px; background: var(--primary-green); color: white; border: none;
-        padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s;
-        width: 100%; justify-content: center; font-family: inherit; font-size: 0.95rem;
-        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2);
-    }
-    .filter-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(46, 125, 50, 0.3); }
-    .filter-toggle-btn.active i.fa-chevron-down { transform: rotate(180deg); }
-
-    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
-
-    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-    @media (max-width: 1024px) {
-        .product-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 768px) {
-        .product-grid { grid-template-columns: 1fr; }
-        .products-container { flex-direction: column !important; }
-        .filters-sidebar { width: 100% !important; flex: auto !important; position: static !important; display: none; }
-        .filters-sidebar.open { display: block; }
-        .filter-toggle-btn { display: flex !important; }
-        .hero-catalog { padding: 50px 5% !important; }
-        .hero-catalog h1 { font-size: 2rem !important; }
-    }
-    @media (max-width: 480px) {
-        .hero-catalog { padding: 40px 5% !important; border-radius: 0 0 30px 30px !important; }
-        .hero-catalog h1 { font-size: 1.6rem !important; }
-        .hero-catalog p { font-size: 0.95rem !important; }
-        #floating-cart { width: 55px !important; height: 55px !important; bottom: 20px !important; right: 20px !important; }
-        #floating-cart i { font-size: 1.2rem !important; }
-        .product-img-wrapper { height: 160px !important; padding: 15px !important; }
-        .product-card h3 { font-size: 1rem !important; min-height: 2.5rem !important; margin-bottom: 10px !important; }
-        .product-card .btn-add-cart { padding: 10px 15px !important; font-size: 0.9rem !important; }
-        .qty-selector input { font-size: 0.9rem !important; width: 30px !important; }
-        .qty-selector button { padding: 8px !important; }
-    }
-
-    .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary-green); }
-    .product-card:hover .product-img-wrapper img { transform: scale(1.1); }
-
-    .qty-selector { display: flex; align-items: center; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
-    .qty-selector button { border: none; background: transparent; padding: 12px; cursor: pointer; color: #64748b; transition: 0.3s; }
-    .qty-selector button:hover { background: #e2e8f0; color: var(--primary-green); }
-    .qty-selector input { width: 40px; border: none; background: transparent; text-align: center; font-weight: 800; color: #1e293b; font-size: 1rem; }
-
-    .btn-add-cart { 
-        background: var(--primary-green); color: white; border: none; padding: 15px 25px; 
-        border-radius: 12px; font-weight: 800; flex: 1; display: flex; align-items: center; 
-        justify-content: center; gap: 10px; cursor: pointer; transition: 0.3s; 
-        box-shadow: 0 10px 20px rgba(46, 125, 50, 0.2); 
-    }
-    .btn-add-cart:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3); }
-
-    .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* Custom Pagination Styles */
-    .pagination { display: flex; padding-left: 0; list-style: none; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
-    .page-item .page-link { 
-        position: relative; display: block; padding: 10px 18px; color: #475569; background-color: #fff; 
-        border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    }
-    .page-item.active .page-link { 
-        z-index: 3; color: #fff; background-color: var(--primary-green); border-color: var(--primary-green); 
-        box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.3);
-    }
-    .page-item.disabled .page-link { color: #94a3b8; pointer-events: none; background-color: #f8fafc; border-color: #e2e8f0; }
-    .page-item .page-link:hover { background-color: #f1f5f9; color: var(--primary-green); transform: translateY(-2px); }
-</style>
 @endpush

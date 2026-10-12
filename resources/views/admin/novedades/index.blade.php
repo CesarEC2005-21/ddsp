@@ -81,8 +81,22 @@
                         </td>
                         <td style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-user-edit"></i> {{ $novedad->user->name ?? 'Sistema' }}</td>
                         <td>
-                            <button onclick='openEditModal(@json($novedad))' class="btn" style="background: #f3f4f6; color: #333; padding: 6px 10px;" title="Editar"><i class="fas fa-edit"></i></button>
-                            <button onclick="confirmDelete({{ $novedad->id }}, '{{ $novedad->codigo }}', 'Novedad', '{{ route('admin.novedades.destroy', $novedad->id) }}')" class="btn" style="background: #fee2e2; color: #ef4444; padding: 6px 10px;" title="Eliminar"><i class="fas fa-trash"></i></button>
+                            <button
+                                class="btn btn-edit-novedad"
+                                style="background: #f3f4f6; color: #333; padding: 6px 10px;"
+                                title="Editar"
+                                data-novedad='@json($novedad)'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button
+                                class="btn btn-delete-novedad"
+                                style="background: #fee2e2; color: #ef4444; padding: 6px 10px;"
+                                title="Eliminar"
+                                data-id="{{ $novedad->id }}"
+                                data-codigo="{{ $novedad->codigo }}"
+                                data-url="{{ route('admin.novedades.destroy', $novedad->id) }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                     @empty
@@ -381,25 +395,41 @@
 <script>
     let currentPickerTarget = 'new'; // 'new' or 'edit'
 
+    // === Delegación de eventos (evita problemas con caracteres especiales en onclick) ===
+    document.addEventListener('click', function(e) {
+        // Botón Editar
+        const editBtn = e.target.closest('.btn-edit-novedad');
+        if (editBtn) {
+            const novedad = JSON.parse(editBtn.getAttribute('data-novedad'));
+            openEditModal(novedad);
+            return;
+        }
+
+        // Botón Eliminar
+        const deleteBtn = e.target.closest('.btn-delete-novedad');
+        if (deleteBtn) {
+            const id     = deleteBtn.getAttribute('data-id');
+            const codigo = deleteBtn.getAttribute('data-codigo');
+            const url    = deleteBtn.getAttribute('data-url');
+            confirmDelete(id, codigo, 'Novedad', url);
+            return;
+        }
+    });
+
     function openProductPicker(target) {
         currentPickerTarget = target;
         document.getElementById('productSearchInput').value = '';
-        filterProductsInPicker(); // Reset filter
+        filterProductsInPicker();
         openModal('productSearchModal');
     }
 
     function filterProductsInPicker() {
         const input = document.getElementById('productSearchInput').value.toLowerCase();
         const rows = document.querySelectorAll('.product-picker-row');
-        
         rows.forEach(row => {
             const code = row.getAttribute('data-code').toLowerCase();
             const name = row.getAttribute('data-name').toLowerCase();
-            if (code.includes(input) || name.includes(input)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+            row.style.display = (code.includes(input) || name.includes(input)) ? '' : 'none';
         });
     }
 
@@ -424,19 +454,18 @@
         }
     }
 
-    function openEditModal(noticia) {
+    function openEditModal(novedad) {
         const form = document.getElementById('editNovedadForm');
-        form.action = `/admin/novedades/${novedad.id}`;
-        
+        form.action = `{{ url('admin/novedades') }}/${novedad.id}`;
+
         document.getElementById('edit-tipo').value = novedad.tipo;
         document.getElementById('edit-laboratory_id').value = novedad.laboratory_id || '';
         document.getElementById('edit-descripcion').value = novedad.descripcion;
         document.getElementById('edit-detalle').value = novedad.detalle || '';
-        document.getElementById('edit-fecha-inicial').value = novedad.fecha_inicial;
-        document.getElementById('edit-fecha-final').value = novedad.fecha_final;
+        document.getElementById('edit-fecha-inicial').value = novedad.fecha_inicial ? novedad.fecha_inicial.substring(0, 10) : '';
+        document.getElementById('edit-fecha-final').value = novedad.fecha_final ? novedad.fecha_final.substring(0, 10) : '';
         document.getElementById('edit-estado').checked = !!novedad.estado;
 
-        // Set linked product if exists
         if (novedad.product_id && novedad.product) {
             document.getElementById('edit-product_id').value = novedad.product_id;
             document.getElementById('edit-product-display').value = `${novedad.product.codigo} - ${novedad.product.nombre}`;
@@ -444,7 +473,7 @@
             document.getElementById('edit-product_id').value = '';
             document.getElementById('edit-product-display').value = '';
         }
-        
+
         openModal('editNovedadModal');
     }
 

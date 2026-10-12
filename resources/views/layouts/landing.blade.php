@@ -18,6 +18,161 @@
     <style>
         /* Mobile Navbar Styles */
         body { padding-top: env(safe-area-inset-top); }
+        
+        .header-search-container {
+            position: relative;
+            flex: 0 1 320px;
+            margin: 0 15px;
+        }
+        .header-search-form {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border-radius: 50px;
+            padding: 4px 6px 4px 18px;
+            border: 1.5px solid #e2e8f0;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header-search-form:hover {
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+        }
+        .header-search-form:focus-within {
+            background: #ffffff;
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.18);
+        }
+        .header-search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            font-size: 0.88rem;
+            color: #1e293b;
+            font-family: inherit;
+        }
+        .header-search-input::placeholder {
+            color: #94a3b8;
+        }
+        .header-search-btn {
+            border: none;
+            background: var(--primary-green);
+            color: white;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .header-search-btn:hover {
+            background: var(--dark-green);
+            transform: scale(1.05);
+        }
+        .search-autocomplete-box {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 100%;
+            min-width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            border: 1px solid #e2e8f0;
+            z-index: 9999;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .nav-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-shrink: 0;
+        }
+        .cart-icon {
+            color: var(--primary-green);
+            font-size: 1.4rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .cart-icon:hover { transform: scale(1.08); }
+        #nav-cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        .nav-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            z-index: 10001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .nav-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-drawer-header {
+            display: none;
+            width: 100%;
+            padding: 0 0 12px 0;
+            margin-bottom: 12px !important;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .drawer-close-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            line-height: 1;
+        }
+        .drawer-close-btn:hover,
+        .drawer-close-btn:active {
+            background: #f0fdf4;
+            color: var(--primary-green);
+            border-color: #86efac;
+            transform: scale(1.05);
+        }
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -25,42 +180,74 @@
             font-size: 1.5rem;
             color: var(--text-main);
             cursor: pointer;
-            padding: 0.5rem;
+            padding: 0.4rem;
+            line-height: 1;
+            z-index: 1005 !important;
+            position: relative;
         }
 
-    .nav-dropdown { position: relative; }
-    .nav-dropdown-toggle { display: flex; align-items: center; gap: 5px; }
-    .nav-dropdown-toggle i { font-size: 0.7rem; transition: 0.3s; }
-    .nav-dropdown:hover .nav-dropdown-toggle i { transform: rotate(180deg); }
-    .nav-dropdown-menu {
-        position: absolute; top: 100%; left: 50%; transform: translateX(-50%); min-width: 220px; max-height: 350px; overflow-y: auto;
-        background: white; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-        padding: 12px 0; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1000;
-        border: 1px solid #f1f5f9; margin-top: 15px;
-    }
-    .nav-dropdown-menu::-webkit-scrollbar { width: 6px; }
-    .nav-dropdown-menu::-webkit-scrollbar-track { background: transparent; border-radius: 10px; margin: 10px 0; }
-    .nav-dropdown-menu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .nav-dropdown-menu::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; margin-top: 5px; }
-    .nav-dropdown-menu a {
-        display: block; padding: 10px 20px; margin: 0; border: none; color: #1e293b; text-decoration: none; font-size: 0.9rem;
-        transition: 0.2s; border-radius: 0;
-    }
-    .nav-dropdown-menu a:hover { background: #f0fdf4; color: var(--primary-green); }
-    .nav-dropdown-divider { height: 1px; background: #e2e8f0; margin: 8px 0; }
-    .nav-dropdown-label {
-        display: block; padding: 8px 20px 5px; font-size: 0.75rem; font-weight: 700;
-        color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;
-    }
-    @media (max-width: 968px) {
-        nav { padding-top: max(30px, env(safe-area-inset-top)) !important; }
-        .mobile-menu-btn { display: block; }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-toggle { display: flex; align-items: center; gap: 5px; }
+        .nav-dropdown-toggle i { font-size: 0.7rem; transition: 0.3s; }
+        .nav-dropdown:hover .nav-dropdown-toggle i { transform: rotate(180deg); }
         .nav-dropdown-menu {
-            position: static; transform: none; box-shadow: none; opacity: 1; visibility: visible;
-            padding: 0; margin: 10px 0 0 20px; border: none; background: transparent; display: none;
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%); min-width: 220px; max-height: 350px; overflow-y: auto;
+            background: white; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            padding: 12px 0; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 1000;
+            border: 1px solid #f1f5f9; margin-top: 15px;
         }
-    }
+        .nav-dropdown-menu::-webkit-scrollbar { width: 6px; }
+        .nav-dropdown-menu::-webkit-scrollbar-track { background: transparent; border-radius: 10px; margin: 10px 0; }
+        .nav-dropdown-menu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .nav-dropdown-menu::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; margin-top: 5px; }
+        .nav-dropdown-menu a {
+            display: block; padding: 10px 20px; margin: 0; border: none; color: #1e293b; text-decoration: none; font-size: 0.9rem;
+            transition: 0.2s; border-radius: 0;
+        }
+        .nav-dropdown-menu a:hover { background: #f0fdf4; color: var(--primary-green); }
+        .nav-dropdown-divider { height: 1px; background: #e2e8f0; margin: 8px 0; }
+        .nav-dropdown-label {
+            display: block; padding: 8px 20px 5px; font-size: 0.75rem; font-weight: 700;
+            color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1100px) {
+            nav { padding-top: max(10px, env(safe-area-inset-top)); }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+            .mobile-drawer-header { display: flex; }
+            .header-search-container { flex: 1; max-width: 450px; }
+            .nav-dropdown-menu {
+                position: static; transform: none; box-shadow: none; opacity: 1; visibility: visible;
+                padding: 0; margin: 10px 0 0 20px; border: none; background: transparent; display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container { padding: 10px 4% !important; }
+            .logo-text { display: none !important; }
+            .logo-img { height: 44px !important; }
+            .header-search-container { flex: 1; min-width: 0; margin: 0 10px !important; }
+            .header-search-form { padding: 3px 5px 3px 14px; }
+            .header-search-input { font-size: 0.85rem; }
+            .search-autocomplete-box { width: 100% !important; min-width: 0 !important; left: 0 !important; transform: none !important; }
+            .nav-right-actions { gap: 14px; }
+            .cart-icon { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container { padding: 8px 3% !important; gap: 8px !important; }
+            .logo-img { height: 38px !important; }
+            .header-search-container { margin: 0 6px !important; }
+            .header-search-form { padding: 2px 4px 2px 10px; border-width: 1px; }
+            .header-search-input { font-size: 0.8rem; }
+            .header-search-btn { width: 28px; height: 28px; font-size: 0.75rem; }
+            .search-autocomplete-box { width: 100% !important; min-width: 0 !important; left: 0 !important; transform: none !important; }
+            .nav-right-actions { gap: 10px; }
+            .cart-icon { font-size: 1.2rem; }
+            .mobile-menu-btn { font-size: 1.25rem; padding: 2px; }
+        }
     </style>
     
     <!-- Dynamic page styles -->
@@ -70,6 +257,9 @@
 
     <!-- Navigation -->
     <nav>
+        <!-- Mobile Drawer Backdrop -->
+        <div class="nav-backdrop" id="navBackdrop"></div>
+
         <div class="nav-container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="{{ route('home') }}" class="logo-container">
                 <img src="{{ asset('img/logo.png') }}" alt="Sanchez Pharma Logo" class="logo-img">
@@ -78,14 +268,21 @@
                 </div>
             </a>
             
+            <!-- Buscador en el encabezado (al lado del logo, profesional y visible) -->
+            <div class="header-search-container">
+                <form action="{{ route('products') }}" method="GET" class="header-search-form">
+                    <input type="text" id="nav-search-input" name="search" autocomplete="off" value="{{ request('search') }}" placeholder="Buscar en catálogo..." class="header-search-input">
+                    <button type="submit" class="header-search-btn" aria-label="Buscar"><i class="fas fa-search"></i></button>
+                </form>
+                <div id="search-autocomplete-results" class="search-autocomplete-box"></div>
+            </div>
+
             <ul class="nav-links" id="navLinks" style="display: flex; align-items: center;">
-                <li style="position: relative; width: 100%;" class="nav-search-container">
-                    <form action="{{ route('products') }}" method="GET" style="display: flex; align-items: center; background: #f8fafc; border-radius: 50px; padding: 4px 6px 4px 20px; border: 1px solid #e2e8f0; transition: 0.3s;" onmouseover="this.style.borderColor='var(--primary-green)'; this.style.boxShadow='0 4px 10px rgba(16, 185, 129, 0.1)';" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-                        <input type="text" id="nav-search-input" name="search" autocomplete="off" value="{{ request('search') }}" placeholder="Buscar en catálogo..." style="border: none; background: transparent; outline: none; flex: 1; min-width: 150px; font-size: 0.9rem; color: #1e293b;" onfocus="this.parentElement.style.background='white'; this.parentElement.style.borderColor='var(--primary-green)';" onblur="this.parentElement.style.background='#f8fafc';">
-                        <button type="submit" style="border: none; background: var(--primary-green); color: white; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: 0.3s;" onmouseover="this.style.background='var(--dark-green)'" onmouseout="this.style.background='var(--primary-green)'"><i class="fas fa-search"></i></button>
-                    </form>
-                    <div id="search-autocomplete-results" style="display: none; position: absolute; top: 110%; left: 0; width: 300px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 9999; overflow: hidden; flex-direction: column;">
-                    </div>
+                <!-- Drawer Header with Only Close Button for Mobile -->
+                <li class="mobile-drawer-header">
+                    <button type="button" class="drawer-close-btn" id="drawerCloseBtn" aria-label="Cerrar menú">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </li>
                 <li><a href="{{ route('home') }}">Inicio</a></li>
                 <li><a href="{{ route('nosotros') }}">Nosotros</a></li>
@@ -105,21 +302,21 @@
                 <li><a href="{{ route('contact') }}" class="nav-cta">Contacto</a></li>
             </ul>
 
-            <div style="display: flex; align-items: center; gap: 20px; margin-left: 25px;">
-                <a href="{{ route('cart.index') }}" class="cart-icon" style="color: var(--primary-green); font-size: 1.4rem; position: relative;">
+            <div class="nav-right-actions">
+                <a href="{{ route('cart.index') }}" class="cart-icon" title="Ver carrito">
                     <i class="fas fa-shopping-basket"></i>
                     @if(count(session('cart', [])) > 0)
-                        <span id="nav-cart-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">
-                                {{ count(session('cart', [])) }}
+                        <span id="nav-cart-badge">
+                            {{ count(session('cart', [])) }}
                         </span>
                     @else
-                        <span id="nav-cart-badge" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.7rem; display: none; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">
+                        <span id="nav-cart-badge" style="display: none;">
                             0
                         </span>
                     @endif
                 </a>
 
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -172,16 +369,86 @@
     </footer>
 
     <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('navLinks').classList.toggle('active');
-            this.querySelector('i').classList.toggle('fa-bars');
-            this.querySelector('i').classList.toggle('fa-times');
+        const mobileMenuBtn  = document.getElementById('mobileMenuBtn');
+        const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+        const navLinks       = document.getElementById('navLinks');
+        const navBackdrop    = document.getElementById('navBackdrop');
+
+        function openDrawer() {
+            if (!navLinks) return;
+            navLinks.classList.add('active');
+            if (navBackdrop) navBackdrop.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (mobileMenuBtn) {
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            }
+        }
+
+        function closeDrawer() {
+            if (!navLinks) return;
+            navLinks.classList.remove('active');
+            if (navBackdrop) navBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
+            if (mobileMenuBtn) {
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (navLinks.classList.contains('active')) {
+                    closeDrawer();
+                } else {
+                    openDrawer();
+                }
+            });
+        }
+
+        if (drawerCloseBtn) {
+            drawerCloseBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeDrawer();
+            });
+        }
+
+        if (navBackdrop) {
+            navBackdrop.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeDrawer();
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (navLinks && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && mobileMenuBtn && !mobileMenuBtn.contains(e.target)) {
+                    closeDrawer();
+                }
+            }
         });
+
+        if (navLinks) {
+            navLinks.querySelectorAll('a:not(.nav-dropdown-toggle)').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 1100) {
+                        closeDrawer();
+                    }
+                });
+            });
+        }
         
         // Mobile dropdown toggle
         document.querySelectorAll('.nav-dropdown-toggle').forEach(toggle => {
             toggle.addEventListener('click', function(e) {
-                if (window.innerWidth <= 968) {
+                if (window.innerWidth <= 1100) {
                     e.preventDefault();
                     this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';
                 }
@@ -200,6 +467,7 @@
                 
                 if (query.length < 2) {
                     searchResults.style.display = 'none';
+                    searchResults.innerHTML = '';
                     return;
                 }
 
@@ -212,10 +480,10 @@
                                 data.forEach(product => {
                                     const imgUrl = product.imagen_url ? product.imagen_url : 'https://placehold.co/40x40/f1f5f9/94a3b8?text=SP';
                                     const itemHtml = `
-                                        <a href="/producto/${product.id}" style="display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f1f5f9; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
-                                            <img src="${imgUrl}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px; margin-right: 12px; border: 1px solid #e2e8f0; background: white;">
-                                            <div>
-                                                <div style="color: #1e293b; font-size: 0.85rem; font-weight: 600; line-height: 1.2; margin-bottom: 3px;">${product.nombre}</div>
+                                        <a href="/producto/${product.id}" style="display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
+                                            <img src="${imgUrl}" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; margin-right: 10px; border: 1px solid #e2e8f0; background: white;">
+                                            <div style="flex: 1; min-width: 0;">
+                                                <div style="color: #1e293b; font-size: 0.85rem; font-weight: 600; line-height: 1.2; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${product.nombre}</div>
                                                 <div style="color: var(--primary-green); font-size: 0.8rem; font-weight: 700;">S/ ${parseFloat(product.precio).toFixed(2)}</div>
                                             </div>
                                         </a>
@@ -223,13 +491,21 @@
                                     searchResults.insertAdjacentHTML('beforeend', itemHtml);
                                 });
                                 searchResults.insertAdjacentHTML('beforeend', `
-                                    <a href="{{ route('products') }}?search=${encodeURIComponent(query)}" style="display: block; text-align: center; padding: 10px; background: #f8fafc; color: var(--primary-green); font-size: 0.8rem; font-weight: 700; text-decoration: none;">Ver todos los resultados</a>
+                                    <a href="{{ route('products') }}?search=${encodeURIComponent(query)}" style="display: block; text-align: center; padding: 10px; background: #f8fafc; color: var(--primary-green); font-size: 0.82rem; font-weight: 700; text-decoration: none; border-top: 1px solid #f1f5f9;">Ver todos los resultados</a>
                                 `);
                                 searchResults.style.display = 'flex';
                             } else {
-                                searchResults.innerHTML = '<div style="padding: 15px; text-align: center; color: #94a3b8; font-size: 0.85rem;">No se encontraron productos.</div>';
+                                searchResults.innerHTML = `
+                                    <div style="padding: 16px 14px; text-align: center; color: #64748b; font-size: 0.85rem;">
+                                        <i class="fas fa-search" style="font-size: 1.25rem; color: #cbd5e1; margin-bottom: 6px; display: block;"></i>
+                                        No se encontraron productos
+                                    </div>
+                                `;
                                 searchResults.style.display = 'block';
                             }
+                        })
+                        .catch(() => {
+                            searchResults.style.display = 'none';
                         });
                 }, 300);
             });
@@ -240,8 +516,14 @@
                 }
             });
             
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    searchResults.style.display = 'none';
+                }
+            });
+
             searchInput.addEventListener('focus', function() {
-                if (this.value.trim().length >= 2) {
+                if (this.value.trim().length >= 2 && searchResults.children.length > 0) {
                     searchResults.style.display = 'flex';
                 }
             });

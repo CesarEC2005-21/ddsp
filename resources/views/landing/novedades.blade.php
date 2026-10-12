@@ -526,10 +526,6 @@
         </p>
     </div>
 
-    <div class="nt-hero-scroll">
-        <div class="nt-scroll-line"></div>
-        Descubre más
-    </div>
 </section>
 
 {{-- ══════════════════════════════════════════

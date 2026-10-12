@@ -187,15 +187,57 @@
     background: white; border-radius: 28px; overflow: hidden;
     box-shadow: 0 25px 60px rgba(0,0,0,.1); border: 1px solid #e2e8f0;
     height: 700px; position: relative;
+    z-index: 1;
+    isolation: isolate;
 }
 #ej-map { width: 100%; height: 100%; }
+
+/* Control de zoom y capas dentro del mapa sin sobreponerse al navbar */
+.ej-map-panel .leaflet-top,
+.ej-map-panel .leaflet-bottom {
+    z-index: 300 !important;
+}
+.ej-map-panel .leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    margin-top: 16px !important;
+    margin-right: 16px !important;
+}
+.ej-map-panel .leaflet-control-zoom a {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    background: #ffffff !important;
+    border: none !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background 0.2s, color 0.2s;
+}
+.ej-map-panel .leaflet-control-zoom a:last-child {
+    border-bottom: none !important;
+}
+.ej-map-panel .leaflet-control-zoom a:hover {
+    background: #f0fdf4 !important;
+    color: #16a34a !important;
+}
+
 .ej-map-badge {
-    position: absolute; top: 20px; right: 20px; z-index: 1000;
-    background: white; padding: 10px 20px; border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.12);
-    display: flex; align-items: center; gap: 10px;
+    position: absolute; bottom: 25px; left: 20px; z-index: 400;
+    background: white; padding: 8px 18px; border-radius: 50px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    display: flex; align-items: center; gap: 8px;
     font-size: .8rem; font-weight: 800; color: #16a34a;
     border: 1px solid #dcfce7;
+    pointer-events: none;
+}
+@media (max-width: 768px) {
+    .ej-map-badge {
+        bottom: 15px; left: 15px; font-size: .75rem; padding: 6px 14px;
+    }
 }
 .ej-map-pulse {
     width: 10px; height: 10px; background: #4ade80; border-radius: 50%;
@@ -399,10 +441,6 @@
         </p>
     </div>
 
-    <div class="ej-hero-scroll">
-        <div class="ej-scroll-line"></div>
-        Conoce al equipo
-    </div>
 </section>
 
 {{-- ══════════════════════════════════════════

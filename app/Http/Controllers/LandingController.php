@@ -85,7 +85,13 @@ class LandingController extends Controller
         $laboratories = Laboratory::where('estado', true)->orderBy('descripcion', 'asc')->get();
         $query = Product::with('laboratory')->where('estado', true);
         
-        if ($request->filled('lab')) {
+        if ($request->has('labs') && !empty($request->labs)) {
+            $labs = is_array($request->labs) ? $request->labs : explode(',', $request->labs);
+            $labs = array_filter($labs);
+            if (!empty($labs)) {
+                $query->whereIn('laboratory_id', $labs);
+            }
+        } elseif ($request->filled('lab')) {
             $query->where('laboratory_id', $request->lab);
         }
         

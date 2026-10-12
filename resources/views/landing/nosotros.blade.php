@@ -924,10 +924,6 @@
         </p>
     </div>
 
-    <div class="ns-hero-scroll">
-        <div class="ns-scroll-line"></div>
-        Descubre más
-    </div>
 </section>
 
 {{-- ═══════════════════════════════════════════════════

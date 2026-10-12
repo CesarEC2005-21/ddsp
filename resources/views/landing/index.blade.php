@@ -484,11 +484,6 @@
         <span class="indicator" data-index="2"></span>
     </div>
 
-    {{-- Scroll hint --}}
-    <div class="hero-scroll-hint">
-        <div class="hero-scroll-mouse"></div>
-        Descubre más
-    </div>
 </section>
 
 
